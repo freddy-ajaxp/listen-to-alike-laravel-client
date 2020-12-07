@@ -1,0 +1,140 @@
+#dash-link-table {
+  background: #fff;
+}
+.table-row-stripe {
+  background: #fafbff;
+}
+.header,
+.marketing,
+.footer {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+.input {
+  border-radius: 2px;
+  border: 1px solid #ccc;
+  padding: 0 0.2em;
+  box-sizing: border-box;
+}
+.hovertip {
+  text-transform: lowercase;
+  font-style: normal;
+  background: #f1f1f1;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  text-align: center;
+  line-height: 1em;
+  border-radius: 100%;
+  color: #a8a8a8;
+  cursor: help;
+}
+.hovertip:hover {
+  background: #ebebeb;
+}
+.well {
+  padding: 1em;
+  background: #f9f9f9;
+  border: 1px solid #efefef;
+}
+.avatar {
+  /* width: 2rem; */
+  /* height: 2rem; */
+  line-height: 2rem;
+  border-radius: 50%;
+  display: inline-block;
+  background: #ced4da no-repeat center/cover;
+  position: relative;
+  text-align: center;
+  color: #868e96;
+  font-weight: 600;
+  vertical-align: bottom;
+  font-size: 0.875rem;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.header {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e5e5e5;
+}
+.header h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 40px;
+}
+.footer {
+  padding-top: 19px;
+  color: #777;
+  border-top: 1px solid #e5e5e5;
+}
+.container-narrow > hr {
+  margin: 30px 0;
+}
+.jumbotron {
+  text-align: center;
+  border-bottom: 1px solid #e5e5e5;
+}
+.jumbotron .btn {
+  padding: 14px 24px;
+  font-size: 21px;
+}
+.marketing {
+  margin: 40px 0;
+}
+.marketing p + h4 {
+  margin-top: 28px;
+}
+.spinner {
+  border: 16px solid #f3f3f3;
+  border-top: 16px solid #3498db;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@media screen and (min-width: 768px) {
+  .header,
+  .marketing,
+  .footer {
+    padding-right: 0;
+    padding-left: 0;
+  }
+  .header {
+    margin-bottom: 30px;
+  }
+  .jumbotron {
+    border-bottom: 0;
+  }
+}
+.page {
+  min-height: 100vh;
+}
+.page-header {
+  margin-top: 0;
+}
+.page-title {
+  font-weight: 400;
+  color: #3c3c3c;
+  font-size: 1.5rem;
+}
+footer {
+  margin-top: 40px;
+}
+.footer p {
+  text-align: left;
+  font-size: 0.8em;
+  color: #bdbdbd;
+}
+select {
+  padding: 3px;
+}

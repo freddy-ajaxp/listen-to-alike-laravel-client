@@ -1,0 +1,19 @@
+.navbar {
+    border-bottom: 1px solid rgba(0, 40, 100, 0.12);
+  }
+  .navbar-brand {
+    color: #ff6000 !important;
+    font-weight: 600;
+  }
+  .navbar-brand span:hover {
+    color: #ff8234;
+  }
+  .nav-link__logout,
+  .nav-link__settings {
+    color: #8f8f8f;
+  }
+  .nav-link__logout:hover,
+  .nav-link__settings:hover {
+    color: #646464;
+  }
+  
