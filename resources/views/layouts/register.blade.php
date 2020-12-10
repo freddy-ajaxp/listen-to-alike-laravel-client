@@ -18,7 +18,7 @@
 <body class="hold-transition register-page">
     <div class="register-box">
         <div class="register-logo">
-            <a href="../../index2.html"><b>Register</b>Account</a>
+            <a href="/landing"><b>Register</b>Account</a>
         </div>
 
         <div class="card">
@@ -61,7 +61,7 @@
                     <div class="row">
                         <div class="col-8">
 
-                            <a href="login.html" class="text-center">already have account</a>
+                            <a href="/login" class="text-center">already have account</a>
 
                         </div>
                         <!-- /.col -->

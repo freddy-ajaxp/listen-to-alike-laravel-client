@@ -25,7 +25,7 @@
         <!-- @include('components/messages') -->
         @include('components/messages')
         <div class="login-logo">
-            <a href="../../index2.html"><b>Login </b>Shorten</a>
+            <a href="/landing"><b>Login </b>Shorten</a>
         </div>
         <!-- /.login-logo -->
 
@@ -68,7 +68,7 @@
                 </form>
 
                 <p class="mb-0">
-                    <a href="register.html" class="text-center">Register</a>
+                    <a href="/register" class="text-center">Register</a>
                 </p>
             </div>
         </div>

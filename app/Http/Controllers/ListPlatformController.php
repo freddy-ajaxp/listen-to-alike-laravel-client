@@ -166,8 +166,6 @@ class ListPlatformController extends Controller
 
     function getAllPlatforms()
     {
-
-
         try {
             $result = List_platform::selectRaw('platform_name as text, platform_name as alt, platform_name as jenis_platform, logo_image_path as image')->get();
             // dd($result);

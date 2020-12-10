@@ -2,6 +2,33 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
+
+    <style>
+        #overlay {
+            position: fixed;
+            display: none;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.3);
+            z-index: 1051;
+            cursor: pointer;
+        }
+
+        #text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            /* font-size: 50px; */
+            /* color: black; */
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+        }
+    </style>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
@@ -15,6 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/dashboard.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/spinner.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/navbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/index.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/form-validation.css') }}">
@@ -31,7 +59,6 @@
               background-attachment: fixed;" `>
                 <div class="section-1-bg" style="background:linear-gradient( to right,rgb(6, 34, 62),rgba(5, 32, 68, 0.66));">
                     @include('components/navbar')
-
                     <section class="content">
                         <div class="container-fluid">
                             <div class="row">
@@ -40,6 +67,24 @@
                                         <div class="card-header">
                                             <h3 class="card-title">DataTable with default features</h3>
                                         </div>
+
+                                        <div id="overlay" style="display:none" onclick='toggleSpinner(false)'>
+                                            <div id="text">
+                                                <div class="d-flex flex-column align-items-center justify-content-center">
+                                                    <div class="row">
+                                                        <div class="spinner-border" role="status">
+                                                            <span class="sr-only">Loading...</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" id="spinner-text">
+                                                        <strong>Processing Your Request</strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
                                         <!-- /.card-header -->
                                         <div class="card-body">
                                             <table id="example" class="table table-bordererless">
@@ -206,12 +251,14 @@
 </html>
 
 
-<!-- <script type="text/javascript" src="{{ asset('assets/js/bootstrap.js') }}"></script> -->
 <!-- <script type="text/javascript" src="{{ asset('assets/js/jquery.min.js') }}"></script> -->
 <!-- <script type="text/javascript" src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script> -->
+
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="https:cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<!-- <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+<script type="text/javascript" src="{{ asset('assets/js/bootstrap.js') }}"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="{{ asset('assets/js/spinner.js') }}"></script>
 <script>
     //init datatable
     $(document).ready(function() {
@@ -289,12 +336,20 @@
                 data: {
                     id: data.id,
                 },
+
                 success: function(linksPlatform) {
                     initModal(linksPlatform)
-                }
+                },
             })
         });
     });
+
+    //toggle spinner
+    function toggleSpinner(status, text = "Processing Your Request") {
+        $('#spinner-text strong').text(text);
+        status ? $("#overlay").css("display", "block") : $("#overlay").css("display", "none")
+
+    }
 
     //img preview
     $('#image').change(function() {
@@ -394,6 +449,9 @@
             dataType: 'json',
             contentType: false,
             processData: false,
+            beforeSend: function() {
+                toggleSpinner(true, "Submitting Your Data");
+            },
             success: function(data) {
                 location.reload();
             }
@@ -410,13 +468,17 @@
             },
             url: '{{ route("table.custom-link") }}',
             enctype: 'multipart/form-data',
-            method: 'patch',
+            method: 'post',
             data: {
                 id: id,
                 short_link: customLink,
             },
             dataType: 'json',
+            beforeSend: function() {
+                toggleSpinner(true, "Submitting Your Data");
+            },
             success: function(data) {
+                toggleSpinner(false, "");
                 location.reload();
             }
         })
@@ -433,11 +495,14 @@
             },
             url: '{{ route("table.delete-link") }}',
             enctype: 'multipart/form-data',
-            method: 'delete',
+            method: 'post',
             data: {
                 id: id
             },
             dataType: 'json',
+            beforeSend: function() {
+                toggleSpinner(true, "Deleting Your Data");
+            },
             success: function(data) {
                 location.reload();
             }
