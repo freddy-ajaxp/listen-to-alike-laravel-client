@@ -26,6 +26,7 @@
                 <p class="login-box-msg">Register a new membership</p>
 
                 <form action="user/register" method="post" id="form-register">
+                {{ csrf_field() }}
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" name="name" placeholder="Full name">
                         <div class="input-group-append">
@@ -77,43 +78,7 @@
     </div>
 
 </html>
-
-<script type="text/javascript" src="{{ asset('assets/js/bootstrap.js') }}"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 
+<script type="text/javascript" src="{{ asset('assets/js/bootstrap.js') }}"></script>
 
-<script>
-    $(document).ready(function() {
-        var count = 0;
-
-        $('#form-register').on('submit', function(event) {
-            event.preventDefault();
-            var name = $('input[name="name"]').val();
-            var email = $('input[name="email"]').val();
-            var password = $('input[name="password"]').val();
-            var confirmPassword = $('input[name="confirmPassword"]').val();
-
-            // console.log(`sending ${email}, ${name}, ${password}, ${confirmPassword}`)
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '{{ url("user/register") }}',
-                method: 'post',
-                data: {
-                    email: email,
-                    name: name,
-                    password: password,
-                    confirmPassword: confirmPassword
-                },
-                dataType: 'json',
-                beforeSend: function() {},
-                success: function(data) {
-                    console.log("data return dari server", data);
-                }
-            })
-        });
-
-
-    })
-</script>

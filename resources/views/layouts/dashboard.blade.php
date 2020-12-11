@@ -1,34 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-<head>
-
-    <style>
-        #overlay {
-            position: fixed;
-            display: none;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(255, 255, 255, 0.3);
-            z-index: 1051;
-            cursor: pointer;
-        }
-
-        #text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            /* font-size: 50px; */
-            /* color: black; */
-            transform: translate(-50%, -50%);
-            -ms-transform: translate(-50%, -50%);
-        }
-    </style>
-
+<head> 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
@@ -242,12 +215,8 @@
         </form>
     </div>
     <!-- modal Custom end -->
-
-
     </div>
-
 </body>
-
 </html>
 
 

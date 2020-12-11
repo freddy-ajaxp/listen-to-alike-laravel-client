@@ -56,7 +56,7 @@
                     <div class="row">
                         <div class="col-8">
                             <div class="icheck-primary">
-
+<a href="/register" class="text-center">Register</a>
                             </div>
                         </div>
                         <!-- /.col -->
@@ -66,10 +66,7 @@
                         <!-- /.col -->
                     </div>
                 </form>
-
-                <p class="mb-0">
-                    <a href="/register" class="text-center">Register</a>
-                </p>
+ 
             </div>
         </div>
     </div>

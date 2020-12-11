@@ -17,7 +17,7 @@
     </a>
     <div class="navbar-nav" style='flex-direction: row;align-items: center'>
         <a class="nav-item nav-item--standard btn btn-link" style='color:#fff' href="/login">Login</a>
-        <a class="nav-item-btn nav-item btn btn-sm btn-red text-white" href=/register">
+        <a class="nav-item-btn nav-item btn btn-sm btn-red text-white" href=/register>
             Register<span id="nav-item__free"></span>
         </a>
     </div>

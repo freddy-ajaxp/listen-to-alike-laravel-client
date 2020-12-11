@@ -45,6 +45,18 @@ Route::get('/logout', function (Request $request) {
 Route::get('/preview', function () {
     return view('layouts/preview');
 });
+Route::get('/admin', function () {
+    $data['main'] = 'links'; 
+    return view('layouts/admin')->with('components', $data);;
+});
+Route::get('/admin/userList', function () {
+    return view('layouts/admin');
+});
+Route::get('/admin/setting', function () {
+    return view('layouts/admin');
+});
+
+// Perintah
 Route::get('/previewData/{short_link}', 'ListPlatformController@preview');
 
 // Route::get('dynamic-field', 'ListPlatformController@index');
@@ -53,15 +65,7 @@ Route::post('dynamic-field/insert', 'ListPlatformController@insert')->name('dyna
 Route::post('dynamic-field/upsert', 'ListPlatformController@upsert')->name('dynamic-field.upsert');
 
 
-//
 Route::get('links/platforms', 'ListPlatformController@getAllPlatforms');
-// Route::get('links/user/{id}', 'ListPlatformController@postLink'); done
-// Route::post('links/userP/{id}', 'ListPlatformController@patchLink'); done
-// Route::post('links/submit', 'ListPlatformController@patchCustomLink');
-// Route::patch('links/custom/{id}', 'ListPlatformController@getLink');
-// Route::delete('links/link/{id}', 'ListPlatformController@deleteLink');
-// Route::patch('links/link/{id}', 'ListPlatformController@getLinksByUserId');
-// Route::get('links/linkSlug', 'ListPlatformController@getLinksByUserIdPagination');
 // Route::get('/', 'ListPlatformController@getAllPlatforms');   
 
 //dummy 
@@ -76,3 +80,6 @@ Route::get('table/getAllLinks','TableController@getAllLinks')->name('table.all-l
 Route::post('table/getLinksById','TableController@getLinksById')->name('table.get-link-by-platform');
 Route::post('table/deleteLinkById','ListPlatformController@deleteLinkById')->name('table.delete-link');
 Route::post('table/custom', 'TableController@patchCustomLink')->name('table.custom-link');
+
+
+//admin

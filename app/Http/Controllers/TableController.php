@@ -27,6 +27,20 @@ class TableController extends Controller
         $data['id_user'] = 4;
         try {
             $result = Link::where('id_user', $data['id_user'])->get();
+            return response()->json(['data'=> $result]);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    function getAllLinksById(Request $request)
+    {
+        $data = $request->all();
+
+        $id_user = $request->session()->get('id');
+        $data['id_user'] = $id_user;
+        try {
+            $result = Link::where('id_user', $data['id_user'])->get();
             // $result = DB::table('list_platforms')->get();
             return response()->json(['data'=> $result]);
         } catch (\Throwable $th) {

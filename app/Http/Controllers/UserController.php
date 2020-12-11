@@ -73,8 +73,9 @@ class UserController extends Controller
             $user->updatedAt = date("Y-m-d");
             $user->save();
 
-            return response()->json(['success' => 'Your Account Is Succesfully Created', 
-            'data' => $user  ], 400);
+            return redirect('/login')->with('success', 'Account Successfuly created');
+            // return response()->json(['success' => 'Your Account Is Succesfully Created', 
+            // 'data' => 'success'], 200);
         }
     }
 
