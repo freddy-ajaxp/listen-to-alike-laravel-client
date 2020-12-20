@@ -10,35 +10,37 @@ use Closure;
 
 class SessionValidator
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
-     */
-    public function handle($request, Closure $next)
-    {
-        if($request->session()->has('email')){
-            // if (Route::currentRouteName('/register') || Route::currentRouteName('/login')) { 
-            if ($request->is('register') || $request->is('login')) { 
-                return redirect("/dashboard");
-              }
-              else{
-                return $next($request);
-              }
-            
-        }
-        else {
-            if ($request->is('register') || $request->is('login')) { 
-                return $next($request);
-              }
-              else{
-                return redirect("/login");                
-              }
-            
-        }
-        
-        
+  /**
+   * Handle an incoming request.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @param  \Closure  $next
+   * @return mixed
+   */
+  public function handle($request, Closure $next)
+  {
+
+
+    // dd(session()->get('admin'));
+    if (session()->get('email') === null) {
+      return redirect("/login");
     }
+
+
+    if (session()->get('admin') == 1) {
+      if ($request->is('register') || $request->is('dashboard')) {
+        return redirect("/admin");
+      } else {
+        return $next($request);
+      }
+    } elseif (session()->get('admin') == 0) {
+      if ($request->is('register') || $request->is('admin/*') || $request->is('admin')) {
+        return redirect("/dashboard");
+      } else {
+        return $next($request);
+      }
+    } elseif (!session()->has('email')) {
+      return redirect("/login");
+    }
+  }
 }

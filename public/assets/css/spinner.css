@@ -12,6 +12,10 @@
   cursor: pointer;
 }
 
+#overlay-alert {
+  z-index: 9052;
+}
+
 #text {
   position: absolute;
   top: 50%;

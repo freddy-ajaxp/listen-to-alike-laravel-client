@@ -15,13 +15,13 @@
                         <div>
                             <label>
                                 <input class="music-link__artwork-checkbox" type="checkbox" style='margin:0.5em 0.5em 0 0;font-size:0.75em'>Embed artwork
-                            </label>
+                            </label>    
                         </div>
                     </div>
                     <!-- <form method="post" id="dynamic_form"> -->
 
 
-                    <div class="music-link__upload-art">
+                    <div class="music-link__upload-art" >
                         <ion-icon name="download-outline" />
                         <b style=" font-weight: 500; margin-bottom: '0.5em'">
                             Upload Image
@@ -71,6 +71,8 @@
                 <div class="table-responsive">
                     <button type="button" name="add" id="add" class="btn btn-outline-secondary">Add New Row</button>
                     <span id="result"></span>
+                    <div id="modal-dynamic-form-add">
+                    </div>
                     <table class="table table-borderless " id="user_table">
                         <tbody>
                         </tbody>
@@ -78,15 +80,9 @@
                 </div>
             </div>
             <div>
-                <!-- <div class="form-group">
-                    <select class="form-control form-control-sm" style="width:200px" id="exampleFormControlSelect1">
-                        <option disabled selected value=null>Add New Platform</option>
-                        <option>Youtube</option>
-                        <option>Spotify</option>
-                    </select>
-                </div> -->
                 <p class="music-link__error"></p>
-                <input type="submit" name="save" id="save" class="btn btn-red mr-1 music-link__create-btn music-link__create-btn--landing py-3" value="Create Link">
+                {{-- <input type="submit" name="save" id="save" class="btn btn-red mr-1 music-link__create-btn music-link__create-btn--landing py-3" value="Create Link"> --}}
+                <button type="submit" class="btn btn-danger btn-lg btn-block">Create Link</button>
                 <!-- <button class='btn btn-red mr-1 music-link__create-btn music-link__create-btn--landing py-3'></button> -->
         </form>
         <div style='padding:0.5em;text-align:center'>

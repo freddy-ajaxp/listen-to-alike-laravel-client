@@ -10,7 +10,7 @@
             <ul class="navbar-nav ml-auto">
                 <!-- Messages Dropdown Menu -->
                 <li class="nav-item ">
-                    <a class="btn btn-danger" href="/auth/logout">
+                    <a class="btn btn-danger" href="/logout">
                         Logout
                     </a>
                 </li>

@@ -6,6 +6,7 @@ use App\Link;
 use App\Link_platform;
 use App\List_platform;
 use App\User;
+use DataTables;
 use Illuminate\Support\Facades\Hash;
 use Dotenv\Result\Result;
 use Illuminate\Http\Request;
@@ -24,13 +25,25 @@ class TableController extends Controller
     function getAllLinks(Request $request)
     {
         $data = $request->all();
-        $data['id_user'] = 4;
-        try {
-            $result = Link::where('id_user', $data['id_user'])->get();
-            return response()->json(['data'=> $result]);
-        } catch (\Throwable $th) {
-            throw $th;
+        $id_user = $request->session()->get('id');
+        $data['id_user'] = $id_user;
+
+        if ($request->ajax()) {
+            $data = Link::where('id_user', $data['id_user'])->get();
+
+            return Datatables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('action', function($row){
+                           $btn = '<button id="editBtn" class="btn btn-primary">Edit</button> 
+                           <button id="deleteBtn" class="btn btn-danger">Delete</button>
+                           <button id="customBtn" class="btn btn-info">Customize</button>
+                           <button id="viewBtn" class="btn btn-success">Visit</button>';
+                           return $btn;
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
         }
+
     }
 
     function getAllLinksById(Request $request)

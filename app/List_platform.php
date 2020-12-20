@@ -8,9 +8,8 @@ class List_platform extends Model
 {
     //
     protected $fillable = [
-        'platform_name', 'logo_image_path', 'platform_regex'
+        'platform_name', 'logo_image_path', 'platform_regex', 'admin', 'createdAt','updatedAt'
     ];
-
     protected $primaryKey = 'id';
     protected $table = 'list_platforms';
 	public $timestamps = false;
