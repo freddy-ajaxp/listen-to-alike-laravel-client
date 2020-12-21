@@ -202,4 +202,27 @@ class ListPlatformController extends Controller
         // return view('layouts/preview')->with('data',$link);
         return view('components/user/view/preview')->with('data', $link);
     }
+
+    function deleteModal(Request $request)
+    {
+        $data = $request->all();
+        try {
+            return view('components/user/partials/modal-delete'); //ini untuk dynamic modal   
+            // return response()->json($result); //ini untuk static modal
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+
+    function customModal(Request $request)
+    {
+        try {
+            return view('components/user/partials/modal-custom'); //ini untuk dynamic modal   
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }
+
+

@@ -77,10 +77,22 @@ class TableController extends Controller
     function getLinksById(Request $request)
     {
         $data = $request->all();
-        $id = $data['id'];
+        try {
+            $result = Link_platform::where('id_link', $data['id'])->get(['id', 'jenis_platform', 'url_platform', 'text'])->toArray();
+            return view('components/user/partials/modal-edit')->with("result", $result); //ini untuk dynamic modal   
+            // return response()->json($result); //ini untuk static modal
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    function dummy(Request $request)
+    {
+        $data = $request->all();
         try {
             $result = Link_platform::where('id_link', $data['id'])->get(['id', 'jenis_platform', 'url_platform', 'text']);
-            return response()->json($result);
+            return view('components/user/partials/modal-add', compact("result")); //ini untuk dynamic modal   
+            // return response()->json($result); //ini untuk static modal
         } catch (\Throwable $th) {
             throw $th;
         }

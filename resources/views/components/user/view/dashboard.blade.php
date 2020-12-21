@@ -22,7 +22,7 @@
                                         <h3 class="card-title">DataTable with default features</h3>
                                     </div>
 
-                                    <div id="overlay" style="display:none" onclick='toggleSpinner(false)'>
+                                    {{-- <div id="overlay" style="display:none" onclick='toggleSpinner(false)'>
                                         <div id="text">
                                             <div class="d-flex flex-column align-items-center justify-content-center">
                                                 <div class="row">
@@ -35,7 +35,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
 
 
 
@@ -67,7 +67,8 @@
         </div>
     </div>
 </div>
-@include('components/user/components/modals')
+{{-- @include('components/user/components/modals') --}}
+@include('components/user/components/modal-master')
 @include('components/user/components/alert')
 @endsection
 
@@ -92,13 +93,13 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 <script type="text/javascript" src="{{ asset('assets/js/bootstrap.js') }}"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script type="text/javascript" src="{{ asset('assets/js/spinner.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/alert.js') }}"></script>
 <script>
     //init datatable
     $(document).ready(function() {
-        counter = 0;  
+        counter = 0;
 
         //serverside
         var table = $('#example').DataTable({
@@ -134,7 +135,6 @@
         $("div.toolbar").html('<button style type="button" name="remove" id="addNewLink" class="btn btn-info btn-sm remove">Create Link</button>');
 
         $("#btn-dashboard").click(function() {
-            // localStorage.removeItem('links');
             localStorage.clear();
         });
 
@@ -146,19 +146,107 @@
             var data = table.row($(this).parents('tr')).data();
             $('p[name="confirm-delete-name"]').text(data.title);
             $('#id_delete').val(data.id);
-            $('#modal-delete').modal('show');
+            $('#modals').modal('show');
+
+             $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , url: '{{ route("table.modal-delete") }}'
+                , method: 'get'
+                , dataType: 'json'
+                , data: {
+                    id: data.id
+                , }
+                , success: function(linksPlatform) {
+                    alert("success")
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    $('#modals .dynamic-modal-container').html(xhr.responseText)
+                    Swal.fire({
+                        title: ajaxOptions + '!'
+                        , text: xhr.responseText
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+
+                }
+            , })
         })
+
         $('#example tbody').on('click', '#customBtn', function() {
             var data = table.row($(this).parents('tr')).data();
-            $('input[name="custom-link"]').val(data.short_link);
-            $('#id_custom').val(data.id);
-            $('#modal-custom').modal('show');
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , url: '{{ route("table.modal-custom") }}'
+                , method: 'get'
+                , success: function(modal) {
+                    $('#modals').modal('show');
+                    $('#modals .dynamic-modal-container').html(modal)
+                     $('input[name="custom-link"]').val(data.short_link);
+                    $('#id_custom').val(data.id);
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    $('#modals .dynamic-modal-container').html(xhr.responseText)
+                    Swal.fire({
+                        title: ajaxOptions + '!'
+                        , text: xhr.responseText
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+
+                }
+            , })
+
+
+
+
         })
-        $('#example tbody').on('click', '#viewBtn', function() {
-            var data = table.row($(this).parents('tr')).data();
-            window.open(`http://localhost:8000/preview/${data.short_link}`, '_blank');
+        $('#example tbody').on('click', '#viewBtn', function(e) {
+            e.preventDefault();
         })
+
         $('#example tbody').on('click', '#editBtn', function() {
+            // test get modal
+            var data = table.row($(this).parents('tr')).data();        
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , url: '{{ route("table.get-link-by-platform") }}'
+                , method: 'post'
+                , data: {
+                    id: data.id
+                , }
+                , success: function(linksPlatform) {
+                    $('#modals .dynamic-modal-container').html(linksPlatform)
+                    $('#id').val(data.id);
+                    $('#link_title').val(data.title);
+                    $('#short_link').val(data.short_link);
+                    $('#video_embed_url').val(data.video_embed_url);
+                    $('#modals').modal('show');
+                    {{-- initModal(linksPlatform) --}}
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    $('#modals .dynamic-modal-container').html(xhr.responseText)
+                    Swal.fire({
+                        title: ajaxOptions + '!'
+                        , text: xhr.responseText
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+
+                }
+            , })
+             
+ 
+
+        })
+
+        //ini yg lama, yg masih modal jadi satu file
+        $('#example tbody').on('click', '#editBtnxxx', function() {
             var data = table.row($(this).parents('tr')).data();
             $('#id').val(data.id);
             $('#link_title').val(data.title);
@@ -193,14 +281,15 @@
     }
 
     //img preview edit
-    $('#image').change(function() {
+    $(document).on('change','#image',function(){
         let reader = new FileReader();
         reader.onload = (e) => {
             $('#image-preview-container').attr('src', e.target.result);
         }
         reader.readAsDataURL(this.files[0]);
-        $("#clear-image").attr("hidden", false);
+        $("#clear-image").attr("hidden", false);    
     });
+    
     //img preview add
     $('#image-add').change(function(evt) {
         let reader = new FileReader();
@@ -231,7 +320,7 @@
         $('#image-preview-container').attr('src', "");
         $('#form-platform').attr('src', "");
         $('#form-custom').attr('src', "");
-        counter=0;
+        counter = 0;
     })
 
     //clear form modal add link
@@ -241,17 +330,17 @@
         $('#image-preview-container-add').attr('src', "");
         $('#form-platform-add').attr('src', "");
         $('#form-custom-add').attr('src', "");
-        counter=0;
+        counter = 0;
     })
 
     $('#checkbox').click(function() {
-            if ($(this).prop("checked") == true) {
-                $("#video_embed_url_add").attr("disabled", false);
-            } else {
-                $("#video_embed_url_add").attr("disabled", true);
-                $('#video_embed_url_add').val('')
-            }
-        });
+        if ($(this).prop("checked") == true) {
+            $("#video_embed_url_add").attr("disabled", false);
+        } else {
+            $("#video_embed_url_add").attr("disabled", true);
+            $('#video_embed_url_add').val('')
+        }
+    });
 
     //add and remove platform edit
     $(document).on('click', '#add', function() {
@@ -264,6 +353,7 @@
 
     //add and remove platform new link
     $(document).on('click', '#add-link-platform', function() {
+        console.log("add button clicked")
         dynamic_field(counter, '#modal-dynamic-form-add');
         counter++;
     });
@@ -297,14 +387,7 @@
 
 
         //log for debug purpose
-        {{-- console.log('data yg akan dikirim')
-        console.log('link_title', link_title)
-        console.log('video_embed_url', video_embed_url)
-        console.log('data_platform', data_platform)
-        console.log('data_url_platform', data_url_platform)
-        console.log('data_text', data_text)
-        console.log('files[0]', files[0]) --}}
-
+    
         //appending data to sent
         formData.append('link_title', link_title);
         formData.append('image', files[0]); //only 1 image, the first index     
@@ -312,7 +395,7 @@
         formData.append('data_platform', data_platform);
         formData.append('data_url_platform', data_url_platform);
         formData.append('data_text', data_text);
-        
+
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -329,24 +412,22 @@
             }
             , success: function(data) {
                 location.reload();
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                        let returnMessage = JSON.parse(xhr.responseText)
-                        Swal.fire({
-                            title: ajaxOptions +'!',
-                            text: returnMessage.failed,
-                            icon: 'error',
-                            confirmButtonText: 'Confirm'
-                            })
-                        
-                        toggleSpinner(false, "");
-                        {{-- toggleAlert(true, "error", ajaxOptions, returnMessage.failed); --}}
-                         
-                    }
+            }
+            , error: function(xhr, ajaxOptions, thrownError) {
+                let returnMessage = JSON.parse(xhr.responseText)
+                Swal.fire({
+                    title: ajaxOptions + '!'
+                    , text: returnMessage.failed
+                    , icon: 'error'
+                    , confirmButtonText: 'Confirm'
+                })
+
+                toggleSpinner(false, ""); 
+            }
         })
     });
 
- $('#form-platform').on('submit', function(event) {
+    $('#form-platform').on('submit', function(event) {
         event.preventDefault();
         var files = $('#image').get(0).files;
         formData = new FormData();
@@ -377,17 +458,7 @@
                 return ' ' + $(this).val();
             }).get();
 
-        //log for debug purpose
-        {{-- console.log('data yg akan dikirim')
-        console.log('id', id)
-        console.log('link_title', link_title)
-        console.log('short_link', short_link)
-        console.log('video_embed_url', video_embed_url)
-        console.log('data_platform', data_platform)
-        console.log('id_platforms', id_platforms)
-        console.log('data_url_platform', data_url_platform)
-        console.log('data_text', data_text)
-        console.log('files[0]', files[0]) --}}
+
 
         //appending data to sent
         formData.append('id', id);
@@ -415,19 +486,19 @@
             }
             , success: function(data) {
                 location.reload();
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                        let returnMessage = JSON.parse(xhr.responseText)
-                        Swal.fire({
-                            title: ajaxOptions +'!',
-                            text: returnMessage.failed,
-                            icon: 'error',
-                            confirmButtonText: 'Confirm'
-                            })
-                        
-                        toggleSpinner(false, "");
-                        {{-- toggleAlert(true, "error", ajaxOptions, returnMessage.failed); --}}
-                            }
+            }
+            , error: function(xhr, ajaxOptions, thrownError) {
+                let returnMessage = JSON.parse(xhr.responseText)
+                Swal.fire({
+                    title: ajaxOptions + '!'
+                    , text: returnMessage.failed
+                    , icon: 'error'
+                    , confirmButtonText: 'Confirm'
+                })
+
+                toggleSpinner(false, ""); 
+                {{--toggleAlert(true, "error", ajaxOptions, returnMessage.failed);--}}
+            }
         })
     });
 
@@ -454,19 +525,19 @@
             , success: function(data) {
                 toggleSpinner(false, "");
                 location.reload();
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                        let returnMessage = JSON.parse(xhr.responseText)
-                        Swal.fire({
-                            title: ajaxOptions +'!',
-                            text: returnMessage.failed,
-                            icon: 'error',
-                            confirmButtonText: 'Confirm'
-                            })
-                        
-                        toggleSpinner(false, "");
-                        {{-- toggleAlert(true, "error", ajaxOptions, returnMessage.failed); --}}
-                    }
+            }
+            , error: function(xhr, ajaxOptions, thrownError) {
+                let returnMessage = JSON.parse(xhr.responseText)
+                Swal.fire({
+                    title: ajaxOptions + '!'
+                    , text: returnMessage.failed
+                    , icon: 'error'
+                    , confirmButtonText: 'Confirm'
+                })
+
+                toggleSpinner(false, ""); 
+                
+            }
         })
 
     });
@@ -491,63 +562,62 @@
             }
             , success: function(data) {
                 location.reload();
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                        let returnMessage = JSON.parse(xhr.responseText)
-                        Swal.fire({
-                            title: ajaxOptions +'!',
-                            text: returnMessage.failed,
-                            icon: 'error',
-                            confirmButtonText: 'Confirm'
-                            })
-                        
-                        toggleSpinner(false, "");
-                        {{-- toggleAlert(true, "error", ajaxOptions, returnMessage.failed); --}}
-                    }
+            }
+            , error: function(xhr, ajaxOptions, thrownError) {
+                let returnMessage = JSON.parse(xhr.responseText)
+                Swal.fire({
+                    title: ajaxOptions + '!'
+                    , text: returnMessage.failed
+                    , icon: 'error'
+                    , confirmButtonText: 'Confirm'
+                })
+
+                toggleSpinner(false, ""); 
+            }
         })
     });
 
     function initModal(linksPlatform) {
         linksPlatform.forEach(eachData => {
             $('#modal-dynamic-form').append(`
-                        <div class="form-group">
-                        <input type="hidden" name="id_platforms[]" value="${eachData.id}"/>
-                            <div class="form-row">
-                                <div class="col-sm-2">
-                                    <select id="data_platform${counter}" name="data_platform[]" class="form-control form-control-sm">
-                                        <option disabled selected value=null>Platform</option>
-                                        <option value="youtube">Youtube</option>
-                                        <option value="spotify">Spotify</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-7">
-                                    <input type="text" name="data_url_platform[]" class="form-control form-control-sm" placeholder="URL dari platform" value="${eachData.url_platform}"/>
-                                </div>
-                                <div class="col-sm-2">
-                                    <select id="data_text${counter}" name="data_text[]" class="music-link__button-text-select">
-                                    <option selected="selected" value="Listen" >Listen</option>
-                                    <option value="Purchase">Purchase</option>
-                                    <option value="Play">Play</option>
-                                    <option value="Buy">Buy</option>
-                                    <option value="Buy Online">Buy Online</option>
-                                    <option value="Download">Download</option>
-                                    <option value="Stream">Stream</option>
-                                    <option value="Go To">Go To</option>
-                                    <option value="Visit">Visit</option>
-                                    <option value="Watch">Watch</option>
-                                    <option value="View">View</option>
-                                    <option value="Pre-Order">Pre-Order</option>
-                                    <option value="Pre-Save">Pre-Save</option>
-                                    <option value="Pre-Add">Pre-Add</option>
-                                    <option value="Buy Tickets">Buy Tickets</option>
-                                    <option value="Get Tickets">Get Tickets</option>
-                                    <option value="View Ticket Prices">View Ticket Prices</option>
-                                    <option value="Discover">Discover</option>                                    </select>
-                                </div>
-                                <div class="col-sm-1">
-                                <button type="button" name="remove" id="" class="btn btn-danger btn-sm remove">X</button>
-                                </div>
-                        </div>`);
+                            <div class="form-group">
+                            <input type="hidden" name="id_platforms[]" value="${eachData.id}"/>
+                                <div class="form-row">
+                                    <div class="col-sm-2">
+                                        <select id="data_platform${counter}" name="data_platform[]" class="form-control form-control-sm">
+                                            <option disabled selected value=null>Platform</option>
+                                            <option value="youtube">Youtube</option>
+                                            <option value="spotify">Spotify</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <input type="text" name="data_url_platform[]" class="form-control form-control-sm" placeholder="URL dari platform" value="${eachData.url_platform}"/>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <select id="data_text${counter}" name="data_text[]" class="music-link__button-text-select">
+                                        <option selected="selected" value="Listen" >Listen</option>
+                                        <option value="Purchase">Purchase</option>
+                                        <option value="Play">Play</option>
+                                        <option value="Buy">Buy</option>
+                                        <option value="Buy Online">Buy Online</option>
+                                        <option value="Download">Download</option>
+                                        <option value="Stream">Stream</option>
+                                        <option value="Go To">Go To</option>
+                                        <option value="Visit">Visit</option>
+                                        <option value="Watch">Watch</option>
+                                        <option value="View">View</option>
+                                        <option value="Pre-Order">Pre-Order</option>
+                                        <option value="Pre-Save">Pre-Save</option>
+                                        <option value="Pre-Add">Pre-Add</option>
+                                        <option value="Buy Tickets">Buy Tickets</option>
+                                        <option value="Get Tickets">Get Tickets</option>
+                                        <option value="View Ticket Prices">View Ticket Prices</option>
+                                        <option value="Discover">Discover</option>                                    </select>
+                                    </div>
+                                    <div class="col-sm-1">
+                                    <button type="button" name="remove" id="" class="btn btn-danger btn-sm remove">X</button>
+                                    </div>
+                            </div>`);
             $(`#data_platform${counter}`).val(eachData.jenis_platform);
             $(`#data_text${counter}`).val(eachData.text);
             counter++;
@@ -596,12 +666,8 @@
                         </div>`);
     }
 
-
-
-
-
 </script>
 
 
- 
+
 @endpush

@@ -125,7 +125,7 @@
                 , method: 'post'
                 , data: {
                     id: id_user
-                , }
+                }
                 , dataType: 'json'
                 , beforeSend: function() {
                     

@@ -1,6 +1,5 @@
-
 <!-- modal add -->
-<div class="modal bd-example-modal-lg" id="modal-add-link" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+{{-- <div class="modal bd-example-modal-lg" id="modal-add-link" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <form id="form-add-link" name="form-add-link" class="form-horizontal" novalidate="">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -15,7 +14,7 @@
                             <input type="text" class="form-control has-error" id="link_title_add" name="link_title" placeholder="title" value="">
                         </div>
                     </div>
-                
+
 
 
 
@@ -79,11 +78,11 @@
     </form>
 </div>
 </div>
-</div>
+</div> --}}
 <!-- modal add end -->
 
-<!-- modal edit -->
-<div class="modal bd-example-modal-lg" id="modal-edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- modalfof edit -->
+{{-- <div class="modal bd-example-modal-lg" id="modal-edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <form id="form-platform" name="form-platform" class="form-horizontal" novalidate="">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -142,12 +141,12 @@
     </form>
 </div>
 </div>
-</div>
+</div> --}}
 <!-- modal edit end -->
 
 
 <!-- modal delete -->
-<div class="modal" id="modal-delete" role="dialog">
+{{-- <div class="modal" id="modal-delete" role="dialog">
     <form id="form-delete" name="form-delete" class="form-horizontal" novalidate="">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -171,40 +170,40 @@
             </div>
         </div>
     </form>
-</div>
+</div> --}}
 <!-- modal delete end -->
 
 <!-- modal Custom -->
-<div class="modal" id="modal-custom" role="dialog">
-    <form id="form-custom" name="form-custom" class="form-horizontal" novalidate="">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Customize URL</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Data Link:</p>
-                    <input type="hidden" id="id_custom" />
-                    <div class="col-auto">
-                        <label class="sr-only" for="inlineFormInputGroup">Username</label>
-                        <div class="input-group mb-2">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text">link.pendek/</div>
-                            </div>
-                            <input type="text" name="custom-link" class="form-control form-control-sm" placeholder="URL dari platform" value="${eachData.url_platform}" />
-                        </div>
+    {{-- <div class="modal" id="modal-custom" role="dialog">
+        <form id="form-custom" name="form-custom" class="form-horizontal" novalidate="">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Customize URL</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
+                    <div class="modal-body">
+                        <p>Data Link:</p>
+                        <input type="hidden" id="id_custom" />
+                        <div class="col-auto">
+                            <label class="sr-only" for="inlineFormInputGroup">Username</label>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">link.pendek/</div>
+                                </div>
+                                <input type="text" name="custom-link" class="form-control form-control-sm" placeholder="URL dari platform" value="${eachData.url_platform}" />
+                            </div>
+                        </div>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" id="btn-custom" class="btn btn-success">Custom</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="btn-custom" class="btn btn-success">Custom</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </form>
-</div>
+        </form>
+    </div> --}}
 <!-- modal Custom end -->

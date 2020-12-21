@@ -80,9 +80,15 @@ Route::post('user/login', 'UserController@login');
 Route::post('user/register', 'UserController@register');
 Route::get('user/logout', 'UserController@logout');
 
+
+//AJAX TABLE MODAL ONLY NO RETRIEVING DATA
+Route::get('table/delete-confirmation', 'ListPlatformController@deleteModal')->name('table.modal-delete');
+Route::get('table/custom-confirmation', 'ListPlatformController@customModal')->name('table.modal-custom');
+
 //AJAX TABLE
 Route::get('table/getAllLinks', 'TableController@getAllLinks')->name('table.all-links');
 Route::post('table/getLinksById', 'TableController@getLinksById')->name('table.get-link-by-platform');
+Route::post('table/dummy', 'TableController@dummy')->name('table.dummy');
 Route::post('table/deleteLinkById', 'ListPlatformController@deleteLinkById')->name('table.delete-link');
 Route::post('table/custom', 'TableController@patchCustomLink')->name('table.custom-link');
 
@@ -91,6 +97,8 @@ Route::post('table/custom', 'TableController@patchCustomLink')->name('table.cust
 Route::post('admin/addPlatform', 'AdminController@addPlatform')->name('admin.add-platform');
 Route::post('admin/deletePlatform', 'AdminController@deletePlatform')->name('admin.delete-platform');
 Route::get('admin/getAllLinks', 'AdminController@getAllLinks')->name('admin.all-links');
+Route::get('admin/getUserDataById/{id}', 'AdminController@getUserDataById')->name('admin.user-data');
+Route::get('admin/getUserLinkList/{id_user}', 'AdminController@getUserLinkList')->name('admin.user-datatable');
 Route::get('admin/datatables', 'AdminController@datatables')->name('admin.datatables');
 Route::post('admin/deleteLink', 'AdminController@deleteLink')->name('admin.delete-link');
 Route::post('admin/deleteUser', 'AdminController@deleteUser')->name('admin.delete-user');

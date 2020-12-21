@@ -132,34 +132,8 @@
 
     $(document).ready(function() {
         counter = 0;
-        //client side
-        {{-- var table = $('#table').DataTable({
-            "ajax": {
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-                , url: '{{ route("admin.all-platforms") }}'
-                , method: 'get'
-                , contentType: false
-                , processData: false
-            , }
-            , "columns": [{
-                    "data": "platform_name"
-                }
-                , {
-                    "data": "logo_image_path"
-                }
-                , {
-                    "data": "platform_regex"
-                }
-                , {
-                    "defaultContent": `
-                    <button id='deleteLogoBtn'>Delete</button>`
-                }
-            , ]
-        }); --}}
         
-        //client side
+        //server side
         var table = $('#example').DataTable({
 
             processing: true
@@ -169,8 +143,7 @@
                     data: 'platform_name'
                     , name: 'platform_name'
                 }
-                , {
-                    
+                , { 
                          data: null,
                          render: function(data,type,row){
                                return `<img src="https://res.cloudinary.com/dfpmdlf8l/image/upload/${row.logo_image_path}",width=60px, height=30px />`},

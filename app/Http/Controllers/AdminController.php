@@ -24,69 +24,56 @@ class AdminController extends Controller
 {
     public function getAllLinks()
     {
-        // try {
-        //     $result = Link::all();
-        //     return response()->json(['data' => $result]);
-        // } catch (\Throwable $th) {
-        //     throw $th;
-        // }
-
-
-            $data = Link::all();
-            return Datatables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn('action', function($row){
-                           $btn = '<button id="deletetBtn" class="btn btn-danger" >Hapus</button> '
-                           ."<a href='/preview/$row->short_link'" .' class="btn btn-info ">Lihat</a>';
-                        //    <button id="viewBtn">Detail</button>
-                           return $btn;
-                    })
-                    ->rawColumns(['action'])
-                    ->make(true);
-        
+        $data = Link::all();
+        return Datatables::of($data)
+            ->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                $btn = '<button id="deletetBtn" class="btn btn-danger" >Hapus</button> '
+                    . "<a href='/preview/$row->short_link'" . ' class="btn btn-info ">Lihat</a>';
+                //    <button id="viewBtn">Detail</button>
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
     public function getAllUsers()
     {
-        // try {
-        //     $result = User::all();
-        //     return response()->json(['data' => $result]);
-        // } catch (\Throwable $th) {
-        //     throw $th;
-        // }
         $result = User::all();
         return Datatables::of($result)
-                    ->addIndexColumn()
-                    ->addColumn('action', function($row){
-                           $btn = '<button id="resetBtn" class="btn btn-secondary">Reset Password</button>
-                           <button id="deactivateBtn" class="btn btn-danger">Hapus User</button>
-                           <button id="viewBtn" class="btn btn-info">Lihat</button>
+            ->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                $btn = '<button id="resetBtn" class="btn btn-secondary">Reset Password</button>
+                           <button id="deactivateBtn" class="btn btn-danger">Hapus User</button> '
+                    . "<a href='getUserDataById/$row->id'" . 'id="viewBtn"  class="btn btn-info">Lihat</button>
                            ';
-                        //    <button id="viewBtn">Detail</button>
-                           return $btn;
-                    })
-                    ->rawColumns(['action'])
-                    ->make(true);
+
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+
+
+    public function getUserDataById(Request $request, $id)
+    {
+        $dataUser = User::where('id', $id)->first()->toArray();
+        return view('components/admin/view/user-profile')->with('data', $dataUser);
     }
 
     public function getAllPlatforms()
     {
-        // try {
-        //     $result = List_platform::all();
-        //     return response()->json(['data' => $result]);
-        // } catch (\Throwable $th) {
-        //     throw $th;
-        // }
+
         $result = List_platform::all();
         return Datatables::of($result)
-                    ->addIndexColumn()
-                    ->addColumn('action', function($row){
-                           $btn = '<button id="deleteLogoBtn" class="btn btn-danger">Hapus Logo</button>
+            ->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                $btn = '<button id="deleteLogoBtn" class="btn btn-danger">Hapus Logo</button>
                            ';
-                           return $btn;
-                    })
-                    ->rawColumns(['action'])
-                    ->make(true);
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
     function addPlatform(Request $request)
@@ -144,34 +131,60 @@ class AdminController extends Controller
     }
 
     //ini fungsi dummy, hanya untuk percobaan
-    function datatables(Request $request){
+    function datatables(Request $request)
+    {
         // dd("asd");
         if ($request->ajax()) {
             $data = Link::select('*');
 
             return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $btn = '<button id="deletetBtn">Hapus</button>
+                           <button id="viewBtn">Detail</button>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+
+    function deleteLink(Request $request)
+    {
+        $data = $request->all();
+        $link = Link::find($data['id']);
+        $link->delete();
+        return response()->json(['success' => 'Data is deleted'], 200);
+    }
+
+    function deleteUser(Request $request)
+    {
+        $data = $request->all();
+        $user = User::find($data['id']);
+        $user->delete();
+        return response()->json(['success' => 'Data is deleted'], 200);
+    }
+
+    function getUserLinkList(Request $request, $id_user)
+    {
+     
+        if ($request->ajax()) {
+            $data = Link::where('id_user', $id_user)->get();
+
+            return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
-                           $btn = '<button id="deletetBtn">Hapus</button>
-                           <button id="viewBtn">Detail</button>';
+                           $btn = 
+                        //    '<button id="viewBtn" class="btn btn-info">Visit</button>'
+                           "<a href='/preview/$row->short_link'" . ' class="btn btn-info ">Lihat</a>'
+                           
+                           ;
                            return $btn;
                     })
                     ->rawColumns(['action'])
                     ->make(true);
         }
-    }
 
-    function deleteLink(Request $request){
-            $data = $request->all();
-            $link = Link::find($data['id']);
-            $link->delete();
-            return response()->json(['success' => 'Data is deleted'], 200);
     }
-
-    function deleteUser(Request $request){
-        $data = $request->all();
-        $user = User::find($data['id']);
-        $user->delete();
-        return response()->json(['success' => 'Data is deleted'], 200);
-}
+    
 }
