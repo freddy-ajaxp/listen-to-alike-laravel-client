@@ -330,7 +330,7 @@
 
                 @foreach($data['platforms'] as $platform)
                 <div class='music-link__container' data-url="{{$platform['url_platform'] }}">
-                    <img class='music-link__logo' src="https://res.cloudinary.com/dfpmdlf8l/image/upload/v1606372945/assets/logo/{{$platform['jenis_platform'] }}.svg" alt="{{$platform['jenis_platform'] }}">
+                    <img class='music-link__logo' onerror=this.src="{{asset('images/icons/headphone.svg')}}"   src="https://res.cloudinary.com/dfpmdlf8l/image/upload/v1606372945/assets/logo/{{$platform['jenis_platform'] }}.svg" style="max-height:40px">
                     <button class='music-link__button' data-url="{{$platform['url_platform'] }}">{{$platform['text'] }}</button>
                 </div>
                 @endforeach

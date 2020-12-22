@@ -106,6 +106,7 @@ class ListPlatformController extends Controller
            
             //create object dulu 
             $link = new Link;
+            $link = Link::find($data['id']);
 
             //BAGIAN upload to cloud
             if($request->file('image')){
@@ -115,8 +116,8 @@ class ListPlatformController extends Controller
             }
 
             //BAGIAN UPDATE DATA LINK
-            //trial
-            $link = Link::find($data['id']);
+            //trial 
+            
             $link->video_embed_url = $data['video_embed_url'];
             $link->title = $data['link_title'];
             $link->save();
@@ -194,10 +195,16 @@ class ListPlatformController extends Controller
 
     function preview(Request $request, $short_link)
     {
+        
         $link['link'] = Link::where('short_link', $short_link)->get()->toArray();
+        if($link['link']==null){
+            abort(404);
+            // return view('404')->with('data', $link);
+        }
         $link['platforms'] = Link_platform::where('id_link', $link['link'][0]['id'])->get(['id', 'jenis_platform', 'url_platform', 'text']);
         $link['video_id'] = strrchr($link['link'][0]['video_embed_url'], 'embed/');
         $link['image_path'] = $link['link'][0]['image_path'];
+        
         // return response()->json($link);
         // return view('layouts/preview')->with('data',$link);
         return view('components/user/view/preview')->with('data', $link);
@@ -213,6 +220,17 @@ class ListPlatformController extends Controller
             throw $th;
         }
     }
+    
+    function addModal(Request $request)
+    {
+        $data = $request->all();
+        try {
+            return view('components/user/partials/modal-add'); //ini untuk dynamic modal   
+         } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+    
 
 
     function customModal(Request $request)

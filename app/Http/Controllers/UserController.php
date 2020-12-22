@@ -63,6 +63,11 @@ class UserController extends Controller
             return redirect('/register')->with('error', 'Passwords does not match');
         }
 
+        if (strlen($data['password']) < 8) {
+            // return response()->json(['error' => 'password does not match'], 400);
+            return redirect('/register')->with('error', 'Passwords minimal 8 character');
+        }
+
         $result = User::where('email', $data['email'])->get()->toArray();
 
         //check exist email

@@ -135,6 +135,8 @@
 
 </script>
 <script>
+    
+
     $(document).ready(function() {
 
         var count = 0;
@@ -174,7 +176,9 @@
                     hard.co.ded/${data.link}
                 </a>
                 <span style="color:#888;font-size:0.85em">${data.title}</span>
-                <div class="presignup-link__buttons" style="float:right"><button class="btn btn-sm presignup-link__copy btn-secondary mr-1">Copy</button><a href="/register" class="btn btn-sm btn-secondary presignup-link__edit mr-1">Edit</a><a target="_blank" href="preview/${data.link}" class="btn btn-sm btn-secondary presignup-link__copy">View
+                <div class="presignup-link__buttons" style="float:right">
+
+                <a href="/dasboard" class="btn btn-sm btn-secondary mr-1">Edit</a><a target="_blank" href="preview/${data.link}" class="btn btn-sm btn-secondary ">View
                     </a></div>
             </div>
                 `);
@@ -184,17 +188,19 @@
         function dynamic_field(number) {
             html = '<tr>';
             html += `
-            <div class="music-link__platform" data-platform='spotify'>
+            <div class="music-link__platform">
             <td style="width: 20%">
-            <div>
                         <label for="form-control form-control-sm"> Platform </label>
+
+                                   
+                    <select name="data_platform[]" class="form-control form-control-sm">
+                    <div id="platform-container">     
+                            <option disabled selected value=null>Platform</option>
+                            <option value="youtube" >Youtube</option>
+                            <option value="spotify">Spotify</option>
                     </div>
-                <select name="data_platform[]" class="form-control form-control-sm">
-                        <option disabled selected value=null>Platform</option>
-                        <option value="youtube" >Youtube</option>
-                        <option value="spotify">Spotify</option>
                     </select>
-                                </td>`;
+            </td>`;
             html += `
             <td style="width: 50%">
             <div class="form-group">
@@ -272,6 +278,8 @@
             }
         });
 
+        
+    
         $('#dynamic_form').on('submit', function(event) {
             event.preventDefault();
             var IsValid = $("#dynamic_form").valid();
@@ -342,8 +350,8 @@
                 })
             }
         });
-
     });
+   
 </script>
 
 <script type="text/javascript" src="{{ asset('assets/js/form-validation.js') }}"></script>

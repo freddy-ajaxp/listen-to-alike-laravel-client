@@ -84,6 +84,7 @@ Route::get('user/logout', 'UserController@logout');
 //AJAX TABLE MODAL ONLY NO RETRIEVING DATA
 Route::get('table/delete-confirmation', 'ListPlatformController@deleteModal')->name('table.modal-delete');
 Route::get('table/custom-confirmation', 'ListPlatformController@customModal')->name('table.modal-custom');
+Route::get('table/add-modal', 'ListPlatformController@addModal')->name('table.modal-add');
 
 //AJAX TABLE
 Route::get('table/getAllLinks', 'TableController@getAllLinks')->name('table.all-links');

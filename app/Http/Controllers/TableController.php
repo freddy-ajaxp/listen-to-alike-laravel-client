@@ -35,9 +35,10 @@ class TableController extends Controller
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
                            $btn = '<button id="editBtn" class="btn btn-primary">Edit</button> 
-                           <button id="deleteBtn" class="btn btn-danger">Delete</button>
-                           <button id="customBtn" class="btn btn-info">Customize</button>
-                           <button id="viewBtn" class="btn btn-success">Visit</button>';
+                           <button id="deleteBtn" class="btn btn-danger"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Delete</button>
+                           <button id="customBtn" class="btn btn-info">Customize</button> '
+                           . "<a href='/preview/$row->short_link'" . ' target="_blank" class="btn btn-success ">Lihat</a>';
+                        //    <button id="viewBtn" class="btn btn-success">Visit</button>
                            return $btn;
                     })
                     ->rawColumns(['action'])

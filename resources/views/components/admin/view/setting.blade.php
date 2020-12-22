@@ -41,7 +41,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Platform URL</label>
-                                <input type="text" class="form-control" name="platform_url" placeholder="cth: https://soundcloud.com/arianagrande/7-rings">
+                                <input type="text" class="form-control" name="platform_url" placeholder="cth: https://soundcloud.com/">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputFile">Logo (format .SVG)</label>
@@ -219,15 +219,24 @@
                 , processData: false
                 , beforeSend: function() {
                     {
-                        toggleSpinner(true, "Submitting Your Data");
+                        toggleSpinner(true, "Processing your request");
                         
                     }
                 }
                 , success: function(data) {
                     {
+                        toggleSpinner(false, "");
                         location.reload();
                         
                     }
+                }
+                 , error: function(xhr, ajaxOptions, thrownError) {
+                    Swal.fire({
+                        title: 'Oops! ' +ajaxOptions 
+                        , text: "error occured"
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
                 }
             })
         });
@@ -255,7 +264,7 @@
                 , dataType: 'json'
                 , beforeSend: function() {
                     {
-                        toggleSpinner(true, "Submitting Your Data");
+                        toggleSpinner(true, "Processing your request");
                     }
                 }
                 , success: function(data) {
@@ -263,6 +272,14 @@
                         location.reload();
 
                     }
+                }
+                 , error: function(xhr, ajaxOptions, thrownError) {
+                    Swal.fire({
+                        title: 'Oops! ' +ajaxOptions 
+                        , text: "error occured"
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
                 }
             })
         });

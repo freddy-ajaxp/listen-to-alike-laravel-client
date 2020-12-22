@@ -38,7 +38,7 @@
                                 <div class="col-12">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h3 class="card-title">DataTable with default features</h3>
+                                            <h3 class="card-title">Your Music Links</h3>
                                         </div>
 
                                         <div id="overlay" style="display:none" onclick='toggleSpinner(false)'>

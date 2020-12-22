@@ -49,7 +49,7 @@
                 <div id="modal-dynamic-form">
                     @foreach ($result as $index =>$dt)
                     <div class="form-group">
-                        <input type="hidden" name="id_platforms[]" value="${eachData.id}" />
+                        <input type="hidden" name="id_platforms[]" value= {{$dt['id']}} />
                         <div class="form-row">
                             <div class="col-sm-2">
                                 <select id="data_platform{{$index}}" name="data_platform[]" class="form-control form-control-sm">

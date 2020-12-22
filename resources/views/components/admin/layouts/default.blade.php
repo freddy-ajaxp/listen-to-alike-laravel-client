@@ -5,22 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>@yield('title')</title>
     @stack('stylesheets')
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-    {{-- <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/adminlte.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.css') }}">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/datatables.min.css" /> --}}
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/spinner.css') }}">
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
         <!-- Navbar -->
+        
         @include('components/admin/components/navbar')
         <!-- /.navbar -->
         @include('components/admin/components/sidebar')
         <!-- Content Wrapper. Contains page content -->
+        
+        @include('components/admin/components/spinner')
 
-        {{-- @include('components/admin/'.$components['main']) --}}
         @yield('content')
 
         <footer class="main-footer">
@@ -35,3 +35,4 @@
 
 
 @stack('javascript')
+<script type="text/javascript" src="{{ asset('assets/js/spinner.js') }}"></script>

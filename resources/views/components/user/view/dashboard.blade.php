@@ -19,7 +19,7 @@
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h3 class="card-title">DataTable with default features</h3>
+                                        <h3 class="card-title">Your Music links</h3>
                                     </div>
 
                                     {{-- <div id="overlay" style="display:none" onclick='toggleSpinner(false)'>
@@ -90,7 +90,8 @@
 
 @push('javascript')
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+{{-- <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script> --}}
+<script type="text/javascript" src="{{ asset('assets/js/jquery.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/bootstrap.js') }}"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
@@ -132,21 +133,39 @@
                 }
             , ]
         });
-        $("div.toolbar").html('<button style type="button" name="remove" id="addNewLink" class="btn btn-info btn-sm remove">Create Link</button>');
+        $("div.toolbar").html('<button style type="button" id="addNewLink" class="btn btn-info btn-sm remove">Create Link</button>');
 
         $("#btn-dashboard").click(function() {
             localStorage.clear();
         });
 
         $("#addNewLink").click(function() {
-            $('#modal-add-link').modal('show');
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , url: '{{ route("table.modal-add") }}'
+                , method: 'get'
+                , success: function(linksPlatform) {
+                    $('#modals .dynamic-modal-container').html(linksPlatform)
+                    $('#modals').modal('show');                    
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    Swal.fire({
+                        title: ajaxOptions + '!'
+                        , text: xhr.responseText
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+                }
+            , })
+
+
         });
 
         $('#example tbody').on('click', '#deleteBtn', function() {
             var data = table.row($(this).parents('tr')).data();
-            $('p[name="confirm-delete-name"]').text(data.title);
-            $('#id_delete').val(data.id);
-            $('#modals').modal('show');
+            
 
              $.ajax({
                 headers: {
@@ -154,15 +173,16 @@
                 }
                 , url: '{{ route("table.modal-delete") }}'
                 , method: 'get'
-                , dataType: 'json'
                 , data: {
                     id: data.id
                 , }
                 , success: function(linksPlatform) {
-                    alert("success")
+                    $('#modals .dynamic-modal-container').html(linksPlatform)
+                    $('#modals').modal('show');
+                    $('#id_delete').val(data.id);
+                    
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
-                    $('#modals .dynamic-modal-container').html(xhr.responseText)
                     Swal.fire({
                         title: ajaxOptions + '!'
                         , text: xhr.responseText
@@ -183,9 +203,9 @@
                 , url: '{{ route("table.modal-custom") }}'
                 , method: 'get'
                 , success: function(modal) {
-                    $('#modals').modal('show');
                     $('#modals .dynamic-modal-container').html(modal)
-                     $('input[name="custom-link"]').val(data.short_link);
+                    $('#modals').modal('show');
+                    $('input[name="custom-link"]').val(data.short_link);
                     $('#id_custom').val(data.id);
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
@@ -361,7 +381,7 @@
         $(this).closest('.form-group').remove();
     });
 
-    $('#form-add-link').on('submit', function(event) {
+    $(document).on('submit', '#form-add-link' , function(event) {
         event.preventDefault();
         var files = $('#image-add').get(0).files;
         formData = new FormData();
@@ -426,8 +446,7 @@
             }
         })
     });
-
-    $('#form-platform').on('submit', function(event) {
+    $(document).on('submit', '#form-platform' , function(event) {
         event.preventDefault();
         var files = $('#image').get(0).files;
         formData = new FormData();
@@ -457,7 +476,15 @@
             .map(function() {
                 return ' ' + $(this).val();
             }).get();
-
+        
+        {{-- console.log(id);
+        console.log(link_title);
+        console.log( files[0]); //only 1 image, the first index     
+        console.log( video_embed_url);
+        console.log( id_platforms);
+        console.log( data_platform);
+        console.log( data_url_platform);
+        console.log( data_text); --}}
 
 
         //appending data to sent
@@ -491,7 +518,7 @@
                 let returnMessage = JSON.parse(xhr.responseText)
                 Swal.fire({
                     title: ajaxOptions + '!'
-                    , text: returnMessage.failed
+                    , text: returnMessage.error
                     , icon: 'error'
                     , confirmButtonText: 'Confirm'
                 })
@@ -502,7 +529,7 @@
         })
     });
 
-    $('#form-custom').on('submit', function(event) {
+    $(document).on('submit', '#form-custom' , function(event) {
         event.preventDefault();
         id = $('#id_custom').val()
         customLink = $('input[name="custom-link"]').val()
@@ -541,11 +568,11 @@
         })
 
     });
-    $('#form-delete').on('submit', function(event) {
+    
+    $(document).on('submit','#form-delete',function(event){
         event.preventDefault();
         id = $('#id_delete').val()
         //log for debug purpose
-
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -561,7 +588,7 @@
                 toggleSpinner(true, "Deleting Your Data");
             }
             , success: function(data) {
-                location.reload();
+                {{-- location.reload(); --}}
             }
             , error: function(xhr, ajaxOptions, thrownError) {
                 let returnMessage = JSON.parse(xhr.responseText)

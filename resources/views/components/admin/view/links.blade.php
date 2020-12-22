@@ -47,9 +47,9 @@
             </div>
         </div>
     </section>
-
     <!-- modal delete -->
     @include('components.admin.components.modals')
+
     <!-- modal delete end -->
 
 </div>
@@ -60,6 +60,7 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/adminlte.min.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.css') }}">
+
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/datatables.min.css" />
 @endpush
@@ -68,43 +69,14 @@
 @push('javascript')
 <script type="text/javascript" src="{{ asset('assets/js/jquery.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/bootstrap.js') }}"></script>
+
 <script type="text/javascript" src="{{ asset('assets/js/adminlte.js') }}"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="{{ asset('assets/js/spinner.js') }}"></script>
 <script>
     //init datatable
 
     $(document).ready(function() {
      counter = 0;
-    {{-- var table = $('#example').DataTable({
-        "ajax": {
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-            , url: '{{ route("admin.all-links") }}'
-            , method: 'get'
-            , contentType: false
-            , processData: false
-        , }
-        , "columns": [{
-                "data": "title"
-            }
-            , {
-                "data": "short_link"
-            }
-            , {
-                "data": "image_path"
-            }
-            , {
-                "data": "video_embed_url"
-            }
-            , {
-                "defaultContent": `
-                    <button id='deletetBtn'>Hapus</button>
-                    <button id='viewBtn'>Detail</button>`
-            },
-        ]
-    }); --}}
 
         //serverside
         var table = $('#example').DataTable({
@@ -145,10 +117,10 @@
         })
     });
         //submit form delete links
-        $('#form-delete-link').on('submit', function(event) {
+        $(document).on('submit', "#form-delete-link" ,  function(event) {
             event.preventDefault();
+
             id_link = $('#id_delete_link').val();
-            alert(id_link)
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -161,14 +133,24 @@
                 , dataType: 'json'
                 , beforeSend: function() {
                     {
-                        {{-- toggleSpinner(true, "Submitting Your Data"); --}}
+                        toggleSpinner(true, "Submitting Your Data");
                     }
                 }
                 , success: function(data) {
-                    {
+                        toggleSpinner(false, "");
                         location.reload();
-
-                    }
+                },
+                complete: function() {
+                        toggleSpinner(false, "");
+                        location.reload();
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    Swal.fire({
+                        title: 'Oops!   ' +ajaxOptions 
+                        , text: "error occured"
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
                 }
             })
         });

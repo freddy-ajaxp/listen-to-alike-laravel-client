@@ -128,13 +128,22 @@
                 }
                 , dataType: 'json'
                 , beforeSend: function() {
-                    
+                    toggleSpinner(true, "Deleteing This User Account");
                 }
                 , success: function(data) {
                     {
+                        toggleSpinner(false, "");
                         location.reload();
 
                     }
+                }
+                 , error: function(xhr, ajaxOptions, thrownError) {
+                    Swal.fire({
+                        title: 'Oops! ' +ajaxOptions 
+                        , text: "error occured"
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
                 }
             })
         });
