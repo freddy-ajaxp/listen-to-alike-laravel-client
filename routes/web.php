@@ -35,11 +35,11 @@ Route::get('/dashboard', function () {
 
 Route::get('/login', function () {
     return view('components/user/view/login');
-})->name('view.login');
+})->name('view.login')->middleware('sessionvalidator');
 
 Route::get('/register', function () {
     return view('components/user/view/register');
-});
+})->middleware('sessionvalidator');
 
 Route::get('/logout', function (Request $request) {
     $request->session()->forget('email');
@@ -69,6 +69,8 @@ Route::get('/admin/setting', function () {
 
 
 Route::get('/preview/{short_link}', 'ListPlatformController@preview');
+Route::get('/detail/{short_link}', 'ListPlatformController@detail');
+Route::post('/click', 'ListPlatformController@viewCtr');
 
 // Route::get('dynamic-field', 'ListPlatformController@index');
 
@@ -81,14 +83,15 @@ Route::post('user/register', 'UserController@register');
 Route::get('user/logout', 'UserController@logout');
 
 
-//AJAX TABLE MODAL ONLY NO RETRIEVING DATA
+//PARTIAL VIEW
 Route::get('table/delete-confirmation', 'ListPlatformController@deleteModal')->name('table.modal-delete');
 Route::get('table/custom-confirmation', 'ListPlatformController@customModal')->name('table.modal-custom');
 Route::get('table/add-modal', 'ListPlatformController@addModal')->name('table.modal-add');
+Route::get('partial/view-select', 'ListPlatformController@viewSelect');
 
 //AJAX TABLE
 Route::get('table/getAllLinks', 'TableController@getAllLinks')->name('table.all-links');
-Route::post('table/getLinksById', 'TableController@getLinksById')->name('table.get-link-by-platform');
+Route::post('table/getLinksById', 'TableController@getLinksById')->name('table.get-link-by-id');
 Route::post('table/dummy', 'TableController@dummy')->name('table.dummy');
 Route::post('table/deleteLinkById', 'ListPlatformController@deleteLinkById')->name('table.delete-link');
 Route::post('table/custom', 'TableController@patchCustomLink')->name('table.custom-link');

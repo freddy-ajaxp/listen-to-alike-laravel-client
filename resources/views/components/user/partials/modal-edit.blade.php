@@ -46,50 +46,43 @@
                 <div>
                     <button type="button" name="add" id="add" class="btn btn-info btn-sm">Add New Row</button>
                 </div>
+                <table class="table table-borderless " id="user_table">
+                    <tbody id="select-master">                            
+                    </tbody>
+                </table>
                 <div id="modal-dynamic-form">
-                    @foreach ($result as $index =>$dt)
+                @include('components/user/partials/select-platform')
+                {{-- ini untuk yg lama, yg baru dari select-platform --}}
+                    {{-- @foreach ($result as $index =>$dt)
                     <div class="form-group">
-                        <input type="hidden" name="id_platforms[]" value= {{$dt['id']}} />
+                        <input type="hidden" name="id_platforms[]" value={{$dt['id']}} />
                         <div class="form-row">
                             <div class="col-sm-2">
                                 <select id="data_platform{{$index}}" name="data_platform[]" class="form-control form-control-sm">
                                     <option disabled selected value=null>Platform</option>
-                                    <option value="youtube">Youtube</option>
-                                    <option value="spotify">Spotify</option>
+                                    @foreach($platforms as $key => $platform)
+                                    <option value="{{$platform['platform_name']}}">{{$platform['platform_name']}}</option>
+                                    @endforeach
                                 </select>
+                                </div>
                             </div>
                             <div class="col-sm-7">
                                 <input type="text" name="data_url_platform[]" class="form-control form-control-sm" placeholder="URL dari platform" value="{{ $dt['url_platform'] }}" />
                             </div>
                             <div class="col-sm-2">
                                 <select id="data_text{{$index}}" name="data_text[]" class="music-link__button-text-select">
-                                    <option selected="selected" value="Listen">Listen</option>
-                                    <option value="Purchase">Purchase</option>
-                                    <option value="Play">Play</option>
-                                    <option value="Buy">Buy</option>
-                                    <option value="Buy Online">Buy Online</option>
-                                    <option value="Download">Download</option>
-                                    <option value="Stream">Stream</option>
-                                    <option value="Go To">Go To</option>
-                                    <option value="Visit">Visit</option>
-                                    <option value="Watch">Watch</option>
-                                    <option value="View">View</option>
-                                    <option value="Pre-Order">Pre-Order</option>
-                                    <option value="Pre-Save">Pre-Save</option>
-                                    <option value="Pre-Add">Pre-Add</option>
-                                    <option value="Buy Tickets">Buy Tickets</option>
-                                    <option value="Get Tickets">Get Tickets</option>
-                                    <option value="View Ticket Prices">View Ticket Prices</option>
-                                    <option value="Discover">Discover</option>
+                                    @foreach($texts as $index => $text)
+                                    <option value="{{$text['text']}}">{{$text['text']}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="col-sm-1">
                                 <button type="button" name="remove" id="" class="btn btn-danger btn-sm remove">X</button>
                             </div>
                         </div>
-                    
+
                     </div>
-                    @endforeach
+                    @endforeach --}}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

@@ -4,17 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class List_text extends Model
 {
-
-    protected $primaryKey = 'id';
     protected $fillable = [
-        'name', 'email', 'password',
+        'text'
     ];
-    protected $table = 'users';
+    protected $primaryKey = 'id';
+    protected $table = 'list_text';
+	public $timestamps = false;
     const CREATED_AT = 'createdAt';
     const UPDATED_AT = 'updatedAt';
-
-
-
 }

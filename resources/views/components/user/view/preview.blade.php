@@ -296,7 +296,9 @@
 
 
 @section('content')
+
 <div id="container" class="container">
+
     {{-- menentukan gambar di background, gambar menjadi prioritas ditampilkan barukemudian thumbnail video --}}
     <div id="bg_container" style="display: block;">
         @if($data['image_path'])
@@ -320,6 +322,7 @@
         @if($data['image_path'] && !$data['link'][0]['video_embed_url'])
         <img id="user-artwork" src="https://res.cloudinary.com/dfpmdlf8l/image/upload/{{$data['image_path']}}.jpg" style="display:block;width:100%;">
         @endif
+        <input type="hidden" name="id-link" value="{{$data['link'][0]['id']}}"/>
         <h1 class="platforms-list__name">
             {{$data['link'][0]['title']}}
         </h1>
@@ -331,7 +334,7 @@
                 @foreach($data['platforms'] as $platform)
                 <div class='music-link__container' data-url="{{$platform['url_platform'] }}">
                     <img class='music-link__logo' onerror=this.src="{{asset('images/icons/headphone.svg')}}"   src="https://res.cloudinary.com/dfpmdlf8l/image/upload/v1606372945/assets/logo/{{$platform['jenis_platform'] }}.svg" style="max-height:40px">
-                    <button class='music-link__button' data-url="{{$platform['url_platform'] }}">{{$platform['text'] }}</button>
+                    <button class='music-link__button' data-id-platform="{{$platform['id'] }}" data-url="{{$platform['url_platform'] }}">{{$platform['text'] }}</button>
                 </div>
                 @endforeach
             </div>
@@ -341,7 +344,7 @@
         @endif
     </div>
     <div style='position:relative;margin-bottom:1em;z-index:50'>
-        <a target="_blank" style='color:#ccc;text-decoration: none;font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px' href="https://li.sten.to/privacy">Privacy &amp; Cookies</a>
+        {{-- <a target="_blank" style='color:#ccc;text-decoration: none;font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px' href="https://li.sten.to/privacy">Privacy &amp; Cookies</a> --}}
     </div>
 </div>
 @endsection
@@ -358,7 +361,20 @@
 
         $(".music-link__button").click(function(e) {
             var loadurl = $(this).attr('data-url');
-            var win = window.open(loadurl, '_blank');
+            var idPlatform = $(this).attr('data-id-platform');
+            var idLink = $("input[name='id-link']").val();
+            var win = window.open(loadurl, '_blank');  
+
+             $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                    , url: '{{ url("/click") }}'
+                    , method: 'post'
+                    , data: { link_platform_id: idPlatform, link_id: idLink} 
+                    , dataType: 'json'
+                })
+
             if (win) {
                 //Browser has allowed it to be opened
                 win.focus();
@@ -366,6 +382,8 @@
                 //Browser has blocked it
                 alert('Please allow popups for this website');
             }
+
+
         });
     });
 

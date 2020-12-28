@@ -4,17 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class Visit extends Model
 {
-
-    protected $primaryKey = 'id';
+    
     protected $fillable = [
-        'name', 'email', 'password',
+        'link_id', 'ip'
     ];
-    protected $table = 'users';
+    protected $primaryKey = 'id';
+    protected $table = 'visits';
+	public $timestamps = true;
     const CREATED_AT = 'createdAt';
     const UPDATED_AT = 'updatedAt';
-
-
-
 }

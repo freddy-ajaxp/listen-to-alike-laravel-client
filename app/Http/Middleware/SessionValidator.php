@@ -23,24 +23,33 @@ class SessionValidator
 
     // dd(session()->get('admin'));
     if (session()->get('email') === null) {
-      return redirect("/login");
+      if ($request->is('login') || $request->is('register') ) {
+        return $next($request);
+
+      }
+      else {
+        return redirect("/login");
+      }
+      
     }
 
-
     if (session()->get('admin') == 1) {
-      if ($request->is('register') || $request->is('dashboard')) {
+      if ($request->is('register') || $request->is('dashboard') || $request->is('login')) {
         return redirect("/admin");
       } else {
         return $next($request);
       }
-    } elseif (session()->get('admin') == 0) {
-      if ($request->is('register') || $request->is('admin/*') || $request->is('admin')) {
+    } 
+    
+    if (session()->get('admin') == 0) {
+      if ($request->is('register') || $request->is('admin/*') || $request->is('admin') || $request->is('login')) {
         return redirect("/dashboard");
       } else {
         return $next($request);
       }
-    } elseif (!session()->has('email')) {
-      return redirect("/login");
-    }
+    } 
+    // elseif (!session()->has('email')) {
+    //   return redirect("/login");
+    // }
   }
 }

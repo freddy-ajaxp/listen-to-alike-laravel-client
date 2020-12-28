@@ -14,6 +14,7 @@
         </div>
     </div>
 
+    
     <div class="music-link__inputs-container" style='border-radius:1px;padding:4.5em 1em 1em 1em;'>
         <form method="post" id="dynamic_form" enctype="multipart/form-data">
             <div class="music-link__top-block">
@@ -75,17 +76,20 @@
                     </div>
                 </div>
             </div>
-
             <label class='d-block' style='color:#444'>Your platforms:</label>
             <div class="music-link__platforms" id="dynamic_platform">
-                <div class="table-responsive">
-                    <button type="button" name="add" id="add" class="btn btn-outline-secondary">Add New Row</button>
-                    <span id="result"></span>
+
+                <button type="button" name="add" id="add" class="btn btn-outline-secondary">Add New Row</button>
+                
+                
+                <span id="result"></span>
+                {{-- <div class="table-responsive">
                     <table class="table table-borderless " id="user_table">
-                        <tbody>
+                        <tbody id="select-master">
                         </tbody>
                     </table>
-                </div>
+                </div> --}}
+                <div id="modal-dynamic-form"></div>
             </div>
             <div>
                 <p class="music-link__error"></p>
@@ -105,7 +109,9 @@
 </div>
 @include('components/user/components/sponsors')
 @include('components/user/components/spinner')
+@include('components/user/components/modal-master')
 @include('components/user/components/alert')
+
 @endsection
 
 
@@ -117,6 +123,7 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/app.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/navbar.css') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">  
 
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/music-links.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/form-validation.css') }}">
@@ -127,7 +134,9 @@
 @push('javascript')
 <script type="text/javascript" src="{{ asset('assets/js/jquery.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/jquery.validate.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
 <script type="text/javascript" src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/js/bootstrap-select.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/spinner.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/alert.js') }}"></script>
 <script>
@@ -135,14 +144,19 @@
 
 </script>
 <script>
-    
-
     $(document).ready(function() {
-
         var count = 0;
+        var platformContainer;
         dynamic_field(count);
-        createTempLink();
+        {{-- createTempLink(); --}}
+        function dynamic_field() {
+            $.get("{{ url('partial/view-select') }}", function(data, status) {
+                platformContainer = data;
+                $('#modal-dynamic-form').append(platformContainer);
+            });
+        }
         count++;
+            $('select.selectpicker').selectpicker();
 
         //img preview
         $('#image').change(function() {
@@ -160,7 +174,7 @@
             $('#image-preview-container').attr('src', '');
             $("#clear-image").attr("hidden", true);
         });
-        
+
         //delete temp link when entering dashboard
         $("#btn-dashboard").click(function() {
             // localStorage.removeItem('links');
@@ -185,88 +199,16 @@
             });
         }
 
-        function dynamic_field(number) {
-            html = '<tr>';
-            html += `
-            <div class="music-link__platform">
-            <td style="width: 20%">
-                        <label for="form-control form-control-sm"> Platform </label>
 
-                                   
-                    <select name="data_platform[]" class="form-control form-control-sm">
-                    <div id="platform-container">     
-                            <option disabled selected value=null>Platform</option>
-                            <option value="youtube" >Youtube</option>
-                            <option value="spotify">Spotify</option>
-                    </div>
-                    </select>
-            </td>`;
-            html += `
-            <td style="width: 50%">
-            <div class="form-group">
-            <div class='music-link__platform__input music-link__platform__input__url'>
-                <div>
-                <label for="music-link__platform__url-input">URL</label>
-                </div>
-                <input type="text" id="platform${count}" name="data_url_platform[]" class="music-link__platform__url-input" placeholder="Enter Platform link"/>
-            </div>
-            </div>
-            </td>`;
-            html += `
-            <td style="width: 20%">
-            <div class='music-link__platform__input music-link__platform__input__button'>
-                    <div>
-                        <label> Button Text</label>
-                    </div>
-                    <select name="data_text[]" class="music-link__button-text-select">
-                        <option selected="selected" value="Listen" >Listen</option>
-                        <option value="Purchase">Purchase</option>
-                        <option value="Play">Play</option>
-                        <option value="Buy">Buy</option>
-                        <option value="Buy Online">Buy Online</option>
-                        <option value="Download">Download</option>
-                        <option value="Stream">Stream</option>
-                        <option value="Go To">Go To</option>
-                        <option value="Visit">Visit</option>
-                        <option value="Watch">Watch</option>
-                        <option value="View">View</option>
-                        <option value="Pre-Order">Pre-Order</option>
-                        <option value="Pre-Save">Pre-Save</option>
-                        <option value="Pre-Add">Pre-Add</option>
-                        <option value="Buy Tickets">Buy Tickets</option>
-                        <option value="Get Tickets">Get Tickets</option>
-                        <option value="View Ticket Prices">View Ticket Prices</option>
-                        <option value="Discover">Discover</option>
-                    </select>
-                </div>
-            </td>`;
-
-
-            if (number > 1) {
-                html += `<td style="width: 10%"> 
-                        <div class="music-link__reposition">
-            <button type="button" name="remove" id="" class="btn btn-danger remove">X</button>
-            </div>
-            </td></tr>`;
-                $('tbody').append(html);
-            } else {
-                html += `<td style="width: 10%"> 
-                        <div class="music-link__reposition">
-                               <button type="button" name="remove" id="" class="btn btn-danger remove">X</button>
-                            </div>
-                              </td></tr>`;
-                $('tbody').html(html);
-            }
-        }
 
         $(document).on('click', '#add', function() {
             count++;
-            dynamic_field(count);
+            $(platformContainer).appendTo("#modal-dynamic-form");
         });
 
         $(document).on('click', '.remove', function() {
             count--;
-            $(this).closest("tr").remove();
+        $(this).closest('.form-group').remove();
         });
 
         $('#checkbox').click(function() {
@@ -278,8 +220,6 @@
             }
         });
 
-        
-    
         $('#dynamic_form').on('submit', function(event) {
             event.preventDefault();
             var IsValid = $("#dynamic_form").valid();
@@ -307,11 +247,10 @@
                     }).get();
 
                 //log for debug purpose
-                console.log('data_platform', data_platform)
-                console.log('data_url_platform', data_url_platform)
-                console.log('data_text', data_text)
-                console.log('files[0]', files[0])
-
+                {{-- console.log('data_platform', data_platform) --}}
+                {{-- console.log('data_url_platform', data_url_platform) --}}
+                {{-- console.log('data_text', data_text) --}}
+                {{-- console.log('files[0]', files[0]) --}}
 
                 //appending data to sent
                 formData.append('link_title', link_title);
@@ -323,35 +262,44 @@
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    enctype: 'multipart/form-data',
-                    url: '{{ route("dynamic-field.insert") }}',
-                    method: 'post',
-                    data: formData,
-                    dataType: 'json',
-                    contentType: false,
-                    processData: false,
-                    beforeSend: function() {
+                    }
+                    , enctype: 'multipart/form-data'
+                    , url: '{{ route("dynamic-field.insert") }}'
+                    , method: 'post'
+                    , data: formData
+                    {{-- , dataType: 'json' --}}
+                    , contentType: false
+                    , processData: false
+                    , beforeSend: function() {
                         toggleSpinner(true, "Submitting Your Data");
-                    },
-                    success: function(data) {
-                        var a = [];
+                    }
+                    , success: function(html) {
+
+                        //ini yg lama yg gapake mdal
+                        {{-- var a = [];
+                        alert("what");
                         dataLink = JSON.parse(localStorage.getItem('links')) || [];
                         dataLink.push(data.result);
                         localStorage.setItem('links', JSON.stringify(dataLink))
                         toggleSpinner(false, "");
-                        window.location.reload();
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {
+                        window.location.reload(); --}}
+                        
+                        //ini yg baru dgn modal konfirmasi
+                        toggleSpinner(false, "");
+                        $('#modals .dynamic-modal-container').html(html)
+                        $('#modals').modal('show');
+
+                    }
+                    , error: function(xhr, ajaxOptions, thrownError) {
                         let returnMessage = JSON.parse(xhr.responseText)
-                            toggleSpinner(false, "");
-                            toggleAlert(true, "error", ajaxOptions, returnMessage.failed);
+                        toggleSpinner(false, "");
+                        toggleAlert(true, "error", ajaxOptions, returnMessage.failed);
                     }
                 })
             }
         });
     });
-   
+
 </script>
 
 <script type="text/javascript" src="{{ asset('assets/js/form-validation.js') }}"></script>

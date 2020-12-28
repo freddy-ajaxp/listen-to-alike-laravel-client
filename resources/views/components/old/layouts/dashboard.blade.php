@@ -299,7 +299,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: '{{ route("table.get-link-by-platform") }}',
+                url: '{{ route("table.get-link-by-id") }}',
                 method: 'post',
                 dataType: 'json',
                 data: {
@@ -497,23 +497,8 @@
                                 <div class="col-sm-2">
                                     <select id="data_text${counter}" name="data_text[]" class="music-link__button-text-select">
                                     <option selected="selected" value="Listen" >Listen</option>
-                                    <option value="Purchase">Purchase</option>
-                                    <option value="Play">Play</option>
-                                    <option value="Buy">Buy</option>
-                                    <option value="Buy Online">Buy Online</option>
-                                    <option value="Download">Download</option>
-                                    <option value="Stream">Stream</option>
-                                    <option value="Go To">Go To</option>
-                                    <option value="Visit">Visit</option>
-                                    <option value="Watch">Watch</option>
-                                    <option value="View">View</option>
-                                    <option value="Pre-Order">Pre-Order</option>
-                                    <option value="Pre-Save">Pre-Save</option>
-                                    <option value="Pre-Add">Pre-Add</option>
-                                    <option value="Buy Tickets">Buy Tickets</option>
-                                    <option value="Get Tickets">Get Tickets</option>
-                                    <option value="View Ticket Prices">View Ticket Prices</option>
-                                    <option value="Discover">Discover</option>                                    </select>
+                                    <option value="Purchase">Old</option>
+                                                                      </select>
                                 </div>
                                 <div class="col-sm-1">
                                 <button type="button" name="remove" id="" class="btn btn-danger btn-sm remove">X</button>
@@ -542,24 +527,9 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <select name="data_text[]" class="music-link__button-text-select">
-                                    <option selected="selected" value="Listen" >Listen</option>
+                                    <option selected="selected" value="Listen" >Old</option>
                                     <option value="Purchase">Purchase</option>
-                                    <option value="Play">Play</option>
-                                    <option value="Buy">Buy</option>
-                                    <option value="Buy Online">Buy Online</option>
-                                    <option value="Download">Download</option>
-                                    <option value="Stream">Stream</option>
-                                    <option value="Go To">Go To</option>
-                                    <option value="Visit">Visit</option>
-                                    <option value="Watch">Watch</option>
-                                    <option value="View">View</option>
-                                    <option value="Pre-Order">Pre-Order</option>
-                                    <option value="Pre-Save">Pre-Save</option>
-                                    <option value="Pre-Add">Pre-Add</option>
-                                    <option value="Buy Tickets">Buy Tickets</option>
-                                    <option value="Get Tickets">Get Tickets</option>
-                                    <option value="View Ticket Prices">View Ticket Prices</option>
-                                    <option value="Discover">Discover</option>                                    </select>
+                                                                        </select>
                                 </div>
                                 <div class="col-sm-1">
                                 <button type="button" name="remove" id="" class="btn btn-danger btn-sm remove">X</button>

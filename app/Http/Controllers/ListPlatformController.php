@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Link;
 use App\Link_platform;
 use App\List_platform;
+use App\List_text;
 use App\User;
+use App\Clickthrough;
+use App\Visit;
 use Illuminate\Support\Facades\Hash;
 use Dotenv\Result\Result;
 use Illuminate\Http\Request;
@@ -24,6 +27,7 @@ class ListPlatformController extends Controller
 
     function insert(Request $request)
     {
+        $referer = request()->headers->get('referer');
         if ($request->ajax()) {
             $data = $request->all();
 
@@ -89,13 +93,18 @@ class ListPlatformController extends Controller
             }
         }
         $dataReturn = array(
+            //yg lama
+            // 'link' => $link->short_link,
+            // 'slug' => $link->video_embed_url,
+            // 'title' => $link->title
+
+            //yg baru
             'link' => $link->short_link,
-            'slug' => $link->video_embed_url,
             'title' => $link->title
         );
-        // dd($data_platform, $data_url_platform, $data_text); //debug all data
         // return Response()->json(array('success'=>true,'result'=>$uploadedFileUrl->getPublicId()));        
-        return Response()->json(array('success' => true, 'result' => $dataReturn));
+        // return Response()->json(array('success' => true, 'result' => $dataReturn));
+        return view('components/user/partials/modal-created')->with(["data" => $dataReturn ]); //ini untuk dynamic modal
     }
 
     function upsert(Request $request)
@@ -195,11 +204,25 @@ class ListPlatformController extends Controller
 
     function preview(Request $request, $short_link)
     {
-        
+        $ip = $request->ip();
+        $referer = request()->getHost();
+
         $link['link'] = Link::where('short_link', $short_link)->get()->toArray();
         if($link['link']==null){
             abort(404);
             // return view('404')->with('data', $link);
+        }
+
+        //if IP had not visited that link
+        $result = Visit::where('link_id', $link['link'][0]['id'])->get()->toArray();
+        if($result==null){
+            $visit = new Visit;
+            $visit->link_id  = $link['link'][0]['id'];
+            $visit->ip  = $ip;
+            $visit->referer = $referer;
+            $visit->createdAt = date("Y-m-d");
+            $visit->updatedAt = date("Y-m-d");
+            $visit->save();
         }
         $link['platforms'] = Link_platform::where('id_link', $link['link'][0]['id'])->get(['id', 'jenis_platform', 'url_platform', 'text']);
         $link['video_id'] = strrchr($link['link'][0]['video_embed_url'], 'embed/');
@@ -210,15 +233,70 @@ class ListPlatformController extends Controller
         return view('components/user/view/preview')->with('data', $link);
     }
 
+    function detail(Request $request, $short_link){
+        $ip = $request->ip();
+        $id_user = $request->session()->get('id');
+        $data['link'] = 
+
+        DB::table('links')
+        ->select(DB::raw('*, (SELECT count(*) FROM `visits` WHERE `visits`.`link_id` = `links`.`id`) AS `count`'))
+        ->where('short_link', '=', $short_link) 
+        ->get();
+
+        $data['link']->transform(function($i) {
+            return (array)$i;
+        });
+        $array = $data['link']->toArray();
+        if($data['link']==null){
+            abort(404);
+        }
+        $data['platform'] = DB::table('link_platforms')
+        ->select(DB::raw('*, (SELECT count(*) FROM `clickthroughs` WHERE `clickthroughs`.`link_platform_id` = `link_platforms`.`id`) AS `count`'))
+        ->where('id_link', '=', $data['link'][0]['id']) 
+        ->get()->toArray();
+
+        $data['referer'] = DB::table('visits')
+        ->select('referer', DB::raw('COUNT(*) AS `count`'))
+        ->groupBy('referer')
+        ->where('link_id', '=', $data['link'][0]['id']) 
+        ->get()->toArray();
+        // dd( $data['referer']);
+
+        return view('components/user/view/detail-link')->with('data', $data);
+    }
+
+    function viewCtr(Request $request)
+    {
+        $data = $request->all();
+        $ip = $request->ip();
+            $result = Clickthrough::where('link_id', $data['link_id'])->where('link_platform_id', $data['link_platform_id'])->where('ip', $ip)->get()->toArray();
+
+            if($result==null){
+                $clickthrough = new Clickthrough;
+                $clickthrough->link_id  = $data['link_id'];
+                $clickthrough->link_platform_id  = $data['link_platform_id'];
+                $clickthrough->ip  = $ip;
+                $clickthrough->createdAt = date("Y-m-d");
+                $clickthrough->updatedAt = date("Y-m-d");
+                $clickthrough->save();
+            }
+    }
+    
     function deleteModal(Request $request)
     {
         $data = $request->all();
         try {
             return view('components/user/partials/modal-delete'); //ini untuk dynamic modal   
-            // return response()->json($result); //ini untuk static modal
         } catch (\Throwable $th) {
             throw $th;
         }
+    }
+
+    function viewSelect(Request $request)
+    {
+        $platforms = List_platform::get(['id','platform_name','logo_image_path','platform_regex'])->toArray();
+        $text = List_text::get(['id','text'])->toArray();
+        return view('components/user/partials/select-platform')->with(['platforms' => $platforms, 'texts'=>$text, 'emptyLayout'=>true]); 
     }
     
     function addModal(Request $request)

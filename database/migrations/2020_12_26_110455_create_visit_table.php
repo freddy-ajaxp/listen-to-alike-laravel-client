@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateListPlatformsTable extends Migration
+class CreateVisitTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class CreateListPlatformsTable extends Migration
      */
     public function up()
     {
-        Schema::create('list_platforms', function (Blueprint $table) {
+        Schema::create('visits', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->mediumInteger('link_id');
+            $table->string('ip');
+            $table->timestamps('');
         });
     }
 
@@ -26,6 +28,6 @@ class CreateListPlatformsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('list_platforms');
+        Schema::dropIfExists('visits');
     }
 }

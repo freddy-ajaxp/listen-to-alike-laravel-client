@@ -1,3 +1,5 @@
+
+
 @extends('components.user.layouts.default')
 
 
@@ -21,26 +23,10 @@
                                     <div class="card-header">
                                         <h3 class="card-title">Your Music links</h3>
                                     </div>
-
-                                    {{-- <div id="overlay" style="display:none" onclick='toggleSpinner(false)'>
-                                        <div id="text">
-                                            <div class="d-flex flex-column align-items-center justify-content-center">
-                                                <div class="row">
-                                                    <div class="spinner-border" role="status">
-                                                        <span class="sr-only">Loading...</span>
-                                                    </div>
-                                                </div>
-                                                <div class="row" id="spinner-text">
-                                                    <strong>Processing Your Request</strong>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> --}}
-
-
-
+                                    
                                     <!-- /.card-header -->
                                     <div class="card-body">
+                                    <div class="table-responsive">
                                         <table id="example" class="table table-bordererless">
                                             <thead>
                                                 <tr>
@@ -48,12 +34,14 @@
                                                     <th>short_link</th>
                                                     <th>Image</th>
                                                     <th>Video Url</th>
+                                                    <th>Visit Count</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                             </tbody>
                                         </table>
+                                        </div>
                                     </div>
                                     <!-- /.card-body -->
                                 </div>
@@ -67,7 +55,6 @@
         </div>
     </div>
 </div>
-{{-- @include('components/user/components/modals') --}}
 @include('components/user/components/modal-master')
 @include('components/user/components/alert')
 @endsection
@@ -126,6 +113,10 @@
                     , name: 'video_embed_url'
                 }
                 , {
+                    data: 'count'
+                    , name: 'count'
+                }
+                , {
                     data: 'action'
                     , name: 'action'
                     , orderable: false
@@ -159,8 +150,6 @@
                     })
                 }
             , })
-
-
         });
 
         $('#example tbody').on('click', '#deleteBtn', function() {
@@ -229,13 +218,14 @@
         })
 
         $('#example tbody').on('click', '#editBtn', function() {
-            // test get modal
+
+            // get modal
             var data = table.row($(this).parents('tr')).data();        
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
-                , url: '{{ route("table.get-link-by-platform") }}'
+                , url: '{{ route("table.get-link-by-id") }}'
                 , method: 'post'
                 , data: {
                     id: data.id
@@ -247,7 +237,6 @@
                     $('#short_link').val(data.short_link);
                     $('#video_embed_url').val(data.video_embed_url);
                     $('#modals').modal('show');
-                    {{-- initModal(linksPlatform) --}}
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
                     $('#modals .dynamic-modal-container').html(xhr.responseText)
@@ -265,32 +254,6 @@
 
         })
 
-        //ini yg lama, yg masih modal jadi satu file
-        $('#example tbody').on('click', '#editBtnxxx', function() {
-            var data = table.row($(this).parents('tr')).data();
-            $('#id').val(data.id);
-            $('#link_title').val(data.title);
-            $('#short_link').val(data.short_link);
-            $('#video_embed_url').val(data.video_embed_url);
-            $('#modal-edit').modal('show');
-
-            // get that data
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-                , url: '{{ route("table.get-link-by-platform") }}'
-                , method: 'post'
-                , dataType: 'json'
-                , data: {
-                    id: data.id
-                , },
-
-                success: function(linksPlatform) {
-                    initModal(linksPlatform)
-                }
-            , })
-        });
     });
 
     //toggle spinner
@@ -311,10 +274,11 @@
     });
     
     //img preview add
-    $('#image-add').change(function(evt) {
+    $(document).on('change','#image-add',function(e){
+        e.preventDefault();
         let reader = new FileReader();
-        reader.onload = (e) => {
-            $('#image-preview-container-add').attr('src', e.target.result);
+        reader.onload = (evt) => {
+            $('#image-preview-container-add').attr('src', evt.target.result);
         }
         reader.readAsDataURL(this.files[0]);
         $("#clear-image-add").attr("hidden", false);
@@ -327,10 +291,9 @@
     });
 
     //img delete add
-    $('#clear-image-add').click(function(e) {
-        e.preventDefault();
+    $(document).on('click','#clear-image-add',function(){
         $('#image-preview-container-add').attr('src', '');
-        $("#clear-image-add").attr("hidden", true);
+        $("#clear-image-add").attr("hidden", true);        
     });
 
     //clear form edit
@@ -388,7 +351,6 @@
         link_title = $('input[name="link_title"]').val()
         video_embed_url = $('input[name="video_embed_url"]').val()
 
-
         // getting data
         var data_platform = $("select[name='data_platform[]']")
             .map(function() {
@@ -407,7 +369,6 @@
 
 
         //log for debug purpose
-    
         //appending data to sent
         formData.append('link_title', link_title);
         formData.append('image', files[0]); //only 1 image, the first index     
@@ -415,7 +376,6 @@
         formData.append('data_platform', data_platform);
         formData.append('data_url_platform', data_url_platform);
         formData.append('data_text', data_text);
-
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -604,6 +564,7 @@
         })
     });
 
+{{-- 
     function initModal(linksPlatform) {
         linksPlatform.forEach(eachData => {
             $('#modal-dynamic-form').append(`
@@ -623,23 +584,7 @@
                                     <div class="col-sm-2">
                                         <select id="data_text${counter}" name="data_text[]" class="music-link__button-text-select">
                                         <option selected="selected" value="Listen" >Listen</option>
-                                        <option value="Purchase">Purchase</option>
-                                        <option value="Play">Play</option>
-                                        <option value="Buy">Buy</option>
-                                        <option value="Buy Online">Buy Online</option>
-                                        <option value="Download">Download</option>
-                                        <option value="Stream">Stream</option>
-                                        <option value="Go To">Go To</option>
-                                        <option value="Visit">Visit</option>
-                                        <option value="Watch">Watch</option>
-                                        <option value="View">View</option>
-                                        <option value="Pre-Order">Pre-Order</option>
-                                        <option value="Pre-Save">Pre-Save</option>
-                                        <option value="Pre-Add">Pre-Add</option>
-                                        <option value="Buy Tickets">Buy Tickets</option>
-                                        <option value="Get Tickets">Get Tickets</option>
-                                        <option value="View Ticket Prices">View Ticket Prices</option>
-                                        <option value="Discover">Discover</option>                                    </select>
+                                        </select>
                                     </div>
                                     <div class="col-sm-1">
                                     <button type="button" name="remove" id="" class="btn btn-danger btn-sm remove">X</button>
@@ -650,47 +595,16 @@
             counter++;
         });
 
-    }
+    } --}}
 
     function dynamic_field(counter, $idModal) {
-        $($idModal).append(`
-                        <div class="form-group">
-                            <div class="form-row">
-                                <div class="col-sm-2">
-                                <input type="hidden" name="id_platforms[]" value="0"/>
-                                    <select name="data_platform[]" class="form-control form-control-sm">
-                                         <option selected value="youtube">Youtube</option>
-                                        <option value="spotify">Spotify</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-7">
-                                    <input type="text" name="data_url_platform[]" class="form-control form-control-sm" placeholder="URL dari platform" value=" "/>
-                                </div>
-                                <div class="col-sm-2">
-                                    <select name="data_text[]" class="music-link__button-text-select">
-                                    <option selected="selected" value="Listen" >Listen</option>
-                                    <option value="Purchase">Purchase</option>
-                                    <option value="Play">Play</option>
-                                    <option value="Buy">Buy</option>
-                                    <option value="Buy Online">Buy Online</option>
-                                    <option value="Download">Download</option>
-                                    <option value="Stream">Stream</option>
-                                    <option value="Go To">Go To</option>
-                                    <option value="Visit">Visit</option>
-                                    <option value="Watch">Watch</option>
-                                    <option value="View">View</option>
-                                    <option value="Pre-Order">Pre-Order</option>
-                                    <option value="Pre-Save">Pre-Save</option>
-                                    <option value="Pre-Add">Pre-Add</option>
-                                    <option value="Buy Tickets">Buy Tickets</option>
-                                    <option value="Get Tickets">Get Tickets</option>
-                                    <option value="View Ticket Prices">View Ticket Prices</option>
-                                    <option value="Discover">Discover</option>                                    </select>
-                                </div>
-                                <div class="col-sm-1">
-                                <button type="button" name="remove" id="" class="btn btn-danger btn-sm remove">X</button>
-                                </div>
-                        </div>`);
+        $.get("{{ url('partial/view-select') }}", function(data, status) {
+                platformContainer = data;
+                $($idModal).append(platformContainer);
+            });
+        
+    
+    
     }
 
 </script>
