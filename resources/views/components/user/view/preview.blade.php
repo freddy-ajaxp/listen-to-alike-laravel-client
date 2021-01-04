@@ -355,9 +355,15 @@
 <script type="text/javascript" src="{{ asset('assets/js/bootstrap.js') }}"></script>
 <script>
     $(document).ready(function() {
+            var myInteger = {!! json_encode($data) !!};
+            {{-- alert(myInteger.link[0].video_embed_url) --}}
         // If user uploaded artwork
-        {{-- $('#bg_container').css("display", "block");
-        $('#bg_img').attr("src", "https://res.cloudinary.com/dfpmdlf8l/image/upload/xye8aoedgrqtx7z5qmay.jpg"); --}}
+
+
+        {{-- var myRequest = new Request('index1.html');
+        $.get( "https://www.youtube.com", function( data ) {
+            alert(data); // returns 200
+        }); --}}
 
         $(".music-link__button").click(function(e) {
             var loadurl = $(this).attr('data-url');

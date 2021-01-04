@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e780ec0a622c12feb02e97f7e68c2ee8",
+    "content-hash": "3a14659ea8f062906b6f38fbe8d05f5c",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -59,30 +59,94 @@
             "time": "2020-10-29T16:03:21+00:00"
         },
         {
-            "name": "blade-ui-kit/blade-icons",
-            "version": "0.4.5",
+            "name": "blade-ui-kit/blade-heroicons",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/blade-ui-kit/blade-icons.git",
-                "reference": "b93505c65a1fc095df517d5640bae295779411e6"
+                "url": "https://github.com/blade-ui-kit/blade-heroicons.git",
+                "reference": "b01a5c98479c895d903e57659c089a28146887b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/blade-ui-kit/blade-icons/zipball/b93505c65a1fc095df517d5640bae295779411e6",
-                "reference": "b93505c65a1fc095df517d5640bae295779411e6",
+                "url": "https://api.github.com/repos/blade-ui-kit/blade-heroicons/zipball/b01a5c98479c895d903e57659c089a28146887b1",
+                "reference": "b01a5c98479c895d903e57659c089a28146887b1",
                 "shasum": ""
             },
             "require": {
-                "illuminate/contracts": "^7.14|^8.0",
-                "illuminate/filesystem": "^7.14|^8.0",
-                "illuminate/support": "^7.14|^8.0",
-                "illuminate/view": "^7.14|^8.0",
+                "blade-ui-kit/blade-icons": "^0.4.0",
+                "illuminate/support": "^7.14",
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.16",
+                "orchestra/testbench": "^5.0",
+                "phpunit/phpunit": "^8.0|^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "BladeUI\\Heroicons\\BladeHeroiconsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "BladeUI\\Heroicons\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dries Vints",
+                    "email": "dries@vints.io",
+                    "homepage": "https://driesvints.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A package to easily make use of Heroicons in your Laravel Blade views.",
+            "homepage": "https://github.com/blade-ui-kit/blade-heroicons",
+            "keywords": [
+                "Heroicons",
+                "blade",
+                "laravel"
+            ],
+            "funding": [
+                {
+                    "url": "https://github.com/driesvints",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-08-11T07:48:49+00:00"
+        },
+        {
+            "name": "blade-ui-kit/blade-icons",
+            "version": "0.4.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/blade-ui-kit/blade-icons.git",
+                "reference": "709cc25c732f0e88c103af2ee423e7220e53c5bd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/blade-ui-kit/blade-icons/zipball/709cc25c732f0e88c103af2ee423e7220e53c5bd",
+                "reference": "709cc25c732f0e88c103af2ee423e7220e53c5bd",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^7.14",
+                "illuminate/filesystem": "^7.14",
+                "illuminate/support": "^7.14",
+                "illuminate/view": "^7.14",
                 "php": "^7.2"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.16",
                 "mockery/mockery": "^1.3",
-                "orchestra/testbench": "^5.0|^6.0",
+                "orchestra/testbench": "^5.0",
                 "phpunit/phpunit": "^8.0|^9.0"
             },
             "type": "library",
@@ -131,7 +195,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-04T11:36:46+00:00"
+            "time": "2020-07-09T20:12:04+00:00"
         },
         {
             "name": "brick/math",

@@ -9,6 +9,7 @@ use App\List_text;
 use App\User;
 use App\Clickthrough;
 use App\Visit;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Dotenv\Result\Result;
 use Illuminate\Http\Request;
@@ -30,7 +31,6 @@ class ListPlatformController extends Controller
         $referer = request()->headers->get('referer');
         if ($request->ajax()) {
             $data = $request->all();
-
             //validasi
             //BAGIAN insert link_platforms
             $data_platform = explode(", ", $data['data_platform']);
@@ -112,12 +112,21 @@ class ListPlatformController extends Controller
         
         if ($request->ajax()) {
             $data = $request->all();
-           
+            
             //create object dulu 
             $link = new Link;
             $link = Link::find($data['id']);
 
-            //BAGIAN upload to cloud
+            // hapus data di DB kalau user memilih mengkosongkan gambar
+            // agar di ketika preview menampilkan hitam
+            if(!$request->file('image') && $data['userErasingImage'] === 'true'){
+                $link->image_path = null;
+            }
+            // jika user mendiamkan preview gambar, artinya gambar tdk diganti, tetap yang lama
+            // tidak ada perubahan di cloud dan database
+            else if(!$request->file('image') && $data['userErasingImage'] === 'false'){
+            }
+            //BAGIAN upload to cloud kalau ada gambar baru
             if($request->file('image')){
                 $uploadedFileUrl = \Cloudinary::upload($request->file('image')->getRealPath());
                 $idImage =  $uploadedFileUrl->getPublicId();
@@ -151,8 +160,7 @@ class ListPlatformController extends Controller
                 $dataPlatforms[$i]['text'] = $data_text[$i];
             }
 
-            //upsert, only for laravel 8
-            // $resultLP= Link_platform::upsert($dataPlatforms, ['id'], ['jenis_platform','url_platform','text']);
+
 
             for ($i = 0; $i < count($dataPlatforms); $i++) {
                 $link_platform = new Link_platform;
@@ -214,7 +222,7 @@ class ListPlatformController extends Controller
         }
 
         //if IP had not visited that link
-        $result = Visit::where('link_id', $link['link'][0]['id'])->get()->toArray();
+        $result = Visit::where('link_id', $link['link'][0]['id'])->where('ip', $ip)->get()->toArray();
         if($result==null){
             $visit = new Visit;
             $visit->link_id  = $link['link'][0]['id'];
@@ -246,10 +254,14 @@ class ListPlatformController extends Controller
         $data['link']->transform(function($i) {
             return (array)$i;
         });
+        
         $array = $data['link']->toArray();
-        if($data['link']==null){
+        
+        //jumlah link 0? berarti link tersebut tidak ada, throw 404
+        if($data['link']->count() === 0){
             abort(404);
         }
+
         $data['platform'] = DB::table('link_platforms')
         ->select(DB::raw('*, (SELECT count(*) FROM `clickthroughs` WHERE `clickthroughs`.`link_platform_id` = `link_platforms`.`id`) AS `count`'))
         ->where('id_link', '=', $data['link'][0]['id']) 
@@ -263,6 +275,12 @@ class ListPlatformController extends Controller
         // dd( $data['referer']);
 
         return view('components/user/view/detail-link')->with('data', $data);
+    }
+
+     function profile(Request $request){
+        $id = $request->session()->get('id');
+        $data = User::where('id', $id)->first(['id', 'name', 'email', 'admin', 'password'])->toArray();
+        return view('components/user/view/profile')->with('data', $data);
     }
 
     function viewCtr(Request $request)
@@ -294,7 +312,7 @@ class ListPlatformController extends Controller
 
     function viewSelect(Request $request)
     {
-        $platforms = List_platform::get(['id','platform_name','logo_image_path','platform_regex'])->toArray();
+        $platforms = List_platform::where('published', 1)->get(['id','platform_name','logo_image_path','platform_regex', 'published'])->toArray();
         $text = List_text::get(['id','text'])->toArray();
         return view('components/user/partials/select-platform')->with(['platforms' => $platforms, 'texts'=>$text, 'emptyLayout'=>true]); 
     }
@@ -318,6 +336,16 @@ class ListPlatformController extends Controller
         } catch (\Throwable $th) {
             throw $th;
         }
+    }
+
+
+
+    function dummy(){
+        $dt = Carbon::create(2012, 1, 31, 0);
+        $data = Visit::where('createdAt', '>=', $dt->subMonth())
+                        ->groupBy(DB::raw('Date(createdAt)'))
+                        ->orderBy('createdAt', 'DESC')->get()->toArray();
+        // dd($data);
     }
 }
 

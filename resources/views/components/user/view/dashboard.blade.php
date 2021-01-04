@@ -21,7 +21,7 @@
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h3 class="card-title">Your Music links</h3>
+                                        <h3 class="card-title">Your Music Links</h3>
                                     </div>
                                     
                                     <!-- /.card-header -->
@@ -81,14 +81,16 @@
 <script type="text/javascript" src="{{ asset('assets/js/jquery.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/bootstrap.js') }}"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 <script type="text/javascript" src="{{ asset('assets/js/spinner.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/alert.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/js/view/modal-add-link.js') }}"></script>
 <script>
     //init datatable
     $(document).ready(function() {
         counter = 0;
-
+        getPlatformField();
+        var platformContainer;
         //serverside
         var table = $('#example').DataTable({
 
@@ -154,8 +156,6 @@
 
         $('#example tbody').on('click', '#deleteBtn', function() {
             var data = table.row($(this).parents('tr')).data();
-            
-
              $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -208,10 +208,6 @@
 
                 }
             , })
-
-
-
-
         })
         $('#example tbody').on('click', '#viewBtn', function(e) {
             e.preventDefault();
@@ -270,7 +266,9 @@
             $('#image-preview-container').attr('src', e.target.result);
         }
         reader.readAsDataURL(this.files[0]);
+        $("#userErasingImage").val(false);
         $("#clear-image").attr("hidden", false);    
+        $("#upload-text").attr("hidden", true);
     });
     
     //img preview add
@@ -282,18 +280,25 @@
         }
         reader.readAsDataURL(this.files[0]);
         $("#clear-image-add").attr("hidden", false);
+        $("#upload-text").attr("hidden", true);
     });
-    //img delete edit
-    $('#clear-image').click(function(e) {
+    //img remove preview edit
+    $(document).on('click','#clear-image',function(e){
         e.preventDefault();
         $('#image-preview-container').attr('src', '');
-        $("#clear-image").attr("hidden", true);
+        $("#form-platform")[0].reset(); //menghilangkan file gambar
+        $("#userErasingImage").val(true);
+        $("#clear-image").attr("hidden", true); 
+        $("#upload-text").attr("hidden", false);
     });
 
-    //img delete add
-    $(document).on('click','#clear-image-add',function(){
+    //img remove preview add
+    $(document).on('click','#clear-image-add',function(e){
+        e.preventDefault();
         $('#image-preview-container-add').attr('src', '');
-        $("#clear-image-add").attr("hidden", true);        
+        $("#form-add-link")[0].reset();
+        $("#clear-image-add").attr("hidden", true);    
+        $("#upload-text").attr("hidden", false);    
     });
 
     //clear form edit
@@ -336,7 +341,6 @@
 
     //add and remove platform new link
     $(document).on('click', '#add-link-platform', function() {
-        console.log("add button clicked")
         dynamic_field(counter, '#modal-dynamic-form-add');
         counter++;
     });
@@ -366,7 +370,6 @@
             .map(function() {
                 return ' ' + $(this).val();
             }).get();
-
 
         //log for debug purpose
         //appending data to sent
@@ -406,7 +409,10 @@
             }
         })
     });
+
     $(document).on('submit', '#form-platform' , function(event) {
+        alert("submit")
+        return 0 ;
         event.preventDefault();
         var files = $('#image').get(0).files;
         formData = new FormData();
@@ -414,7 +420,7 @@
         link_title = $('input[name="link_title"]').val()
         short_link = $('input[name="short_link"]').val()
         video_embed_url = $('input[name="video_embed_url"]').val()
-
+        userErasingImage = $('#userErasingImage').val()
 
         // getting data
         var data_platform = $("select[name='data_platform[]']")
@@ -437,25 +443,30 @@
                 return ' ' + $(this).val();
             }).get();
         
-        {{-- console.log(id);
+        console.log(id);
         console.log(link_title);
         console.log( files[0]); //only 1 image, the first index     
         console.log( video_embed_url);
         console.log( id_platforms);
         console.log( data_platform);
         console.log( data_url_platform);
-        console.log( data_text); --}}
+        console.log( data_text);
+        console.log(userErasingImage)
 
 
         //appending data to sent
         formData.append('id', id);
         formData.append('link_title', link_title);
-        formData.append('image', files[0]); //only 1 image, the first index     
+        if(files.length !== 0){
+            formData.append('image', files[0]); //only 1 image, the first index
+        }
+        formData.append('image', files[0]); //only 1 image, the first index
         formData.append('video_embed_url', video_embed_url);
         formData.append('id_platforms', id_platforms);
         formData.append('data_platform', data_platform);
         formData.append('data_url_platform', data_url_platform);
         formData.append('data_text', data_text);
+        formData.append('userErasingImage', userErasingImage);
 
         $.ajax({
             headers: {
@@ -528,7 +539,12 @@
         })
 
     });
-    
+
+    $(document).on('click','.music-link__reposition-up',function(){
+        $($this).before($(""));
+    })
+
+
     $(document).on('submit','#form-delete',function(event){
         event.preventDefault();
         id = $('#id_delete').val()
@@ -548,7 +564,7 @@
                 toggleSpinner(true, "Deleting Your Data");
             }
             , success: function(data) {
-                {{-- location.reload(); --}}
+                location.reload();
             }
             , error: function(xhr, ajaxOptions, thrownError) {
                 let returnMessage = JSON.parse(xhr.responseText)
@@ -564,49 +580,22 @@
         })
     });
 
-{{-- 
-    function initModal(linksPlatform) {
-        linksPlatform.forEach(eachData => {
-            $('#modal-dynamic-form').append(`
-                            <div class="form-group">
-                            <input type="hidden" name="id_platforms[]" value="${eachData.id}"/>
-                                <div class="form-row">
-                                    <div class="col-sm-2">
-                                        <select id="data_platform${counter}" name="data_platform[]" class="form-control form-control-sm">
-                                            <option disabled selected value=null>Platform</option>
-                                            <option value="youtube">Youtube</option>
-                                            <option value="spotify">Spotify</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-7">
-                                        <input type="text" name="data_url_platform[]" class="form-control form-control-sm" placeholder="URL dari platform" value="${eachData.url_platform}"/>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <select id="data_text${counter}" name="data_text[]" class="music-link__button-text-select">
-                                        <option selected="selected" value="Listen" >Listen</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-1">
-                                    <button type="button" name="remove" id="" class="btn btn-danger btn-sm remove">X</button>
-                                    </div>
-                            </div>`);
-            $(`#data_platform${counter}`).val(eachData.jenis_platform);
-            $(`#data_text${counter}`).val(eachData.text);
-            counter++;
-        });
 
-    } --}}
-
-    function dynamic_field(counter, $idModal) {
+    function getPlatformField() {
         $.get("{{ url('partial/view-select') }}", function(data, status) {
                 platformContainer = data;
-                $($idModal).append(platformContainer);
             });
-        
-    
-    
+    }
+    function dynamic_field(counter, $idModal) {
+        $($idModal).append(platformContainer);
+        {{-- $.get("{{ url('partial/view-select') }}", function(data, status) {
+                platformContainer = data;
+                 $($idModal).append(platformContainer);           
+            }); --}}
     }
 
+
+    
 </script>
 
 

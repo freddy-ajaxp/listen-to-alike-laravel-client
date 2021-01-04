@@ -32,3 +32,4 @@
 
 <script type="text/javascript" src="{{ asset('assets/js/spinner.js') }}"></script>
  @stack('javascript')
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>

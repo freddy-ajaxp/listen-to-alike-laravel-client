@@ -28,13 +28,12 @@
                             </label>
                         </div>
                     </div>
-                    <!-- <form method="post" id="dynamic_form"> -->
 
 
                     <div class="music-link__upload-art">
-                        <ion-icon name="download-outline" />
-
-                        <b style=" font-weight: 500; margin-bottom: '0.5em'">
+                        <ion-icon name="download-outline"></ion-icon>
+                        <div id="upload-text">
+                         <b style=" font-weight: 500; margin-bottom: '0.5em'">
                             Upload Image
                         </b>
                         <p style="font-size: '0.8em'; opacity: '0.8' ">
@@ -44,6 +43,9 @@
                         <p style="font-size: '0.8em'; opacity: '0.8' ">
                             Drop file here.
                         </p>
+                        </div>
+
+                       
                         <img id="image-preview-container" src="" style="max-height: 150px;">
                         <input id="image" class="music-link__upload-input" type="file" name="image" accept="image/*" />
                     </div>
@@ -166,6 +168,7 @@
             }
             reader.readAsDataURL(this.files[0]);
             $("#clear-image").attr("hidden", false);
+            $("#upload-text").attr("hidden", true);
         });
 
         //img delete
@@ -173,6 +176,7 @@
             e.preventDefault();
             $('#image-preview-container').attr('src', '');
             $("#clear-image").attr("hidden", true);
+            $("#upload-text").attr("hidden", false);
         });
 
         //delete temp link when entering dashboard
@@ -274,16 +278,6 @@
                         toggleSpinner(true, "Submitting Your Data");
                     }
                     , success: function(html) {
-
-                        //ini yg lama yg gapake mdal
-                        {{-- var a = [];
-                        alert("what");
-                        dataLink = JSON.parse(localStorage.getItem('links')) || [];
-                        dataLink.push(data.result);
-                        localStorage.setItem('links', JSON.stringify(dataLink))
-                        toggleSpinner(false, "");
-                        window.location.reload(); --}}
-                        
                         //ini yg baru dgn modal konfirmasi
                         toggleSpinner(false, "");
                         $('#modals .dynamic-modal-container').html(html)
@@ -293,7 +287,12 @@
                     , error: function(xhr, ajaxOptions, thrownError) {
                         let returnMessage = JSON.parse(xhr.responseText)
                         toggleSpinner(false, "");
-                        toggleAlert(true, "error", ajaxOptions, returnMessage.failed);
+                        Swal.fire({
+                            title: ajaxOptions + '!'
+                            , text: returnMessage.failed
+                            , icon: 'error'
+                            , confirmButtonText: 'Confirm'
+                        })
                     }
                 })
             }

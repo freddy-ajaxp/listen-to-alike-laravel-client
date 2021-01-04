@@ -20,7 +20,7 @@
                     </ol>
                 </div>
             </div>
-        </div><!-- /.container-fluid -->
+        </div>
     </section>
 
     <!-- Main content -->
@@ -31,8 +31,6 @@
                     <div class="card-header">
                         <h3 class="card-title">Add New Platform</h3>
                     </div>
-                    <!-- /.card-header -->
-                    <!-- form start -->
                     <form id="form-platform" action="/admin/addPlatform" method="post" enctype="multipart/form-data">
                         <div class="card-body">
                             <div class="form-group">
@@ -56,22 +54,13 @@
                                 <img id="image-preview-container" src="" style="max-height: 150px;">
                                 <button id="clear-image" hidden> clear</button>
                             </div>
-
-
                         </div>
-                        <!-- /.card-body -->
-
                         <div class="card-footer">
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
                     </form>
                 </div>
-                <!-- /.card -->
-
-                <!-- /.box -->
             </div>
-            <!-- /.box -->
-            <!-- Default box -->
             <div class="col-md-8">
                 <div class="card card-primary">
                     <div class="card-header">
@@ -87,6 +76,50 @@
                                         <th>Platform</th>
                                         <th>Image</th>
                                         <th>URL</th>
+                                        <th>Actions <img src="{{asset('images/icons/question-circle.svg')}}" style="margin-bottom: 10px;" data-toggle="tooltip" title="Tombol Publish membuat Platform dapat dipilih pengguna. tombol hide membuat tidak dapat dipilih pengguna"/></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Add New Text Option</h3>
+                    </div>
+                    <form id="form-text" action="/admin/addPlatform" method="post" enctype="multipart/form-data">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Text</label>
+                                <input name="text" type="text" class="form-control" placeholder="cth: Kunjungi">
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Text List</h3>
+                    </div>
+
+                    @include('components.admin.components.spinner')
+                    <div class="card-body">
+                        <div class="table-responsive ">
+                            <table id="table-text" class="table table-bordered table-striped table-hover users-table mb-2">
+                                <thead>
+                                    <tr>
+                                        <th>Text</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -95,12 +128,9 @@
                             </table>
                         </div>
                     </div>
-                    <!-- /.card-body -->
                 </div>
             </div>
         </div>
-        <!-- /.card -->
-
     </section>
     <!-- /.content -->
 
@@ -132,10 +162,9 @@
 
     $(document).ready(function() {
         counter = 0;
-        
+
         //server side
         var table = $('#example').DataTable({
-
             processing: true
             , serverSide: true
             , ajax: "{{ route('admin.all-platforms') }}"
@@ -143,12 +172,13 @@
                     data: 'platform_name'
                     , name: 'platform_name'
                 }
-                , { 
-                         data: null,
-                         render: function(data,type,row){
-                               return `<img src="https://res.cloudinary.com/dfpmdlf8l/image/upload/${row.logo_image_path}",width=60px, height=30px />`},
-                         orderable: false
-                       }
+                , {
+                    data: null
+                    , render: function(data, type, row) {
+                        return `<img src="https://res.cloudinary.com/dfpmdlf8l/image/upload/${row.logo_image_path}",width=60px, height=30px />`
+                    }
+                    , orderable: false
+                }
                 , {
                     data: 'platform_regex'
                     , name: 'platform_regex'
@@ -161,10 +191,152 @@
                 }
             , ]
         });
+
+         var tableText = $('#table-text').DataTable({
+            processing: true
+            , serverSide: true
+            , ajax: "{{ route('admin.all-texts') }}"
+            , columns: [{
+                    data: 'text'
+                    , name: 'text'
+                }
+                , {
+                    data: 'action'
+                    , name: 'action'
+                    , orderable: false
+                    , searchable: false
+                }
+            , ]
+        });
+
+         //img preview edit
+        $(document).on('change','#image',function(){
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                $('#image-preview-container-edit').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(this.files[0]);
+            $("#userErasingImage").val(false);
+            $("#clear-image-platform").attr("hidden", false);    
+        });
+
+        $(document).on('click','#clear-image-platform',function(e){
+            e.preventDefault();
+            $('#image-preview-container-edit').attr('src', '');
+            $("#form-platform-edit")[0].reset(); //menghilangkan file gambar
+            $("#userErasingImage").val(true);
+            $("#clear-image-platform").attr("hidden", true); 
+        });
+
         $('#example tbody').on('click', '#deleteLogoBtn', function() {
-            var data = table.row($(this).closest('tr')).data();
+            var data = table.row($(this).parents('tr')).data();
             $('#id_delete_logo').val(data.id);
-            $('#modal-delete-logo').modal('show');
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , url: '{{ url("admin/modal/delete-platform") }}'
+                , method: 'get'
+                , success: function(linksPlatform) {
+                    $('#modals .dynamic-modal-container').html(linksPlatform)
+                    $('#modals').modal('show');
+                    $('#id_delete_logo').val(data.id);
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    let returnMessage = JSON.parse(xhr.responseText)
+                    Swal.fire({
+                        title: 'Oops! ' + ajaxOptions
+                        , text: returnMessage.error
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+
+                }
+            , })
+        })
+
+        $('#example tbody').on('click', '#editLogoBtn', function() {
+            var data = table.row($(this).parents('tr')).data();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , url: '{{ url("admin/modal/edit-platform") }}'
+                , method: 'get'
+                , data: {
+                    id: data.id
+                }
+                , success: function(linksPlatform) {
+                    $('#modals .dynamic-modal-container').html(linksPlatform)
+                    $('#modals').modal('show');
+                    $('#id_delete_logo').val(data.id);
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    let returnMessage = JSON.parse(xhr.responseText)
+                    Swal.fire({
+                        title: 'Oops! ' + ajaxOptions
+                        , text: returnMessage.error
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+
+                }
+            , })
+        })
+
+         $('#table-text tbody').on('click', '#editTextBtn', function() {
+            var data = table.row($(this).parents('tr')).data();
+            $('#id_delete_logo').val(data.id);
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , url: '{{ url("admin/modal/edit-text") }}'
+                , method: 'get'
+                , data: {
+                    id: data.id
+                }
+                , success: function(linksPlatform) {
+                    $('#modals .dynamic-modal-container').html(linksPlatform)
+                    $('#modals').modal('show');
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    let returnMessage = JSON.parse(xhr.responseText)
+                    Swal.fire({
+                        title: 'Oops! ' + ajaxOptions
+                        , text: returnMessage.error
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+
+                }
+            , })
+        })
+
+        $('#table-text tbody').on('click', '#deleteTextBtn', function() {
+            var data = table.row($(this).closest('tr')).data();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , url: '{{ url("admin/modal/delete-text") }}'
+                , method: 'get'
+                , success: function(linksPlatform) {
+                    $('#modals .dynamic-modal-container').html(linksPlatform)
+                    $('#modals').modal('show');
+                    $('#id_delete_logo').val(data.id);
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    let returnMessage = JSON.parse(xhr.responseText)
+                    Swal.fire({
+                        title: 'Oops! ' + ajaxOptions
+                        , text: returnMessage.error
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+
+                }
+            , })
         })
 
         //img preview
@@ -220,19 +392,17 @@
                 , beforeSend: function() {
                     {
                         toggleSpinner(true, "Processing your request");
-                        
                     }
                 }
                 , success: function(data) {
                     {
                         toggleSpinner(false, "");
                         location.reload();
-                        
                     }
                 }
-                 , error: function(xhr, ajaxOptions, thrownError) {
+                , error: function(xhr, ajaxOptions, thrownError) {
                     Swal.fire({
-                        title: 'Oops! ' +ajaxOptions 
+                        title: 'Oops! ' + ajaxOptions
                         , text: "error occured"
                         , icon: 'error'
                         , confirmButtonText: 'Confirm'
@@ -241,7 +411,94 @@
             })
         });
 
-         //toggle spinner
+        //submit form text
+        $('#form-text').on('submit', function(event) {
+            event.preventDefault();
+            text_name = $('input[name="text"]').val()
+
+            //appending data to sent
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , url: '{{ route("admin.add-text") }}'
+                , method: 'post'
+                , data: {text: text_name}
+                , dataType: 'json'
+                , beforeSend: function() {
+                    {
+                        toggleSpinner(true, "Processing your request");
+                    }
+                }
+                , success: function(data) {
+                    {
+                        location.reload();
+                    }
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    toggleSpinner(false, "");
+                    Swal.fire({
+                        title: 'Oops! ' + ajaxOptions
+                        , text: "error occured"
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+                }
+            })
+        });
+
+        //submit edit platform
+        $(document).on('submit', "#form-platform-edit" ,  function(event) {
+            event.preventDefault();
+            
+            var files = $('#image').get(0).files;
+            formData = new FormData();
+            id = $('#id').val()
+            userErasingImage = $('#userErasingImage').val()
+            {{-- console.log(id)
+            console.log(files)
+            console.log(userErasingImage) --}}
+            //appending data to sent
+            formData.append('id', id);
+            formData.append('userErasingImage', userErasingImage);
+            if(files.length !== 0){
+            formData.append('image', files[0]); //only 1 image, the first index
+            }
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , enctype: 'multipart/form-data'
+                , url: '{{ url("admin/editPlatform") }}'
+                , method: 'post'
+                , data: formData
+                , dataType: 'json'
+                , contentType: false
+                , processData: false
+                , beforeSend: function() {
+                    {
+                        toggleSpinner(true, "Processing your request");
+                    }
+                }
+                , success: function(data) {
+                    {
+                        location.reload();
+                    }
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    let returnMessage = JSON.parse(xhr.responseText)
+                    toggleSpinner(false, "");
+                    Swal.fire({
+                        title: 'Oops! ' + ajaxOptions
+                        , text: returnMessage.error
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+                }
+            })
+        });
+
+        //toggle spinner
         function toggleSpinner(status, text = "Processing Your Request") {
             $('#spinner-text strong').text(text);
             status ? $("#overlay").css("display", "block") : $("#overlay").css("display", "none")
@@ -249,7 +506,7 @@
         }
 
         //submit form delete logo
-        $('#form-delete-logo').on('submit', function(event) {
+        $(document).on('submit', "#form-delete-logo" ,  function(event) {
             event.preventDefault();
             id_logo = $('#id_delete_logo').val()
             $.ajax({
@@ -270,13 +527,14 @@
                 , success: function(data) {
                     {
                         location.reload();
-
                     }
                 }
-                 , error: function(xhr, ajaxOptions, thrownError) {
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    let returnMessage = JSON.parse(xhr.responseText)
+                    toggleSpinner(false, "");
                     Swal.fire({
-                        title: 'Oops! ' +ajaxOptions 
-                        , text: "error occured"
+                        title: 'Oops! ' + ajaxOptions
+                        , text: returnMessage.error
                         , icon: 'error'
                         , confirmButtonText: 'Confirm'
                     })

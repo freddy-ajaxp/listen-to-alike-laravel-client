@@ -15,7 +15,6 @@
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
                         <li class="breadcrumb-item"><a href='{{ url("admin/userList") }}'>Users</a></li>
-                        
                         <li class="breadcrumb-item active">User Data</li>
                     </ol>
                 </div>
@@ -127,12 +126,16 @@
                     data: 'short_link'
                     , name: 'short_link'
                 },
-
-
                 {
                     data: "video_embed_url"
                     , render: function(data, type, row) {
-                        return `<img src="https://res.cloudinary.com/dfpmdlf8l/image/upload/${row.image_path}",width=60px, height=30px />`
+                        if(row.image_path){
+                            return `<img src="https://res.cloudinary.com/dfpmdlf8l/image/upload/${row.image_path}",width=60px, height=30px alt="image not found" />`
+                        }
+                        else {
+                            return "No image"
+                        }
+                        
                     }
                     , orderable: false
                 }
@@ -141,7 +144,12 @@
                     data: 'video_embed_url'
                     , name: 'video_embed_url'
                     , "render": function(data, type, row, meta) {
-                        return '<a href="' + data + '" style="text-align:center">Video Link</a>';
+                         if(row.video_embed_url){
+                            return '<a href="' + data + '" style="text-align:center">Video Link</a>';
+                        }
+                        else {
+                            return "No Video URL";
+                        }
                     }
                 }
                 , {
@@ -152,7 +160,6 @@
                 }
             , ]
         });
-
 
     });
 

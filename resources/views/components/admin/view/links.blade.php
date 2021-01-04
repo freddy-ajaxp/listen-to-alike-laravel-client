@@ -37,7 +37,7 @@
                                 <th>Judul</th>
                                 <th>Slug</th>
                                 <th>Gambar</th>
-                                <th>Video</th>
+                                <th>Video Embed</th>
                                 <th>#</th>
                             </tr>
                         </thead>
@@ -93,12 +93,29 @@
                     , name: 'short_link'
                 }
                 , {
-                    data: 'image_path'
-                    , name: 'image_path'
+                    data: null,
+                    render: function(data,type,row){
+                        if(row.image_path){
+                            return `<img src="https://res.cloudinary.com/dfpmdlf8l/image/upload/${row.image_path}",width=60px, height=30px alt="image not found" />`
+                        }
+                        else {
+                            return "No image"
+                        }
+                        },
+                    orderable: false
                 }
                 , {
-                    data: 'video_embed_url'
-                    , name: 'video_embed_url'
+                    data: null,
+                    render: function(data,type,row){
+                        if(row.video_embed_url){
+                            return `<a href="${row.video_embed_url}" target="__blank"> ${row.video_embed_url} </a>`
+                        }
+                        else {
+                            return "No Video URL"
+                        }
+                        },
+                    orderable: false
+
                 }
                 , {
                     data: 'action'
@@ -113,7 +130,29 @@
             var data = table.row($(this).closest('tr')).data();
             $('p[name="confirm-delete-name"]').text(data.id);
             $('#id_delete_link').val(data.id);
-            $('#modal-delete').modal('show');
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , url: '{{ url("admin/modal/delete-link") }}'
+                , method: 'get'
+
+                , success: function(linksPlatform) {
+                    $('#modals .dynamic-modal-container').html(linksPlatform)
+                    $('#modals').modal('show');
+                    $('#id_delete_link').val(data.id);
+                    
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    Swal.fire({
+                        title: ajaxOptions + '!'
+                        , text: xhr.responseText
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+
+                }
+            , })
         })
     });
         //submit form delete links
@@ -133,7 +172,7 @@
                 , dataType: 'json'
                 , beforeSend: function() {
                     {
-                        toggleSpinner(true, "Submitting Your Data");
+                        toggleSpinner(true, "Processing your request");
                     }
                 }
                 , success: function(data) {

@@ -27,16 +27,18 @@
                     <label for="inputDetail" class="col-sm-3 control-label">Image</label>
                     <div class="music-link__upload-art">
                         <ion-icon name="download-outline" />
+                        <div id="upload-text">
                         <b style=" font-weight: 500; margin-bottom: '0.5em'">
                             Upload Image
                         </b>
                         <p style="font-size: '0.8em'; opacity: '0.8' ">
                             jpg | jpeg | png <br> Max 10MB <br> Drop file here.
                         </p>
+                        </div>
                         <img id="image-preview-container-add" src="" style="max-height: 150px;">
                         <input id="image-add" class="music-link__upload-input" type="file" name="image" accept="image/*" />
                     </div>
-                    <a id="clear-image-add" hidden> Hapus</a>
+                    <button id="clear-image-add" hidden> clear</button>
                 </div>
                 <div>
                     <button type="button" name="add" id="add" class="btn btn-info btn-sm">Add New Row</button>

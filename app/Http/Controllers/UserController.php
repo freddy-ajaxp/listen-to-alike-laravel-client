@@ -101,4 +101,34 @@ class UserController extends Controller
         $request->session()->forget('admin');
         return redirect("/login");
     }
+
+
+    function changePassword(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = $request->all();
+           if (!$data['password'] ||  !$data['password2'] || !$data['name'] ) {
+            return response()->json(['error' => 'Please fill all fields'], 400);
+            }
+            if ($data['password'] !== $data['password2']) {
+                return response()->json(['error' => 'password does not match'], 400);
+            }    
+            if (strlen($data['password']) < 8) {
+                // return redirect('/register')->with('error', 'Passwords minimal 8 character');
+                return response()->json(['error' => 'Passwords minimal 8 character'], 400);
+            }
+
+            $hashed = Hash::make($data['password'], [
+                'rounds' => 12,
+            ]);
+
+            $user = User::find($data['id']);
+            $user->password = $hashed;
+            $user->save();
+
+            return response()->json(['success' => 'data is updated'], 200);
+        }
+    }
+
+    
 }

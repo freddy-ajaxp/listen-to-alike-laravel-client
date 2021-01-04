@@ -17,25 +17,33 @@ use App\Http\Middleware;
 |
 */
 
-//VIEW ONLY START
+//USER
+
+
+Route::group(['middleware' => 'revalidate'], function()
+{
+     
+    Route::get('/login', function () {
+        return view('components/user/view/login');
+    })->name('view.login')->middleware('sessionvalidator');
+
+
+    Route::get('/dashboard', function () {
+        return view('components/user/view/dashboard');
+    })->middleware('sessionvalidator');
+
+    Route::get('/admin', function () {
+        $data['main'] = 'links';
+        return view('components/admin/view/links')->with('components', $data);
+    })->middleware('sessionvalidator');
+});
 
 Route::get('/', function () {
-    // return view('welcome');
     return redirect("/landing");
 });
-
 Route::get('/landing', function () {
-    // return view('layouts/dummy')->with('components', ['data'=>'dmmmyy']);
     return view('components/user/view/landing');
 });
-
-Route::get('/dashboard', function () {
-    return view('components/user/view/dashboard');
-})->middleware('sessionvalidator');
-
-Route::get('/login', function () {
-    return view('components/user/view/login');
-})->name('view.login')->middleware('sessionvalidator');
 
 Route::get('/register', function () {
     return view('components/user/view/register');
@@ -46,30 +54,8 @@ Route::get('/logout', function (Request $request) {
     return redirect('/landing');
 });
 
-//admin
-Route::get('/admin', function () {
-    $data['main'] = 'links';
-    return view('components/admin/view/links')->with('components', $data);
-    // return view('components/admin/view/datatables')->with('components', $data);
-})->middleware('sessionvalidator');
-
-Route::get('/admin/userList', function () {
-    $data['main'] = 'links';
-    return view('components/admin/view/users')->with('components', $data);
-})->middleware('sessionvalidator');
-
-Route::get('/admin/setting', function () {
-    $data['main'] = 'links';
-    return view('components/admin/view/setting')->with('components', $data);
-})->middleware('sessionvalidator');
-
-//VIEW ONLY END
-
-
-
-
 Route::get('/preview/{short_link}', 'ListPlatformController@preview');
-Route::get('/detail/{short_link}', 'ListPlatformController@detail');
+Route::get('/detail/{short_link}', 'ListPlatformController@detail')->middleware('sessionvalidator');
 Route::post('/click', 'ListPlatformController@viewCtr');
 
 // Route::get('dynamic-field', 'ListPlatformController@index');
@@ -81,7 +67,8 @@ Route::get('links/platforms', 'ListPlatformController@getAllPlatforms');
 Route::post('user/login', 'UserController@login');
 Route::post('user/register', 'UserController@register');
 Route::get('user/logout', 'UserController@logout');
-
+Route::get('user/profile', 'ListPlatformController@profile')->middleware('sessionvalidator');
+Route::post('user/changePassword', 'UserController@changePassword');
 
 //PARTIAL VIEW
 Route::get('table/delete-confirmation', 'ListPlatformController@deleteModal')->name('table.modal-delete');
@@ -98,7 +85,19 @@ Route::post('table/custom', 'TableController@patchCustomLink')->name('table.cust
 
 
 //ADMIN
+
+Route::get('/admin/userList', function () {
+    $data['main'] = 'links';
+    return view('components/admin/view/users')->with('components', $data);
+})->middleware('sessionvalidator');
+
+Route::get('/admin/setting', function () {
+    $data['main'] = 'links';
+    return view('components/admin/view/setting')->with('components', $data);
+})->middleware('sessionvalidator');
+
 Route::post('admin/addPlatform', 'AdminController@addPlatform')->name('admin.add-platform');
+Route::post('admin/addText', 'AdminController@addText')->name('admin.add-text');
 Route::post('admin/deletePlatform', 'AdminController@deletePlatform')->name('admin.delete-platform');
 Route::get('admin/getAllLinks', 'AdminController@getAllLinks')->name('admin.all-links');
 Route::get('admin/getUserDataById/{id}', 'AdminController@getUserDataById')->name('admin.user-data');
@@ -108,3 +107,20 @@ Route::post('admin/deleteLink', 'AdminController@deleteLink')->name('admin.delet
 Route::post('admin/deleteUser', 'AdminController@deleteUser')->name('admin.delete-user');
 Route::get('admin/getAllUsers', 'AdminController@getAllUsers')->name('admin.all-users');
 Route::get('admin/getAllPlatforms', 'AdminController@getAllPlatforms')->name('admin.all-platforms');
+Route::get('admin/getAllTexts', 'AdminController@getAllTexts')->name('admin.all-texts');
+Route::get('admin/modal/delete-link', 'AdminController@deleteLinkModal');
+Route::get('admin/modal/delete-platform', 'AdminController@deletePlatformModal');
+Route::get('admin/modal/delete-user', 'AdminController@deleteUserModal');
+Route::get('admin/modal/reset-pwd', 'AdminController@resetPwdModal');
+Route::get('admin/modal/edit-platform', 'AdminController@editPlatformModal');
+Route::get('admin/modal/edit-text', 'AdminController@editTextModal');
+Route::get('admin/modal/delete-text', 'AdminController@deleteTextModal');
+Route::post('admin/editPlatform', 'AdminController@editPlatform');
+Route::get('admin/editText', 'AdminController@editText');
+Route::post('admin/resetPassword', 'AdminController@resetPassword')->name('admin.reset-pwd');
+
+
+
+
+Route::get('dummy', 'ListPlatformController@dummy');
+

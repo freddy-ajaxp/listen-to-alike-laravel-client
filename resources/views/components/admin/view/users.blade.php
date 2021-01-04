@@ -69,6 +69,7 @@
 <script type="text/javascript" src="{{ asset('assets/js/adminlte.js') }}"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="{{ asset('assets/js/spinner.js') }}"></script>
+
 <script>
     //init datatable
 
@@ -97,24 +98,69 @@
             , ]
         });
 
+
         $('#example tbody').on('click', '#resetBtn', function() {
             var data = table.row($(this).closest('tr')).data();
-            $('#id_delete').val(data.id);
-            $('#modal-reset').modal('show');
-        })
-        $('#example tbody').on('click', '#deactivateBtn', function() {
-            var data = table.row($(this).closest('tr')).data();
-            $('p[name="confirm-delete-name"]').text(data.title);
-            $('#id_delete_user').val(data.id);
-            $('#modal-delete-user').modal('show');
-        })
-        $('#example tbody').on('click', '#viewBtn', function() {
-            var data = table.row($(this).closest('tr')).data();
-            window.location.href = "{{ url('login')}}";
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , url: '{{ url("admin/modal/reset-pwd") }}'
+                , method: 'get'
+                , data: {
+                    id: data.id
+                }
+                , success: function(linksPlatform) {
+                    $('#modals .dynamic-modal-container').html(linksPlatform)
+                    $('#modals').modal('show');
+                    $('#id_user').val(data.id);
+
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    Swal.fire({
+                        title: ajaxOptions + '!'
+                        , text: xhr.responseText
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+
+                }
+            , })
         })
 
+        //not yet used
+        $(document).on('click', '#deactivateBtn', function(event) {
+            var data = table.row($(this).closest('tr')).data();
+            $('p[name="confirm-delete-name"]').text(data.title);
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , url: '{{ url("admin/modal/delete-user") }}'
+                , method: 'get'
+
+                , success: function(linksPlatform) {
+                    $('#modals .dynamic-modal-container').html(linksPlatform)
+                    $('#modals').modal('show');
+                    $('#id_delete_user').val(data.id);
+
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    Swal.fire({
+                        title: ajaxOptions + '!'
+                        , text: xhr.responseText
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+
+                }
+            , })
+        })
+
+
         //submit form delete user
-        $('#form-delete-user').on('submit', function(event) {
+        $(document).on('submit', '#form-delete-user', function(event) {
             event.preventDefault();
             id_user = $('#id_delete_user').val();
             $.ajax({
@@ -137,9 +183,9 @@
 
                     }
                 }
-                 , error: function(xhr, ajaxOptions, thrownError) {
+                , error: function(xhr, ajaxOptions, thrownError) {
                     Swal.fire({
-                        title: 'Oops! ' +ajaxOptions 
+                        title: 'Oops! ' + ajaxOptions
                         , text: "error occured"
                         , icon: 'error'
                         , confirmButtonText: 'Confirm'
@@ -147,6 +193,61 @@
                 }
             })
         });
+
+        //form reset password
+        $(document).on('submit', '#form-reset-password', function(event) {
+            event.preventDefault();
+            id_user = $('#id_user').val();
+            password = $('#password').val();
+            password2 = $('#password-confirmation').val();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , url: '{{ url("admin/resetPassword") }}'
+                , method: 'post'
+                , data: {
+                    id: id_user
+                    , password: password
+                    , password2: password2
+
+                }
+
+                , beforeSend: function() {
+                    toggleSpinner(true, "Processing request");
+                }
+                , success: function(data) {
+                    toggleSpinner(false, "");
+                    Swal.fire({
+                        title: 'success'
+                        , text: "update success"
+                        , icon: 'success'
+                        , confirmButtonText: 'Confirm'
+                    })
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    toggleSpinner(false, "");
+                    Swal.fire({
+                        title: 'Oops! ' + ajaxOptions
+                        , text: xhr.responseJSON.error
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+                }
+            })
+
+        });
+
+
+        //show password on-mousedown
+        $(document).on('click', '#show-pwd', function() {
+            if ($('input:checkbox').is(':checked')) {
+                $("input[name=pwd]").attr('type', 'text')
+            } else if (!$('input:checkbox').is(':checked')) {
+                $("input[name=pwd]").attr('type', 'password')
+            }
+        });
+
     });
 
 </script>

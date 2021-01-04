@@ -37,6 +37,7 @@ class TableController extends Controller
             $data = DB::table('links')
              ->select(DB::raw('*, (SELECT count(*) FROM `visits` WHERE `visits`.`link_id` = `links`.`id`) AS `count`'))
              ->where('id_user', '=', $id_user) 
+             ->where('show_status', '=', 1) 
              ->get();
 
             // dd($data);
@@ -89,10 +90,11 @@ class TableController extends Controller
     {
         $data = $request->all();
         try {
-            $result = Link_platform::where('id_link', $data['id'])->get(['id', 'jenis_platform', 'url_platform', 'text'])->toArray();
-            $platforms = List_platform::get(['id','platform_name','logo_image_path','platform_regex'])->toArray();
+            $link = Link::where('id', $data['id'])->first()->toArray();
+            $links = Link_platform::where('id_link', $data['id'])->get(['id', 'jenis_platform', 'url_platform', 'text'])->toArray();
+            $platforms = List_platform::get(['id','platform_name','logo_image_path','platform_regex', 'published'])->toArray();
             $text = List_text::get(['id','text'])->toArray();
-            return view('components/user/partials/modal-edit')->with(["result" => $result, "platforms" => $platforms , "texts" => $text ]); //ini untuk dynamic modal   
+            return view('components/user/partials/modal-edit')->with(["link"=>$link, "result" => $links, "platforms" => $platforms , "texts" => $text ]); //ini untuk dynamic modal   
             // return response()->json($result); //ini untuk static modal
         } catch (\Throwable $th) {
             throw $th;

@@ -2,6 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
@@ -27,8 +28,9 @@
         </div>
     </div>
 </body>
-
+@include('components.user.components.spinner')
 </html>
 
 <script type="text/javascript" src="{{ asset('assets/js/spinner.js') }}"></script>
  @stack('javascript')
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
