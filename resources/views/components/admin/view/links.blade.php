@@ -177,11 +177,10 @@
                 }
                 , success: function(data) {
                         toggleSpinner(false, "");
-                        location.reload();
+                        $('#example').DataTable().ajax.reload();
                 },
                 complete: function() {
                         toggleSpinner(false, "");
-                        location.reload();
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
                     Swal.fire({

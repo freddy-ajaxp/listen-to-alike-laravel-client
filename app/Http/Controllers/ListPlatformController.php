@@ -37,10 +37,16 @@ class ListPlatformController extends Controller
             $data_url_platform = explode(", ", $data['data_url_platform']);
             $data_text = explode(", ", $data['data_text']);
 
+            // dd($data_platform);
+
+            // $users = DB::table('list_platforms')
+            //     ->groupBy('platform_name')
+            //     ->get()->toArray();
+
             //kalau data platform ==0, return error, karena minimal 1
             if ($data['data_platform'] === null) {
                 return response()->json([
-                    'failed'  => 'Harap isi minimal 1 platform'
+                    'error'  => 'Harap isi minimal 1 platform'
                 ], 400);
             }
 
@@ -48,23 +54,26 @@ class ListPlatformController extends Controller
             // this a little prevention from user bypassing front end validation 
             if ((count($data_platform) !== count($data_url_platform)) || (count($data_url_platform) !== count($data_text))) {
                 return response()->json([
-                    'failed'  => 'Data is incorrect, please complete all data including "Platform", "URL" and "Button Text"'
+                    'error'  => 'Data is incorrect, please complete all data including "Platform", "URL" and "Button Text"'
                 ], 400);
             }
+
+            //mengecek seluruh platform, jika ada yg tidak ada maka akan return error
+            // $platformExist = List_platform::where('short_link', $slug)->first()['short_link'];
+
 
             //create object dulu 
             $link = new Link;
 
             //BAGIAN upload to cloud
-            if($request->file('image')){
+            if ($request->file('image')) {
                 $uploadedFileUrl = \Cloudinary::upload($request->file('image')->getRealPath());
                 $idImage =  $uploadedFileUrl->getPublicId();
                 $link->image_path = $idImage;
-            }
-            else{
+            } else {
                 $link->image_path = null;
             }
-            
+
 
             //BAGIAN CREATE DATA LINK
             $link->id_user = $request->session()->get('id');
@@ -93,90 +102,123 @@ class ListPlatformController extends Controller
             }
         }
         $dataReturn = array(
-            //yg lama
-            // 'link' => $link->short_link,
-            // 'slug' => $link->video_embed_url,
-            // 'title' => $link->title
-
-            //yg baru
             'link' => $link->short_link,
             'title' => $link->title
         );
         // return Response()->json(array('success'=>true,'result'=>$uploadedFileUrl->getPublicId()));        
         // return Response()->json(array('success' => true, 'result' => $dataReturn));
-        return view('components/user/partials/modal-created')->with(["data" => $dataReturn ]); //ini untuk dynamic modal
+        return view('components/user/partials/modal-created')->with(["data" => $dataReturn]); //ini untuk dynamic modal
     }
 
     function upsert(Request $request)
     {
-        
+
         if ($request->ajax()) {
             $data = $request->all();
-            
+
             //create object dulu 
             $link = new Link;
             $link = Link::find($data['id']);
 
+            // START VALIDATION PART
             // hapus data di DB kalau user memilih mengkosongkan gambar
             // agar di ketika preview menampilkan hitam
-            if(!$request->file('image') && $data['userErasingImage'] === 'true'){
+            if (!$request->file('image') && $data['userErasingImage'] === 'true') {
                 $link->image_path = null;
             }
             // jika user mendiamkan preview gambar, artinya gambar tdk diganti, tetap yang lama
             // tidak ada perubahan di cloud dan database
-            else if(!$request->file('image') && $data['userErasingImage'] === 'false'){
+            else if (!$request->file('image') && $data['userErasingImage'] === 'false') {
             }
             //BAGIAN upload to cloud kalau ada gambar baru
-            if($request->file('image')){
+            if ($request->file('image')) {
                 $uploadedFileUrl = \Cloudinary::upload($request->file('image')->getRealPath());
                 $idImage =  $uploadedFileUrl->getPublicId();
                 $link->image_path = $idImage;
             }
+            if ($data['data_platform'] === null) {
+                return response()->json([
+                    'error'  => 'Harap isi minimal 1 platform'
+                ], 400);
+            }
 
-            //BAGIAN UPDATE DATA LINK
-            //trial 
-            
+            // END  VALIDATION PART
+
+            //START BAGIAN LINK
             $link->video_embed_url = $data['video_embed_url'];
             $link->title = $data['link_title'];
             $link->save();
 
-            //BAGIAN update link_platforms
-            $id_platforms = explode(", ", $data['id_platforms']);
-            $data_platform = explode(", ", $data['data_platform']);
-            $data_url_platform = explode(", ", $data['data_url_platform']);
-            $data_text = explode(", ", $data['data_text']);
+            //END BAGIAN LINK
+
+            //START BAGIAN LINK_PLATFORMS
+            $id_platforms = array_filter(explode(",", $data['id_platforms']));
+            $data_platform = array_filter(explode(",", $data['data_platform']));
+            $data_url_platform = array_filter(explode(",", $data['data_url_platform']));
+            $data_text = array_filter(explode(",", $data['data_text']));
+
+
+            // echo "data_platform"; 
+            // print_r($data_platform);
+            // echo "data_url_platform";
+            //  print_r($data_url_platform);
+            //  echo "data_text";
+            //  print_r($data_text);
+            //  echo "id_platforms";
+            //  print_r($id_platforms);    
+
 
             // if array has different length, meaning some field at some [index] of array is null
             // this a little prevention from user bypassing front end validation 
-            if ((count($data_platform) !== count($data_url_platform)) || (count($data_url_platform) !== count($data_text))) {
-                return response()->json(['error' => 'Form is not complete'], 400);
+            if (
+                (count($data_url_platform) !==  count($data_platform))
+                || (count($data_url_platform) !== count($data_text))
+                || (count($data_url_platform) !== count($id_platforms)) //id platform bisa 0 untuk platform baru
+            ) {
+                return response()->json([
+                    'error'  => 'Harap lengkapi form'
+                ], 400);
             }
 
-            $dataPlatforms = array();
+            //get old ids from DB
+            $listOldPlatformsId = Link_platform::where('id_link', $data['id'])->pluck('id')->toArray();
+
+            // filtered out new platform which has id value of 0
+            $idsToDeleted = array_diff($listOldPlatformsId, $id_platforms);
+            Link_platform::findMany($idsToDeleted)->each(function ($each) {
+                $each->delete();
+            });
+
             for ($i = 0; $i < count($data_platform); $i++) {
-                $dataPlatforms[$i]['id'] = $id_platforms[$i];
-                $dataPlatforms[$i]['jenis_platform'] = $data_platform[$i];
-                $dataPlatforms[$i]['url_platform'] = $data_url_platform[$i];
-                $dataPlatforms[$i]['text'] = $data_text[$i];
+                //kalau menggunakan id di form =0
+                if ($id_platforms[$i] != 0) {
+                    //kalau menggunakan id di form tanpa value
+                    // if($id_platforms[$i]) {
+                    Link_platform::where('id', $id_platforms[$i])
+                        ->update([
+                            'text' => $data_text[$i],
+                            'jenis_platform' => $data_platform[$i],
+                            'url_platform' => $data_url_platform[$i],
+                            'updatedAt' => date("Y-m-d")
+                        ]);
+                }
+                //update
+                elseif ($id_platforms[$i] == 0) {
+                    // elseif(!$id_platforms[$i]) {
+
+                    $new_data = new Link_platform;
+                    $new_data->jenis_platform = $data_platform[$i];
+                    $new_data->url_platform = $data_url_platform[$i];
+                    $new_data->text = $data_text[$i];
+                    $new_data->createdAt = date("Y-m-d");
+                    $new_data->updatedAt = date("Y-m-d");
+                    $new_data->deletedAt = null;
+                    $new_data->id_link = $data['id'];
+                    $new_data->save();
+                }
             }
 
-
-
-            for ($i = 0; $i < count($dataPlatforms); $i++) {
-                $link_platform = new Link_platform;
-                if ($dataPlatforms[$i]['id']) {
-                    $link_platform = link_platform::find($dataPlatforms[$i]['id']);
-                }
-                $link_platform->url_platform = $dataPlatforms[$i]['url_platform'];
-                $link_platform->jenis_platform = $dataPlatforms[$i]['jenis_platform'];
-                $link_platform->text = $dataPlatforms[$i]['text'];
-                $link_platform->id_link = $data['id'];
-                if (!$dataPlatforms[$i]['id']) {
-                    $link_platform->createdAt = date("Y-m-d");
-                }
-                $link_platform->updatedAt = date("Y-m-d");
-                $link_platform->save();
-            }
+            // exit();
             return response()->json(['success' => 'data is updated'], 200);
         }
     }
@@ -206,6 +248,8 @@ class ListPlatformController extends Controller
     {
         $data = $request->all();
         $link = Link::find($data['id']);
+        // $link->show_status = 2; //ini yg lama, ketika menghapus show_statusnya masih 2
+        // $link->save(); //ini yg lama, ketika menghapus show_statusnya masih 2
         $link->delete();
         return response()->json(['success' => 'Data is deleted'], 200);
     }
@@ -215,15 +259,26 @@ class ListPlatformController extends Controller
         $ip = $request->ip();
         $referer = request()->getHost();
 
+        // dd(session()->get('id'));
         $link['link'] = Link::where('short_link', $short_link)->get()->toArray();
-        if($link['link']==null){
+
+        if ($link['link'] == null) {
             abort(404);
-            // return view('404')->with('data', $link);
         }
 
-        //if IP had not visited that link
+        if ($link['link'][0]['show_status'] == 2) {
+            abort(404, "It seems this page cannot be displayed for violating our Term of Service. If you own this Link, you can contact our administrator. ");
+        }
+
         $result = Visit::where('link_id', $link['link'][0]['id'])->where('ip', $ip)->get()->toArray();
-        if($result==null){
+
+        //if IP had not visited that link
+        //and that IP is not Admin's IP or that user's IP
+        if (
+        ($link['link'][0]['id_user'] != session()->get('id'))&&
+         (session()->get('admin') != 1)&&
+          ($result == null)
+        ) {
             $visit = new Visit;
             $visit->link_id  = $link['link'][0]['id'];
             $visit->ip  = $ip;
@@ -232,52 +287,55 @@ class ListPlatformController extends Controller
             $visit->updatedAt = date("Y-m-d");
             $visit->save();
         }
+
         $link['platforms'] = Link_platform::where('id_link', $link['link'][0]['id'])->get(['id', 'jenis_platform', 'url_platform', 'text']);
         $link['video_id'] = strrchr($link['link'][0]['video_embed_url'], 'embed/');
         $link['image_path'] = $link['link'][0]['image_path'];
-        
+
         // return response()->json($link);
         // return view('layouts/preview')->with('data',$link);
         return view('components/user/view/preview')->with('data', $link);
     }
 
-    function detail(Request $request, $short_link){
+    function detail(Request $request, $short_link)
+    {
         $ip = $request->ip();
         $id_user = $request->session()->get('id');
-        $data['link'] = 
+        $data['link'] =
 
-        DB::table('links')
-        ->select(DB::raw('*, (SELECT count(*) FROM `visits` WHERE `visits`.`link_id` = `links`.`id`) AS `count`'))
-        ->where('short_link', '=', $short_link) 
-        ->get();
+            DB::table('links')
+            ->select(DB::raw('*, (SELECT count(*) FROM `visits` WHERE `visits`.`link_id` = `links`.`id`) AS `count`'))
+            ->where('short_link', '=', $short_link)
+            ->get();
 
-        $data['link']->transform(function($i) {
+        $data['link']->transform(function ($i) {
             return (array)$i;
         });
-        
+
         $array = $data['link']->toArray();
-        
+
         //jumlah link 0? berarti link tersebut tidak ada, throw 404
-        if($data['link']->count() === 0){
+        if ($data['link']->count() === 0) {
             abort(404);
         }
 
         $data['platform'] = DB::table('link_platforms')
-        ->select(DB::raw('*, (SELECT count(*) FROM `clickthroughs` WHERE `clickthroughs`.`link_platform_id` = `link_platforms`.`id`) AS `count`'))
-        ->where('id_link', '=', $data['link'][0]['id']) 
-        ->get()->toArray();
+            ->select(DB::raw('*, (SELECT count(*) FROM `clickthroughs` WHERE `clickthroughs`.`link_platform_id` = `link_platforms`.`id`) AS `count`'))
+            ->where('id_link', '=', $data['link'][0]['id'])
+            ->get()->toArray();
 
         $data['referer'] = DB::table('visits')
-        ->select('referer', DB::raw('COUNT(*) AS `count`'))
-        ->groupBy('referer')
-        ->where('link_id', '=', $data['link'][0]['id']) 
-        ->get()->toArray();
+            ->select('referer', DB::raw('COUNT(*) AS `count`'))
+            ->groupBy('referer')
+            ->where('link_id', '=', $data['link'][0]['id'])
+            ->get()->toArray();
         // dd( $data['referer']);
 
         return view('components/user/view/detail-link')->with('data', $data);
     }
 
-     function profile(Request $request){
+    function profile(Request $request)
+    {
         $id = $request->session()->get('id');
         $data = User::where('id', $id)->first(['id', 'name', 'email', 'admin', 'password'])->toArray();
         return view('components/user/view/profile')->with('data', $data);
@@ -287,19 +345,19 @@ class ListPlatformController extends Controller
     {
         $data = $request->all();
         $ip = $request->ip();
-            $result = Clickthrough::where('link_id', $data['link_id'])->where('link_platform_id', $data['link_platform_id'])->where('ip', $ip)->get()->toArray();
+        $result = Clickthrough::where('link_id', $data['link_id'])->where('link_platform_id', $data['link_platform_id'])->where('ip', $ip)->get()->toArray();
 
-            if($result==null){
-                $clickthrough = new Clickthrough;
-                $clickthrough->link_id  = $data['link_id'];
-                $clickthrough->link_platform_id  = $data['link_platform_id'];
-                $clickthrough->ip  = $ip;
-                $clickthrough->createdAt = date("Y-m-d");
-                $clickthrough->updatedAt = date("Y-m-d");
-                $clickthrough->save();
-            }
+        if ($result == null) {
+            $clickthrough = new Clickthrough;
+            $clickthrough->link_id  = $data['link_id'];
+            $clickthrough->link_platform_id  = $data['link_platform_id'];
+            $clickthrough->ip  = $ip;
+            $clickthrough->createdAt = date("Y-m-d");
+            $clickthrough->updatedAt = date("Y-m-d");
+            $clickthrough->save();
+        }
     }
-    
+
     function deleteModal(Request $request)
     {
         $data = $request->all();
@@ -312,21 +370,21 @@ class ListPlatformController extends Controller
 
     function viewSelect(Request $request)
     {
-        $platforms = List_platform::where('published', 1)->get(['id','platform_name','logo_image_path','platform_regex', 'published'])->toArray();
-        $text = List_text::get(['id','text'])->toArray();
-        return view('components/user/partials/select-platform')->with(['platforms' => $platforms, 'texts'=>$text, 'emptyLayout'=>true]); 
+        $platforms = List_platform::where('published', 1)->get(['id', 'platform_name', 'logo_image_path', 'platform_regex', 'published'])->toArray();
+        $text = List_text::get(['id', 'text'])->toArray();
+        return view('components/user/partials/select-platform')->with(['platforms' => $platforms, 'texts' => $text, 'emptyLayout' => true]);
     }
-    
+
     function addModal(Request $request)
     {
         $data = $request->all();
         try {
             return view('components/user/partials/modal-add'); //ini untuk dynamic modal   
-         } catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             throw $th;
         }
     }
-    
+
 
 
     function customModal(Request $request)
@@ -338,15 +396,38 @@ class ListPlatformController extends Controller
         }
     }
 
+    function dummy()
+    {
+        $data = Link_platform::all();
+        return view('components/user/view/test')->with(['data' => $data]);  //ini untuk dynamic modal   
 
-
-    function dummy(){
-        $dt = Carbon::create(2012, 1, 31, 0);
-        $data = Visit::where('createdAt', '>=', $dt->subMonth())
-                        ->groupBy(DB::raw('Date(createdAt)'))
-                        ->orderBy('createdAt', 'DESC')->get()->toArray();
+        //ini rancangana untuk ambil statistik per date
+        // $dt = Carbon::create(2012, 1, 31, 0);
+        // $data = Visit::where('createdAt', '>=', $dt->subMonth())
+        //                 ->groupBy(DB::raw('Date(createdAt)'))
+        //                 ->orderBy('createdAt', 'DESC')->get()->toArray();
         // dd($data);
     }
+
+    function dummysoftdelete()
+    {
+
+
+            /*
+384
+*/
+            // $data = Link_platform::find(384);
+            $data = Link_platform::findMany([396, 397])->each(function ($item) {
+                $item->delete();
+            });
+        echo "success sfot delete";
+        exit();
+    }
+
+    function dummyshowsoftdelete()
+    {
+        $data = Link_platform::onlyTrashed()->get()->toArray();
+        print_r($data);
+        exit();
+    }
 }
-
-

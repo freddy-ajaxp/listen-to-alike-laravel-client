@@ -7,9 +7,10 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+
                 <div class="modal-body">
-                    Konfirmasi Menghapus Text?<p name="confirm-delete-name"> </p>
-                    <input type="hidden" id="id_delete_logo" />
+                    Konfirmasi Menghapus Text? <p name="confirm-delete-name"> </p>
+                    <input type="hidden" id="id_delete_text" value="{{$data->id}}"/>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-danger">Hapus</button>

@@ -48,9 +48,9 @@
                                     <div class="col-lg-8 col-md-6">
                                         <div class="card card-info">
                                             <div class="card-header">
-                                                <h3 class="card-title">Change Password & Username</h3>
+                                                <h3 class="card-title">Change Username</h3>
                                             </div>
-                                            <form class="form-horizontal" id="form-change-password">
+                                            <form class="form-change-username" id="form-change-username">
                                                 <div class="card-body">
                                                     <input type="hidden" class="form-control" id="id_user" value="{{ $data['id'] }}">
                                                     <div class="form-group row">
@@ -65,14 +65,34 @@
                                                             <input type="text"  class="form-control" id="name" aria-describedby="basic-addon3" placeholder="User's Email" value="{{ $data['name'] }}">
                                                         </div>
                                                     </div>
+                                                </div>
+
+                                                <div class="card-footer">
+                                                    <button type="submit" class="btn btn-info float-right">Change</button>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <div class="card card-info">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Change Password</h3>
+                                            </div>
+                                            <form id="form-change-password">
+                                                <div class="card-body">
                                                     <div class="form-group row">
-                                                        <label for="password" class="col-sm-3 col-form-label">Password</label>
+                                                        <label for="password" class="col-sm-3 col-form-label">Old Password</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="password" class="form-control" name="pwd" id="old-password" placeholder="Password minimal 8 characters">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="password" class="col-sm-3 col-form-label">New Password</label>
                                                         <div class="col-sm-9">
                                                             <input type="password" class="form-control" name="pwd" id="password" placeholder="Password minimal 8 characters">
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
-                                                        <label for="password-confirmation" class="col-sm-3 col-form-label">Re-enter Password</label>
+                                                        <label for="password-confirmation" class="col-sm-3 col-form-label">Re-enter New Password</label>
                                                         <div class="col-sm-9">
                                                             <input type="password" class="form-control" name="pwd" id="password-confirmation" aria-describedby="basic-addon3" placeholder="Re-enter password">
                                                         </div>
@@ -133,8 +153,8 @@
         $(document).on('submit', '#form-change-password', function(event) {
             event.preventDefault();
             id_user = $('#id_user').val();
-            name = $('#name').val();
             password = $('#password').val();
+            oldpassword = $('#old-password').val();
             password2 = $('#password-confirmation').val();
 
             $.ajax({
@@ -146,11 +166,54 @@
                 , data: {
                     id: id_user
                     , name: name
+                    , oldpassword: oldpassword
                     , password: password
                     , password2: password2
-
                 }
+                , beforeSend: function() {
+                    toggleSpinner(true, "Processing request");
+                }
+                , success: function(data) {
+                    toggleSpinner(false, "")
+                    Swal.fire({
+                        title: 'success'
+                        , text: "update password success"
+                        , icon: 'success'
+                        , confirmButtonText: 'Confirm'
+                    })
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    toggleSpinner(false, "");
+                    Swal.fire({
+                        title: 'Oops! ' + ajaxOptions
+                        , text: xhr.responseJSON.error
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+                }
+                , complete : function(){
+                    $('#old-password').val("");
+                    $('#password').val("");
+                    $('#password-confirmation').val("");
+                }
+            })
+        });
 
+        $(document).on('submit', '#form-change-username', function(event) {
+            event.preventDefault();
+            id_user = $('#id_user').val();
+            name = $('#name').val();
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , url: '{{ url("user/changePassword") }}'
+                , method: 'post'
+                , data: {
+                    id: id_user
+                    , name: name
+                }
                 , beforeSend: function() {
                     toggleSpinner(true, "Processing request");
                 }
@@ -158,13 +221,12 @@
                     toggleSpinner(false, "");
                     Swal.fire({
                         title: 'success'
-                        , text: "update password success"
+                        , text: "update username success"
                         , icon: 'success'
                         , confirmButtonText: 'Confirm'
                     })
                     $('#password').val("");
                     $('#password-confirmation').val("");
-
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
                     toggleSpinner(false, "");

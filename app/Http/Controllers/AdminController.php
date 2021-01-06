@@ -25,7 +25,7 @@ class AdminController extends Controller
 {
     public function getAllLinks()
     {
-        $data = Link::all();
+        $data = Link::withTrashed()->get();
         return Datatables::of($data)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
@@ -87,7 +87,7 @@ class AdminController extends Controller
         return Datatables::of($listText)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                $btn = '<button id="deleteTextBtn" class="btn btn-danger">Hapus </button> 
+                $btn = '<button id="deleteTextBtn" data-id=' ."'$row->id'" .'class="btn btn-danger">Hapus </button> 
                 ';
                 // <button id="editTextBtn" class="btn btn-info">Edit</button>
                 return $btn;
@@ -232,6 +232,21 @@ class AdminController extends Controller
         return response()->json(['success' => 'Data is deleted'], 200);
     }
 
+
+    function deleteText(Request $request){
+        $data = $request->all();
+        
+        try { 
+            $text = Text::find($data['id']);
+               $text->delete();
+             return response()->json(['success' => 'Text is deleted'], 200);
+            //Your code
+           } catch(\Illuminate\Database\QueryException $ex){ 
+            //  put error loggin here
+             return response()->json(['error' => 'An error occurred'], 500);
+           }
+    }
+
     //ini fungsi dummy, hanya untuk percobaan
     function datatables(Request $request)
     {
@@ -254,8 +269,10 @@ class AdminController extends Controller
     function deleteLink(Request $request)
     {
         $data = $request->all();
-        $link = Link::find($data['id']);
-        $link->delete();
+        $link = Link::withTrashed()->where('id', $data['id'])->first();
+        // echo($link);
+        // exit();
+        $link->forceDelete();
         return response()->json(['success' => 'Data is deleted'], 200);
     }
 
@@ -299,7 +316,9 @@ class AdminController extends Controller
     }
     function deleteTextModal(Request $request)
     {
-        return view('components/admin/partials/modal-delete-text');
+        $data = $request->all();
+        $data = Text::find($data['idText']);
+        return view('components/admin/partials/modal-delete-text')->with('data', $data);
     }
     function resetPwdModal(Request $request)
     {

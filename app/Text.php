@@ -15,4 +15,9 @@ class Text extends Model
 	public $timestamps = false;
     const CREATED_AT = 'createdAt';
     const UPDATED_AT = 'updatedAt';
+
+    public function link_platform()
+    {
+        return $this->hasOne('App\Link_platform','text');
+    }
 }

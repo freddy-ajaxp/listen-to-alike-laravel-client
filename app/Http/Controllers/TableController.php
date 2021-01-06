@@ -37,7 +37,8 @@ class TableController extends Controller
             $data = DB::table('links')
              ->select(DB::raw('*, (SELECT count(*) FROM `visits` WHERE `visits`.`link_id` = `links`.`id`) AS `count`'))
              ->where('id_user', '=', $id_user) 
-             ->where('show_status', '=', 1) 
+            //  ->where('show_status', '=', 1) //ini lama, ketika menggunakan show_status untuk menandakan bahwa ia telah dihapus 
+             ->whereNull('deletedAt')
              ->get();
 
             // dd($data);
@@ -78,6 +79,25 @@ class TableController extends Controller
     {
 
         $data = $request->all();
+        $result = Link::where('short_link', $data['short_link'])->first();
+        
+        if($result){
+            return response()->json([
+                'failed'  => 'Short Link sudah terpakai'
+            ], 400);
+        }
+        if(strlen($data['short_link']) != 8){
+            return response()->json([
+                'failed'  => 'Short Link harus berjumlah 8 karakter'
+            ], 400);
+        }
+
+        if(preg_match('/\s/', $data['short_link'])){
+            return response()->json([
+                'failed'  => 'Short Link tidak boleh mengandung spasi'
+            ], 400);
+        }
+      
         try {
             $result = Link::where('id', $data['id'])
             ->update(['short_link' => $data['short_link']]);
@@ -91,11 +111,10 @@ class TableController extends Controller
         $data = $request->all();
         try {
             $link = Link::where('id', $data['id'])->first()->toArray();
-            $links = Link_platform::where('id_link', $data['id'])->get(['id', 'jenis_platform', 'url_platform', 'text'])->toArray();
+            $links = Link_platform::where('id_link', $data['id'])->get(['id', 'jenis_platform', 'url_platform', 'text']);
             $platforms = List_platform::get(['id','platform_name','logo_image_path','platform_regex', 'published'])->toArray();
             $text = List_text::get(['id','text'])->toArray();
             return view('components/user/partials/modal-edit')->with(["link"=>$link, "result" => $links, "platforms" => $platforms , "texts" => $text ]); //ini untuk dynamic modal   
-            // return response()->json($result); //ini untuk static modal
         } catch (\Throwable $th) {
             throw $th;
         }

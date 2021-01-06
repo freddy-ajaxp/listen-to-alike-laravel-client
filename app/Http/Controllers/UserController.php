@@ -96,6 +96,7 @@ class UserController extends Controller
 
     function logout(Request $request)
     {
+        Session::flush();
         $request->session()->forget('email');
         $request->session()->forget('id');
         $request->session()->forget('admin');
@@ -107,15 +108,40 @@ class UserController extends Controller
     {
         if ($request->ajax()) {
             $data = $request->all();
-           if (!$data['password'] ||  !$data['password2'] || !$data['name'] ) {
+            $result = User::where('id', $data['id'])->get()->first();
+            if (!Hash::check($data['oldpassword'], $result->password)) {
+                return response()->json(['error' => 'Password you entered is incorrect'], 400);
+            }                    
+           if (!$data['password'] ||  !$data['password2'] || !$data['oldpassword'] ) {
             return response()->json(['error' => 'Please fill all fields'], 400);
             }
             if ($data['password'] !== $data['password2']) {
                 return response()->json(['error' => 'password does not match'], 400);
             }    
             if (strlen($data['password']) < 8) {
+                return response()->json(['error' => 'Passwords minimal 8 character'], 400);
+            }
+            if (strlen($data['password']) < 8) {
                 // return redirect('/register')->with('error', 'Passwords minimal 8 character');
                 return response()->json(['error' => 'Passwords minimal 8 character'], 400);
+            }
+            $hashed = Hash::make($data['password'], [
+                'rounds' => 12,
+            ]);
+            $user = User::find($data['id']);
+            $user->password = $hashed;
+            $user->save();
+
+            return response()->json(['success' => 'data is updated'], 200);
+        }
+    }
+
+    function changeUsername(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = $request->all();
+           if (!$data['name'] ) {
+            return response()->json(['error' => 'Please fill all fields'], 400);
             }
 
             $hashed = Hash::make($data['password'], [
@@ -123,7 +149,7 @@ class UserController extends Controller
             ]);
 
             $user = User::find($data['id']);
-            $user->password = $hashed;
+            $user->name = $data['name'];
             $user->save();
 
             return response()->json(['success' => 'data is updated'], 200);

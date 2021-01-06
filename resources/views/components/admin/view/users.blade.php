@@ -179,7 +179,7 @@
                 , success: function(data) {
                     {
                         toggleSpinner(false, "");
-                        location.reload();
+                        $('#example').DataTable().ajax.reload();
 
                     }
                 }

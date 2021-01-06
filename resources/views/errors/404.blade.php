@@ -11,19 +11,39 @@
  
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/adminlte.css') }}">
     <script type="text/javascript" src="{{ asset('assets/js/jquery.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/adminlte.js') }}"></script>
 
 </head>
 
 
+<!-- Main content -->
+    <section class="content">
+      <div class="error-page">
+        <h2 class="headline text-warning"> 404</h2>
 
-<div class="d-flex justify-content-center align-items-center" style="text-align:center;" id="main">
-    <h1 class="mr-3 pr-3 align-top border-right inline-block align-content-center">404</h1>
-    <div class="inline-block align-middle">
-    	<h2 class="font-weight-normal lead" id="desc">The page you requested was not found.</h2>
-        <h2 class="font-weight-normal lead" id="desc">Click <a href="{{ url('/landing') }}">Here</a>  to return to Home.</h2>
-         
-    </div>
+        <div class="error-content">
+          <h3><i class="fas fa-exclamation-triangle text-warning"></i> Oops! Page not found.</h3>
+          
+          
+          
+          <p>
+          @if($exception->getMessage())
+          {{$exception->getMessage()}}
+          @else
+          We could not find the page you were looking for.
+          @endif
+            
 
-</div>
+            Meanwhile, you may <a href="/dashboard">return to dashboard</a>.
+          </p>
+        </div>
+        <!-- /.error-content -->
+      </div>
+      <!-- /.error-page -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->

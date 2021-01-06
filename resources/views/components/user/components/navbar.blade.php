@@ -6,7 +6,7 @@
     </a>
     <div class="navbar-nav" style='flex-direction: row;align-items: center'>
         
-        <a class="btn btn-danger btn-sm " id="btn-dashboard" style='color:#fff' href="/dashboard">Dashboard</a>
+        <a class="btn btn-danger btn-sm " id="btn-dashboard" style='color:#fff' href="/dashboard">Dashboard {{session()->get('admin')}}</a>
         &nbsp;
         @if(session('admin')==0)
         <div class="dropdown show">

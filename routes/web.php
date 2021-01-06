@@ -69,6 +69,7 @@ Route::post('user/register', 'UserController@register');
 Route::get('user/logout', 'UserController@logout');
 Route::get('user/profile', 'ListPlatformController@profile')->middleware('sessionvalidator');
 Route::post('user/changePassword', 'UserController@changePassword');
+Route::post('user/changeUsername', 'UserController@changeUsername');
 
 //PARTIAL VIEW
 Route::get('table/delete-confirmation', 'ListPlatformController@deleteModal')->name('table.modal-delete');
@@ -115,6 +116,7 @@ Route::get('admin/modal/reset-pwd', 'AdminController@resetPwdModal');
 Route::get('admin/modal/edit-platform', 'AdminController@editPlatformModal');
 Route::get('admin/modal/edit-text', 'AdminController@editTextModal');
 Route::get('admin/modal/delete-text', 'AdminController@deleteTextModal');
+Route::post('admin/deleteText', 'AdminController@deleteText');
 Route::post('admin/editPlatform', 'AdminController@editPlatform');
 Route::get('admin/editText', 'AdminController@editText');
 Route::post('admin/resetPassword', 'AdminController@resetPassword')->name('admin.reset-pwd');
@@ -123,4 +125,5 @@ Route::post('admin/resetPassword', 'AdminController@resetPassword')->name('admin
 
 
 Route::get('dummy', 'ListPlatformController@dummy');
-
+Route::get('dummysoftdelete', 'ListPlatformController@dummysoftdelete');
+Route::get('dummyshowsoftdelete', 'ListPlatformController@dummyshowsoftdelete');

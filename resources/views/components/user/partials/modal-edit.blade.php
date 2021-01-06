@@ -40,7 +40,12 @@
                                 jpg | jpeg | png <br> Max 10MB <br> Drop file here.
                             </p>
                         </div>
-                        <img id="image-preview-container" src="https://res.cloudinary.com/dfpmdlf8l/image/upload/{{$link['image_path']}}.jpg" style="max-height: 150px;" alt="">
+                        @if($link['image_path'])
+                            <img id="image-preview-container" src="https://res.cloudinary.com/dfpmdlf8l/image/upload/{{$link['image_path']}}.jpg" style="max-height: 150px;" alt="">    
+                        @else
+                        <img id="image-preview-container" src="" style="max-height: 150px;" alt="">
+                        @endif
+                        
                         <input id="image" class="music-link__upload-input" type="file" name="image" accept="image/*" />
                         <input type="hidden" id="userErasingImage" value=false>
                     </div>

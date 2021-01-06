@@ -1,6 +1,6 @@
 @if(isset($emptyLayout) && $emptyLayout)
 <div class="form-group">
-    <input type="hidden" name="id_platforms[]" value="" />
+    <input type="hidden" name="id_platforms[]" value=0/>
     <div class="form-row">
         <div class="col-sm-2">
             <div class="">
@@ -12,9 +12,9 @@
                 
                 <select name="data_platform[]" class="custom-select ">
                 {{-- <select name="data_platform[]" class="custom-select selectpicker"> --}}
-                    <option disabled="" selected="" value="null">Platform </option>
+
                     @foreach($platforms as $key => $platform)
-                    <option value="{{$platform['platform_name']}}">{{$platform['platform_name']}}</option>
+                    <option value="{{$platform['id']}}">{{$platform['platform_name']}}</option>
                     @endforeach
                 </select>
             </div>
@@ -39,7 +39,7 @@
                 </div>
                 <select name="data_text[]" class="custom-select">
                     @foreach($texts as $index => $text)
-                    <option value="{{$text['text']}}">{{$text['text']}}</option>
+                    <option value="{{$text['id']}}">{{$text['text']}}</option>
                     @endforeach
                 </select>
             </div>
@@ -54,10 +54,33 @@
     </div>
 </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @else
 @foreach ($result as $index =>$dt)
 <div class="form-group">
-    <input type="hidden" name="id_platforms[]" value="{{$dt['id']}}" />
+        @if($dt['id'] !== 0)
+            <input type="hidden" name="id_platforms[]" value="{{$dt['id']}}" />
+        @else
+            <input type="hidden" name="id_platforms[]" />
+        @endif
     <div class="form-row">
 
         <div class="col-sm-2">
@@ -70,9 +93,9 @@
                     @foreach($platforms as $key => $platform)
                     <option 
                     @php
-                        if ($platform['platform_name'] === $dt['jenis_platform']) echo 'selected="selected"';
+                        if ($platform['platform_name'] === $dt->list_platform->platform_name) echo 'selected="selected"';
                     @endphp  
-                    value="{{$platform['platform_name']}}">{{$platform['platform_name']}}</option>
+                    value="{{$platform['id']}}">{{$platform['platform_name']}}</option>
                     @endforeach
                 </select>
             </div>
@@ -99,9 +122,9 @@
                     @foreach($texts as $index => $text)
                     <option 
                     @php
-                        if ($text['text'] ===  $dt['text']) echo 'selected="selected"';
+                        if ($text['text'] ===  $dt->list_text->text) echo 'selected="selected"';
                     @endphp  
-                    value="{{$text['text']}}">{{$text['text']}}  </option>
+                    value="{{$text['id']}}">{{$text['text']}}  </option>
                     @endforeach
                 </select>
             </div>

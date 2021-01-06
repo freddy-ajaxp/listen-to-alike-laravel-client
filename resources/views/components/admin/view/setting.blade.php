@@ -279,52 +279,26 @@
                         , icon: 'error'
                         , confirmButtonText: 'Confirm'
                     })
-
                 }
             , })
         })
 
-         $('#table-text tbody').on('click', '#editTextBtn', function() {
-            var data = table.row($(this).parents('tr')).data();
-            $('#id_delete_logo').val(data.id);
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-                , url: '{{ url("admin/modal/edit-text") }}'
-                , method: 'get'
-                , data: {
-                    id: data.id
-                }
-                , success: function(linksPlatform) {
-                    $('#modals .dynamic-modal-container').html(linksPlatform)
-                    $('#modals').modal('show');
-                }
-                , error: function(xhr, ajaxOptions, thrownError) {
-                    let returnMessage = JSON.parse(xhr.responseText)
-                    Swal.fire({
-                        title: 'Oops! ' + ajaxOptions
-                        , text: returnMessage.error
-                        , icon: 'error'
-                        , confirmButtonText: 'Confirm'
-                    })
+         
 
-                }
-            , })
-        })
-
-        $('#table-text tbody').on('click', '#deleteTextBtn', function() {
-            var data = table.row($(this).closest('tr')).data();
+        $(document).on('click', '#deleteTextBtn', function() {
+            var data = table.row($(this).parents('tr')).data(); //data tidak tertangkap
+            idText = $(this).data('id'); // id diambil dari dalam attribute button #deleteTextBtn
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
                 , url: '{{ url("admin/modal/delete-text") }}'
+                , data: {idText: idText}
                 , method: 'get'
                 , success: function(linksPlatform) {
                     $('#modals .dynamic-modal-container').html(linksPlatform)
                     $('#modals').modal('show');
-                    $('#id_delete_logo').val(data.id);
+                    $('#id_delete_logo').val(idText);
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
                     let returnMessage = JSON.parse(xhr.responseText)
@@ -397,7 +371,7 @@
                 , success: function(data) {
                     {
                         toggleSpinner(false, "");
-                        location.reload();
+                        $('#example').DataTable().ajax.reload();
                     }
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
@@ -432,7 +406,41 @@
                 }
                 , success: function(data) {
                     {
-                        location.reload();
+                        $('#example').DataTable().ajax.reload();
+                    }
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    toggleSpinner(false, "");
+                    Swal.fire({
+                        title: 'Oops! ' + ajaxOptions
+                        , text: "error occured"
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+                }
+            })
+        });
+
+        //submit form text
+        $('#form-text').on('submit', function(event) {
+            event.preventDefault();
+            text_name = $('input[name="text"]').val()
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , url: '{{ route("admin.add-text") }}'
+                , method: 'post'
+                , data: {text: text_name}
+                , dataType: 'json'
+                , beforeSend: function() {
+                    {
+                        toggleSpinner(true, "Processing your request");
+                    }
+                }
+                , success: function(data) {
+                    {
+                        $('#example').DataTable().ajax.reload();
                     }
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
@@ -450,7 +458,6 @@
         //submit edit platform
         $(document).on('submit', "#form-platform-edit" ,  function(event) {
             event.preventDefault();
-            
             var files = $('#image').get(0).files;
             formData = new FormData();
             id = $('#id').val()
@@ -482,7 +489,45 @@
                 }
                 , success: function(data) {
                     {
-                        location.reload();
+                        $('#example').DataTable().ajax.reload();
+                    }
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    let returnMessage = JSON.parse(xhr.responseText)
+                    toggleSpinner(false, "");
+                    Swal.fire({
+                        title: 'Oops! ' + ajaxOptions
+                        , text: returnMessage.error
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+                }
+            })
+        });
+
+
+        //submit edit platform
+        $(document).on('submit', "#form-delete-text" ,  function(event) {
+            event.preventDefault();
+            id_delete_text = $('#id_delete_text').val()           
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , enctype: 'application/json'
+                , url: '{{ url("admin/deleteText") }}'
+                , method: 'post'
+                , data: {id: id_delete_text}
+                , dataType: 'json'
+                , beforeSend: function() {
+                    {
+                        toggleSpinner(true, "Processing your request");
+                    }
+                }
+                , success: function(data) {
+                    {
+                        $('#table-text').DataTable().ajax.reload();
+                        toggleSpinner(false, "");
                     }
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
@@ -526,7 +571,7 @@
                 }
                 , success: function(data) {
                     {
-                        location.reload();
+                        $('#example').DataTable().ajax.reload();
                     }
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {

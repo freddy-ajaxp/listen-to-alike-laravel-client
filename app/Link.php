@@ -3,9 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Link extends Model
 {
+    use SoftDeletes;
     protected $primaryKey = 'id';
     protected $table = 'links';
 	public $timestamps = false;
@@ -14,4 +15,7 @@ class Link extends Model
     ];
     const CREATED_AT = 'createdAt';
     const UPDATED_AT = 'updatedAt';
+    const DELETED_AT = 'deletedAt';
+
+
 }
