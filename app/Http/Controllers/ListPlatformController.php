@@ -8,6 +8,7 @@ use App\List_platform;
 use App\List_text;
 use App\User;
 use App\Clickthrough;
+use App\Text;
 use App\Visit;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -18,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use PhpParser\Node\Expr\List_;
 use PhpParser\Node\Stmt\Catch_;
 use PhpParser\Node\Stmt\TryCatch;
 use Validator;
@@ -32,16 +34,12 @@ class ListPlatformController extends Controller
         if ($request->ajax()) {
             $data = $request->all();
             //validasi
+
             //BAGIAN insert link_platforms
-            $data_platform = explode(", ", $data['data_platform']);
-            $data_url_platform = explode(", ", $data['data_url_platform']);
-            $data_text = explode(", ", $data['data_text']);
-
-            // dd($data_platform);
-
-            // $users = DB::table('list_platforms')
-            //     ->groupBy('platform_name')
-            //     ->get()->toArray();
+            $id_platforms = array_map('trim',array_filter(explode(",", $data['id_platforms'])));
+            $data_platform = array_map('trim',array_filter(explode(",", $data['data_platform'])));
+            $data_url_platform = array_map('trim',array_filter(explode(",", $data['data_url_platform'])));
+            $data_text = array_map('trim',array_filter(explode(",", $data['data_text'])));
 
             //kalau data platform ==0, return error, karena minimal 1
             if ($data['data_platform'] === null) {
@@ -54,13 +52,37 @@ class ListPlatformController extends Controller
             // this a little prevention from user bypassing front end validation 
             if ((count($data_platform) !== count($data_url_platform)) || (count($data_url_platform) !== count($data_text))) {
                 return response()->json([
-                    'error'  => 'Data is incorrect, please complete all data including "Platform", "URL" and "Button Text"'
+                    'error'  => 'Harap lengkapi form'
                 ], 400);
             }
 
-            //mengecek seluruh platform, jika ada yg tidak ada maka akan return error
-            // $platformExist = List_platform::where('short_link', $slug)->first()['short_link'];
+            // if array has different length, meaning some field at some [index] of array is null
+            // this a little prevention from user bypassing front end validation 
+            if (
+                (count($data_url_platform) !==  count($data_platform))
+                || (count($data_url_platform) !== count($data_text))
+                || (count($data_url_platform) !== count($id_platforms)) //id platform bisa 0 untuk platform baru
+            ) {
+                return response()->json([
+                    'error'  => 'Harap lengkapi form'
+                ], 400);
+            }
 
+            // mengecek apakah input platform & text dari user tersedia di DB
+            // ketika user mengisi form, admin bisa menghapus data di DB dan view user blm terupdate
+            $platformDiDB = List_platform::whereIn('id', $data_platform)->pluck('id')->toArray();
+            $textDiDB = Text::whereIn('id', $data_text)->pluck('id')->toArray();
+            $bedaPltDBdanInput = array_diff($platformDiDB, $data_platform);
+            $bedaTextDBdanInput = array_diff($textDiDB, $data_text);
+            //jika beda, berarti data input user tidak sesuai dgn yg ada di DB
+            if(
+                count($bedaPltDBdanInput) != 0 || 
+                count($bedaTextDBdanInput) != 0
+               ){
+                   return response()->json([
+                       'error'  => 'Terjadi kesalahan pada saat memasukkan data, mohon untuk refresh halaman ini'
+                   ], 500);
+               }
 
             //create object dulu 
             $link = new Link;
@@ -74,7 +96,6 @@ class ListPlatformController extends Controller
                 $link->image_path = null;
             }
 
-
             //BAGIAN CREATE DATA LINK
             $link->id_user = $request->session()->get('id');
             $link->short_link = $this->generateId(Str::random(9));
@@ -85,9 +106,7 @@ class ListPlatformController extends Controller
             $link->updatedAt = date("Y-m-d");
             $link->save();
 
-
-
-            $temp = array();
+            $temp = array(); // ini buat apa ya??
             //insert loop
             for ($i = 0; $i < count($data_url_platform); $i++) {
                 $link_platform = new Link_platform;
@@ -105,8 +124,7 @@ class ListPlatformController extends Controller
             'link' => $link->short_link,
             'title' => $link->title
         );
-        // return Response()->json(array('success'=>true,'result'=>$uploadedFileUrl->getPublicId()));        
-        // return Response()->json(array('success' => true, 'result' => $dataReturn));
+
         return view('components/user/partials/modal-created')->with(["data" => $dataReturn]); //ini untuk dynamic modal
     }
 
@@ -116,57 +134,18 @@ class ListPlatformController extends Controller
         if ($request->ajax()) {
             $data = $request->all();
 
-            //create object dulu 
-            $link = new Link;
-            $link = Link::find($data['id']);
+            //START VALIDATION
+            $id_platforms = array_map('trim',array_filter(explode(",", $data['id_platforms'])));
+            $data_platform = array_map('trim',array_filter(explode(",", $data['data_platform'])));
+            $data_url_platform = array_map('trim',array_filter(explode(",", $data['data_url_platform'])));
+            $data_text = array_map('trim',array_filter(explode(",", $data['data_text'])));
 
-            // START VALIDATION PART
-            // hapus data di DB kalau user memilih mengkosongkan gambar
-            // agar di ketika preview menampilkan hitam
-            if (!$request->file('image') && $data['userErasingImage'] === 'true') {
-                $link->image_path = null;
-            }
-            // jika user mendiamkan preview gambar, artinya gambar tdk diganti, tetap yang lama
-            // tidak ada perubahan di cloud dan database
-            else if (!$request->file('image') && $data['userErasingImage'] === 'false') {
-            }
-            //BAGIAN upload to cloud kalau ada gambar baru
-            if ($request->file('image')) {
-                $uploadedFileUrl = \Cloudinary::upload($request->file('image')->getRealPath());
-                $idImage =  $uploadedFileUrl->getPublicId();
-                $link->image_path = $idImage;
-            }
+            //kalau data platform ==0, return error, karena minimal 1
             if ($data['data_platform'] === null) {
                 return response()->json([
                     'error'  => 'Harap isi minimal 1 platform'
                 ], 400);
             }
-
-            // END  VALIDATION PART
-
-            //START BAGIAN LINK
-            $link->video_embed_url = $data['video_embed_url'];
-            $link->title = $data['link_title'];
-            $link->save();
-
-            //END BAGIAN LINK
-
-            //START BAGIAN LINK_PLATFORMS
-            $id_platforms = array_filter(explode(",", $data['id_platforms']));
-            $data_platform = array_filter(explode(",", $data['data_platform']));
-            $data_url_platform = array_filter(explode(",", $data['data_url_platform']));
-            $data_text = array_filter(explode(",", $data['data_text']));
-
-
-            // echo "data_platform"; 
-            // print_r($data_platform);
-            // echo "data_url_platform";
-            //  print_r($data_url_platform);
-            //  echo "data_text";
-            //  print_r($data_text);
-            //  echo "id_platforms";
-            //  print_r($id_platforms);    
-
 
             // if array has different length, meaning some field at some [index] of array is null
             // this a little prevention from user bypassing front end validation 
@@ -180,6 +159,54 @@ class ListPlatformController extends Controller
                 ], 400);
             }
 
+            // mengecek apakah input platform & text dari user tersedia di DB
+            // ketika user mengisi form, admin bisa menghapus data di DB dan view user blm terupdate
+             $platformDiDB = List_platform::whereIn('id', $data_platform)->pluck('id')->toArray();
+             $textDiDB = Text::whereIn('id', $data_text)->pluck('id')->toArray();
+             $bedaPltDBdanInput = array_diff($platformDiDB, $data_platform);
+             $bedaTextDBdanInput = array_diff($textDiDB, $data_text);
+             //jika beda, berarti data input user tidak sesuai dgn yg ada di DB
+             if(
+                 count($bedaPltDBdanInput) != 0 || 
+                 count($bedaTextDBdanInput) != 0
+                ){
+                    return response()->json([
+                        'error'  => 'Terjadi kesalahan pada saat memasukkan data, mohon untuk refresh halaman ini'
+                    ], 500);
+                }
+
+            //create object dulu 
+            $link = new Link;
+            $link = Link::find($data['id']);
+
+            // hapus data di DB kalau user memilih mengkosongkan gambar
+            // agar di ketika preview menampilkan hitam
+            if (!$request->file('image') && $data['userErasingImage'] === 'true') {
+                $link->image_path = null;
+            }
+            // jika user mendiamkan preview gambar, artinya gambar tdk diganti, tetap yang lama
+            // tidak ada perubahan di cloud dan database
+            else if (!$request->file('image') && $data['userErasingImage'] === 'false') {
+            }
+
+            
+            // END  VALIDATION 
+
+
+            // upload to cloud kalau ada gambar baru
+            if ($request->file('image')) {
+                $uploadedFileUrl = \Cloudinary::upload($request->file('image')->getRealPath());
+                $idImage =  $uploadedFileUrl->getPublicId();
+                $link->image_path = $idImage;
+            }
+
+            //save LINK
+            $link->video_embed_url = $data['video_embed_url'];
+            $link->title = $data['link_title'];
+            $link->save();
+            //END LINK
+
+            
             //get old ids from DB
             $listOldPlatformsId = Link_platform::where('id_link', $data['id'])->pluck('id')->toArray();
 

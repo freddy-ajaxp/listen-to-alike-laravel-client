@@ -1,5 +1,5 @@
 <!-- modal Custom -->
-    <form id="form-custom" name="form-custom" class="form-horizontal" novalidate="">
+    <form id="form-custom" name="form-custom" class="form-horizontal" >
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

@@ -31,7 +31,8 @@ class AdminController extends Controller
             ->addColumn('action', function ($row) {
                 $btn = '<button id="deletetBtn" class="btn btn-danger" >Hapus</button> '
                     . "<a href='/preview/$row->short_link'" . ' class="btn btn-info ">Lihat</a>'
-                    . "<a href='/detail/$row->short_link'" . ' class="btn btn-default ">Detail</a>';
+                    . "<a href='/detail/$row->short_link'" . ' class="btn btn-default ">Detail</a>'                    
+                    ;
                 //    <button id="viewBtn">Detail</button>
                 return $btn;
             })
@@ -49,7 +50,6 @@ class AdminController extends Controller
                            <button id="deactivateBtn" class="btn btn-danger">Hapus User</button> '
                     . "<a href='getUserDataById/$row->id'" . 'id="viewBtn"  class="btn btn-info">Lihat</button>
                            ';
-
                 return $btn;
             })
             ->rawColumns(['action'])
@@ -65,16 +65,17 @@ class AdminController extends Controller
 
     public function getAllPlatforms()
     {
-        $result = List_platform::all();
+        $result = List_platform::withTrashed()->get();
         return Datatables::of($result)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $btn = '<button id="deleteLogoBtn" class="btn btn-danger">Hapus</button> 
                 <button id="editLogoBtn" class="btn btn-info">Edit </button>
-                           ' . ($row->published ? 
-                           "<a href='/publishing' id='editLogoBtn' class='btn btn-success'>Publish </a>"
-                           : "<a href='/publishing' id='editLogoBtn' class='btn btn-warning'>Hide </a>" );
-                        //    <a href='/preview/$row->short_link'" . ' class="btn btn-info ">Lihat</a>
+                           ' . ($row->deletedAt ? 
+                           "<button href='admin/publishing' id='publishLogoBtn' class='btn btn-success'>Publish </button>"
+                           : 
+                           "<button href='admin/publishing' id='hideLogoBtn' class='btn btn-warning'>Hide</button>"
+                            );
                 return $btn;
             })
             ->rawColumns(['action'])
@@ -214,16 +215,18 @@ class AdminController extends Controller
     {
 
         $data = $request->all();
-        // $logo_image_path = List_platform::where('id', $data['id'])->first()->logo_image_path;
-        $list_platform = List_platform::find($data['id']);
-        $dataExist = Link_platform::where('jenis_platform', $list_platform['platform_name'])->first();
+        $list_platform = List_platform::withTrashed()->where('id',$data['id'])->first();
+        $dataExist = Link_platform::withTrashed()->where('jenis_platform', $data['id'])->first();
+    
         // jika ada record yang berkaitan, tidak boleh dihapus
         if ($dataExist) {
             return response()->json(['error' => 'Cannot delete Platform that is being used in a Link by User(s)'], 400);
         }
+
         $logo_image_path = $list_platform->logo_image_path;
+
         //delete record di db
-        $list_platform->delete();
+        $list_platform->forceDelete();
         //delete file di server
         $deleteResult = \Cloudinary::destroy($logo_image_path);
         if (!$deleteResult) {
@@ -235,7 +238,12 @@ class AdminController extends Controller
 
     function deleteText(Request $request){
         $data = $request->all();
-        
+        $dataExist = Link_platform::where('text', $data['id'])->first();
+        // jika ada record yang berkaitan, tidak boleh dihapus
+        if ($dataExist) {
+            return response()->json(['error' => 'Cannot delete Text that is being used in a Link by User(s)'], 400);
+        }
+
         try { 
             $text = Text::find($data['id']);
                $text->delete();
@@ -270,9 +278,22 @@ class AdminController extends Controller
     {
         $data = $request->all();
         $link = Link::withTrashed()->where('id', $data['id'])->first();
-        // echo($link);
-        // exit();
         $link->forceDelete();
+        return response()->json(['success' => 'Data is deleted permanently'], 200);
+    }
+    function publishPlatform(Request $request)
+    {
+        $data = $request->all();
+        $link = List_platform::withTrashed()->where('id', $data['id'])->first();
+
+        $link->restore();
+        return response()->json(['success' => 'Data is restored'], 200);
+    }
+    function hidePlatform(Request $request)
+    {
+        $data = $request->all();
+        $link = List_platform::withTrashed()->where('id', $data['id'])->first();
+        $link->delete();
         return response()->json(['success' => 'Data is deleted'], 200);
     }
 

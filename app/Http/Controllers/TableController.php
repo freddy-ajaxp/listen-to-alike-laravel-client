@@ -111,10 +111,12 @@ class TableController extends Controller
         $data = $request->all();
         try {
             $link = Link::where('id', $data['id'])->first()->toArray();
-            $links = Link_platform::where('id_link', $data['id'])->get(['id', 'jenis_platform', 'url_platform', 'text']);
+            $link_platform = Link_platform::where('id_link', $data['id'])->get(['id', 'jenis_platform', 'url_platform', 'text']);
+
+            print($link_platform);
             $platforms = List_platform::get(['id','platform_name','logo_image_path','platform_regex', 'published'])->toArray();
             $text = List_text::get(['id','text'])->toArray();
-            return view('components/user/partials/modal-edit')->with(["link"=>$link, "result" => $links, "platforms" => $platforms , "texts" => $text ]); //ini untuk dynamic modal   
+            return view('components/user/partials/modal-edit')->with(["link"=>$link, "result" => $link_platform, "platforms" => $platforms , "texts" => $text ]); //ini untuk dynamic modal   
         } catch (\Throwable $th) {
             throw $th;
         }

@@ -88,50 +88,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">Add New Text Option</h3>
-                    </div>
-                    <form id="form-text" action="/admin/addPlatform" method="post" enctype="multipart/form-data">
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label>Text</label>
-                                <input name="text" type="text" class="form-control" placeholder="cth: Kunjungi">
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Add</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="col-md-8">
-                <div class="card card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">Text List</h3>
-                    </div>
-
-                    @include('components.admin.components.spinner')
-                    <div class="card-body">
-                        <div class="table-responsive ">
-                            <table id="table-text" class="table table-bordered table-striped table-hover users-table mb-2">
-                                <thead>
-                                    <tr>
-                                        <th>Text</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </section>
     <!-- /.content -->
 
@@ -323,7 +279,7 @@
                     })
                 }
             , })
-        })
+        });
         
          $('#example tbody').on('click', '#publishLogoBtn', function() {
             var data = table.row($(this).parents('tr')).data();
@@ -349,37 +305,7 @@
                     })
                 }
             , })
-        })
-
-         
-
-        $(document).on('click', '#deleteTextBtn', function() {
-            var data = table.row($(this).parents('tr')).data(); //data tidak tertangkap
-            idText = $(this).data('id'); // id diambil dari dalam attribute button #deleteTextBtn
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-                , url: '{{ url("admin/modal/delete-text") }}'
-                , data: {idText: idText}
-                , method: 'get'
-                , success: function(linksPlatform) {
-                    $('#modals .dynamic-modal-container').html(linksPlatform)
-                    $('#modals').modal('show');
-                    $('#id_delete_logo').val(idText);
-                }
-                , error: function(xhr, ajaxOptions, thrownError) {
-                    let returnMessage = JSON.parse(xhr.responseText)
-                    Swal.fire({
-                        title: 'Oops! ' + ajaxOptions
-                        , text: returnMessage.error
-                        , icon: 'error'
-                        , confirmButtonText: 'Confirm'
-                    })
-
-                }
-            , })
-        })
+        });
 
         //img preview
         $('#svg').change(function() {
@@ -437,42 +363,6 @@
                     }
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
-                    Swal.fire({
-                        title: 'Oops! ' + ajaxOptions
-                        , text: "error occured"
-                        , icon: 'error'
-                        , confirmButtonText: 'Confirm'
-                    })
-                }
-            })
-        });
-
-        //submit form text
-        $('#form-text').on('submit', function(event) {
-            event.preventDefault();
-            text_name = $('input[name="text"]').val()
-
-            //appending data to sent
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-                , url: '{{ route("admin.add-text") }}'
-                , method: 'post'
-                , data: {text: text_name}
-                , dataType: 'json'
-                , beforeSend: function() {
-                    {
-                        toggleSpinner(true, "Processing your request");
-                    }
-                }
-                , success: function(data) {
-                    {
-                        $('#example').DataTable().ajax.reload();
-                    }
-                }
-                , error: function(xhr, ajaxOptions, thrownError) {
-                    toggleSpinner(false, "");
                     Swal.fire({
                         title: 'Oops! ' + ajaxOptions
                         , text: "error occured"

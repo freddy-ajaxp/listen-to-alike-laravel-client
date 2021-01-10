@@ -19,6 +19,7 @@ class Link_platform extends Model
     const UPDATED_AT = 'updatedAt';
     const DELETED_AT = 'deletedAt';
 
+
     public function list_platform()
     {
         return $this->belongsTo(List_platform::class,'jenis_platform');

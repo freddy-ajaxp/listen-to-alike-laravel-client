@@ -1,6 +1,6 @@
 <!-- modal add -->
 {{-- <div class="modal bd-example-modal-lg" id="modal-add-link" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <form id="form-add-link" name="form-add-link" class="form-horizontal" novalidate="">
+    <form id="form-add-link" name="form-add-link" class="form-horizontal" >
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -83,7 +83,7 @@
 
 <!-- modalfof edit -->
 {{-- <div class="modal bd-example-modal-lg" id="modal-edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <form id="form-platform" name="form-platform" class="form-horizontal" novalidate="">
+    <form id="form-platform" name="form-platform" class="form-horizontal" >
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -147,7 +147,7 @@
 
 <!-- modal delete -->
 {{-- <div class="modal" id="modal-delete" role="dialog">
-    <form id="form-delete" name="form-delete" class="form-horizontal" novalidate="">
+    <form id="form-delete" name="form-delete" class="form-horizontal" >
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -175,7 +175,7 @@
 
 <!-- modal Custom -->
     {{-- <div class="modal" id="modal-custom" role="dialog">
-        <form id="form-custom" name="form-custom" class="form-horizontal" novalidate="">
+        <form id="form-custom" name="form-custom" class="form-horizontal" >
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">

@@ -55,7 +55,7 @@
                     <div class="form-group">
                         <div class='music-link__platform__input'>
                             <label class='d-block' style='color:#444'>Link Title</label>
-                            <input type="text" name="link_title" class="music-link__name" placeholder='Song, album, or artist title'>
+                            <input required type="text" name="link_title" class="music-link__name" placeholder='Song, album, or artist title'>
                         </div>
                     </div>
                     <div class='music-link__platform__input'>
@@ -85,17 +85,11 @@
                 
                 
                 <span id="result"></span>
-                {{-- <div class="table-responsive">
-                    <table class="table table-borderless " id="user_table">
-                        <tbody id="select-master">
-                        </tbody>
-                    </table>
-                </div> --}}
+
                 <div id="modal-dynamic-form"></div>
             </div>
             <div>
                 <p class="music-link__error"></p>
-                {{-- <input type="submit" name="save" id="save" class="btn btn-red mr-1 music-link__create-btn music-link__create-btn--landing py-3" value="Create Link"> --}}
                 <button type="submit" class="btn btn-danger btn-lg btn-block">Create Link</button>
                 <!-- <button class='btn btn-red mr-1 music-link__create-btn music-link__create-btn--landing py-3'></button> -->
         </form>
@@ -225,16 +219,18 @@
         });
 
         $('#dynamic_form').on('submit', function(event) {
-            event.preventDefault();
-            var IsValid = $("#dynamic_form").valid();
-            if (IsValid) {
-
+                event.preventDefault();
                 var files = $('#image').get(0).files;
                 formData = new FormData();
                 link_title = $('input[name="link_title"]').val()
                 embed_url_video = $('input[name="embed_url_video"]').val()
 
                 // getting data
+                var id_platforms = $("select[name='id_platforms[]']")
+                    .map(function() {
+                        return ' ' + $(this).val();
+                    }).get();
+
                 var data_platform = $("select[name='data_platform[]']")
                     .map(function() {
                         return ' ' + $(this).val();
@@ -251,15 +247,17 @@
                     }).get();
 
                 //log for debug purpose
-                {{-- console.log('data_platform', data_platform) --}}
-                {{-- console.log('data_url_platform', data_url_platform) --}}
-                {{-- console.log('data_text', data_text) --}}
-                {{-- console.log('files[0]', files[0]) --}}
+                console.log('id_platforms', id_platforms)
+                console.log('data_platform', data_platform)
+                console.log('data_url_platform', data_url_platform)
+                console.log('data_text', data_text)
+                console.log('files[0]', files[0])
 
                 //appending data to sent
                 formData.append('link_title', link_title);
                 formData.append('image', files[0]); //only 1 image, the first index     
                 formData.append('video_embed_url', embed_url_video);
+                formData.append('id_platforms', id_platforms);
                 formData.append('data_platform', data_platform);
                 formData.append('data_url_platform', data_url_platform);
                 formData.append('data_text', data_text);
@@ -271,14 +269,12 @@
                     , url: '{{ route("dynamic-field.insert") }}'
                     , method: 'post'
                     , data: formData
-                    {{-- , dataType: 'json' --}}
                     , contentType: false
                     , processData: false
                     , beforeSend: function() {
                         toggleSpinner(true, "Submitting Your Data");
                     }
                     , success: function(html) {
-                        //ini yg baru dgn modal konfirmasi
                         toggleSpinner(false, "");
                         $('#modals .dynamic-modal-container').html(html)
                         $('#modals').modal('show');
@@ -289,17 +285,16 @@
                         toggleSpinner(false, "");
                         Swal.fire({
                             title: ajaxOptions + '!'
-                            , text: returnMessage.failed
+                            , text: returnMessage.error
                             , icon: 'error'
                             , confirmButtonText: 'Confirm'
                         })
                     }
                 })
-            }
         });
     });
 
 </script>
 
-<script type="text/javascript" src="{{ asset('assets/js/form-validation.js') }}"></script>
+{{-- <script type="text/javascript" src="{{ asset('assets/js/form-validation.js') }}"></script> --}}
 @endpush

@@ -37,6 +37,7 @@
                                 <th>Judul</th>
                                 <th>Slug</th>
                                 <th>Gambar</th>
+                                <th>Status</th>
                                 <th>Video Embed</th>
                                 <th>#</th>
                             </tr>
@@ -62,7 +63,7 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.css') }}">
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/datatables.min.css" />
+{{-- <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/datatables.min.css" /> --}}
 @endpush
 
 
@@ -76,7 +77,7 @@
     //init datatable
 
     $(document).ready(function() {
-     counter = 0;
+        counter = 0;
 
         //serverside
         var table = $('#example').DataTable({
@@ -93,28 +94,38 @@
                     , name: 'short_link'
                 }
                 , {
-                    data: null,
-                    render: function(data,type,row){
-                        if(row.image_path){
+                    data: null
+                    , render: function(data, type, row) {
+                        if (row.image_path) {
                             return `<img src="https://res.cloudinary.com/dfpmdlf8l/image/upload/${row.image_path}",width=60px, height=30px alt="image not found" />`
-                        }
-                        else {
+                        } else {
                             return "No image"
                         }
-                        },
-                    orderable: false
+                    }
+                    , orderable: false
                 }
                 , {
-                    data: null,
-                    render: function(data,type,row){
-                        if(row.video_embed_url){
-                            return `<a href="${row.video_embed_url}" target="__blank"> ${row.video_embed_url} </a>`
+                    data: null
+                    , render: function(data, type, row) {
+                        if (row.deletedAt) {
+                            return 'Dihapus';
+                        } else {
+                            return 'Aktif';
                         }
-                        else {
+                    },
+                    orderable: false
+                    , searchable: true
+                }
+                , {
+                    data: null
+                    , render: function(data, type, row) {
+                        if (row.video_embed_url) {
+                            return `<a href="${row.video_embed_url}" target="__blank"> ${row.video_embed_url} </a>`
+                        } else {
                             return "No Video URL"
                         }
-                        },
-                    orderable: false
+                    }
+                    , orderable: false
 
                 }
                 , {
@@ -126,7 +137,7 @@
             , ]
         });
 
-    $('#example tbody').on('click', '#deletetBtn', function() {
+        $('#example tbody').on('click', '#deletetBtn', function() {
             var data = table.row($(this).closest('tr')).data();
             $('p[name="confirm-delete-name"]').text(data.id);
             $('#id_delete_link').val(data.id);
@@ -141,7 +152,7 @@
                     $('#modals .dynamic-modal-container').html(linksPlatform)
                     $('#modals').modal('show');
                     $('#id_delete_link').val(data.id);
-                    
+
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
                     Swal.fire({
@@ -155,42 +166,44 @@
             , })
         })
     });
-        //submit form delete links
-        $(document).on('submit', "#form-delete-link" ,  function(event) {
-            event.preventDefault();
+    //submit form delete links
+    $(document).on('submit', "#form-delete-link", function(event) {
+        event.preventDefault();
 
-            id_link = $('#id_delete_link').val();
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        id_link = $('#id_delete_link').val();
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+            , url: '{{ route("admin.delete-link") }}'
+            , method: 'post'
+            , data: {
+                id: id_link
+            , }
+            , dataType: 'json'
+            , beforeSend: function() {
+                {
+                    toggleSpinner(true, "Processing your request");
                 }
-                , url: '{{ route("admin.delete-link") }}'
-                , method: 'post'
-                , data: {
-                    id: id_link
-                , }
-                , dataType: 'json'
-                , beforeSend: function() {
-                    {
-                        toggleSpinner(true, "Processing your request");
-                    }
-                }
-                , success: function(data) {
-                        toggleSpinner(false, "");
-                        $('#example').DataTable().ajax.reload();
-                },
-                complete: function() {
-                        toggleSpinner(false, "");
-                }
-                , error: function(xhr, ajaxOptions, thrownError) {
-                    Swal.fire({
-                        title: 'Oops!   ' +ajaxOptions 
-                        , text: "error occured"
-                        , icon: 'error'
-                        , confirmButtonText: 'Confirm'
-                    })
-                }
-            })
-        });
+            }
+            , success: function(data) {
+                toggleSpinner(false, "");
+                $('#example').DataTable().ajax.reload();
+                $('#modals').modal('toggle');
+            }
+            , complete: function() {
+                toggleSpinner(false, "");
+            }
+            , error: function(xhr, ajaxOptions, thrownError) {
+                Swal.fire({
+                    title: 'Oops!   ' + ajaxOptions
+                    , text: "error occured"
+                    , icon: 'error'
+                    , confirmButtonText: 'Confirm'
+                })
+            }
+        })
+    });
+
 </script>
 @endpush

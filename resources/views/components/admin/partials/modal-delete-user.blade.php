@@ -1,4 +1,4 @@
-<form id="form-delete-user" name="form-delete-user" class="form-horizontal" novalidate="">
+<form id="form-delete-user" name="form-delete-user" class="form-horizontal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

@@ -1,4 +1,4 @@
-<form id="form-platform" name="form-platform" class="form-horizontal" >
+<form id="form-platform" name="form-platform" class="form-horizontal" novalidate="">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -10,7 +10,7 @@
                 <div class="form-group">
                     <label for="inputName" class="col-sm-3 control-label">Title</label>
                     <div>
-                        <input required  type="text" class="form-control has-error" id="link_title" name="link_title" placeholder="title" value="{{$link['title']}}">
+                        <input type="text" class="form-control has-error" id="link_title" name="link_title" placeholder="title" value="{{$link['title']}}">
                     </div>
                 </div>
                 <div class="form-group">
@@ -40,12 +40,7 @@
                                 jpg | jpeg | png <br> Max 10MB <br> Drop file here.
                             </p>
                         </div>
-                        @if($link['image_path'])
-                            <img id="image-preview-container" src="https://res.cloudinary.com/dfpmdlf8l/image/upload/{{$link['image_path']}}.jpg" style="max-height: 150px;" alt="">    
-                        @else
-                        <img id="image-preview-container" src="" style="max-height: 150px;" alt="">
-                        @endif
-                        
+                        <img id="image-preview-container" src="https://res.cloudinary.com/dfpmdlf8l/image/upload/{{$link['image_path']}}.jpg" style="max-height: 150px;" alt="">
                         <input id="image" class="music-link__upload-input" type="file" name="image" accept="image/*" />
                         <input type="hidden" id="userErasingImage" value=false>
                     </div>

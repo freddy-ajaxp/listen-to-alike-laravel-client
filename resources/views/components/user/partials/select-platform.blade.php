@@ -1,6 +1,6 @@
 @if(isset($emptyLayout) && $emptyLayout)
 <div class="form-group">
-    <input type="hidden" name="id_platforms[]" value=0/>
+    <input type="hidden" name="id_platforms[]"/>
     <div class="form-row">
         <div class="col-sm-2">
             <div class="">
@@ -26,7 +26,7 @@
                     <div>
                         <label>URL</label>
                     </div>
-                    <input type="text" id="platform0" name="data_url_platform[]" class="form-control form-control" placeholder="Enter Platform link">
+                    <input required type="text" id="platform0" name="data_url_platform[]" class="form-control form-control" placeholder="Enter Platform link">
                 </div>
             </div>
         </div>
@@ -93,7 +93,7 @@
                     @foreach($platforms as $key => $platform)
                     <option 
                     @php
-                        if ($platform['platform_name'] === $dt->list_platform->platform_name) echo 'selected="selected"';
+                        if ($platform['id'] === $dt['jenis_platform']) echo 'selected="selected"';
                     @endphp  
                     value="{{$platform['id']}}">{{$platform['platform_name']}}</option>
                     @endforeach
@@ -107,7 +107,7 @@
                     <div>
                         <label>URL</label>
                     </div>
-                    <input type="text" name="data_url_platform[]" class="form-control form-control" placeholder="URL dari platform" value="{{ $dt['url_platform'] }}" />
+                    <input required type="text" name="data_url_platform[]" class="form-control form-control" placeholder="URL dari platform" value="{{ $dt['url_platform'] }}" />
                 </div>
             </div>
         </div>

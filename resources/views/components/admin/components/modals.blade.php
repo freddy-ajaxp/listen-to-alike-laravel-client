@@ -1,6 +1,6 @@
 <!-- modal delete form-->
 <div class="modal" id="modal-delete" role="dialog">
-    {{-- <form id="form-delete-link" name="form-delete-link" class="form-horizontal" novalidate="">
+    {{-- <form id="form-delete-link" name="form-delete-link" class="form-horizontal" >
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -25,7 +25,7 @@
 
 <!-- modal delete user-->
 <div class="modal" id="modal-delete-user" role="dialog">
-    {{-- <form id="form-delete-user" name="form-delete-user" class="form-horizontal" novalidate="">
+    {{-- <form id="form-delete-user" name="form-delete-user" class="form-horizontal" >
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -50,7 +50,7 @@
 
 <!-- modal reset -->
     <div class="modal" id="modal-reset" role="dialog">
-        {{-- <form id="form-delete" name="form-reset" class="form-horizontal" novalidate="">
+        {{-- <form id="form-delete" name="form-reset" class="form-horizontal" >
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -76,7 +76,7 @@
 
 <!-- modal delete svg logo  -->
 <div class="modal" id="modal-delete-logo" role="dialog">
-    {{-- <form id="form-delete-logo" name="form-delete-logo" class="form-horizontal" novalidate="">
+    {{-- <form id="form-delete-logo" name="form-delete-logo" class="form-horizontal" >
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

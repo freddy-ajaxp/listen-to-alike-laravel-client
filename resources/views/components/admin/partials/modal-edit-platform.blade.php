@@ -1,4 +1,4 @@
-<form id="form-platform-edit" name="form-platform" class="form-horizontal" novalidate="">
+<form id="form-platform-edit" name="form-platform" class="form-horizontal" >
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -11,7 +11,7 @@
                 <div class="form-group">
                     <label for="inputName" class="col-sm-3 control-label">Name</label>
                     <div>
-                        <input type="text"  disabled class="form-control has-error" id="link_title" name="link_title" placeholder="title" value="{{$data['platform_name']}}">
+                        <input required type="text"  disabled class="form-control has-error" id="link_title" name="link_title" placeholder="title" value="{{$data['platform_name']}}">
                     </div>
                 </div>
                 

@@ -14,4 +14,10 @@ class List_text extends Model
 	public $timestamps = false;
     const CREATED_AT = 'createdAt';
     const UPDATED_AT = 'updatedAt';
+
+
+    public function list_text()
+    {
+        return $this->hasOne('App\Link_platform','text');
+    }
 }

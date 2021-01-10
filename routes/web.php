@@ -51,7 +51,9 @@ Route::get('/register', function () {
 
 Route::get('/logout', function (Request $request) {
     $request->session()->forget('email');
-    return redirect('/landing');
+        $request->session()->forget('id');
+        $request->session()->forget('admin');
+        return redirect('/landing');
 });
 
 Route::get('/preview/{short_link}', 'ListPlatformController@preview');
@@ -93,9 +95,17 @@ Route::get('/admin/userList', function () {
 })->middleware('sessionvalidator');
 
 Route::get('/admin/setting', function () {
-    $data['main'] = 'links';
-    return view('components/admin/view/setting')->with('components', $data);
+    return view('components/admin/view/setting');
 })->middleware('sessionvalidator');
+
+Route::get('/admin/platform', function () {
+    return view('components/admin/view/platform');
+})->middleware('sessionvalidator');
+
+Route::get('/admin/text', function () {
+    return view('components/admin/view/text');
+})->middleware('sessionvalidator');
+
 
 Route::post('admin/addPlatform', 'AdminController@addPlatform')->name('admin.add-platform');
 Route::post('admin/addText', 'AdminController@addText')->name('admin.add-text');
@@ -106,8 +116,14 @@ Route::get('admin/getUserLinkList/{id_user}', 'AdminController@getUserLinkList')
 Route::get('admin/datatables', 'AdminController@datatables')->name('admin.datatables');
 Route::post('admin/deleteLink', 'AdminController@deleteLink')->name('admin.delete-link');
 Route::post('admin/deleteUser', 'AdminController@deleteUser')->name('admin.delete-user');
+
 Route::get('admin/getAllUsers', 'AdminController@getAllUsers')->name('admin.all-users');
 Route::get('admin/getAllPlatforms', 'AdminController@getAllPlatforms')->name('admin.all-platforms');
+Route::post('admin/publishPlatform', 'AdminController@publishPlatform');
+Route::post('admin/hidePlatform', 'AdminController@hidePlatform');
+
+
+
 Route::get('admin/getAllTexts', 'AdminController@getAllTexts')->name('admin.all-texts');
 Route::get('admin/modal/delete-link', 'AdminController@deleteLinkModal');
 Route::get('admin/modal/delete-platform', 'AdminController@deletePlatformModal');

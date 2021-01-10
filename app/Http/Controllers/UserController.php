@@ -96,11 +96,12 @@ class UserController extends Controller
 
     function logout(Request $request)
     {
+        dd($request->session()->all());
         Session::flush();
         $request->session()->forget('email');
         $request->session()->forget('id');
         $request->session()->forget('admin');
-        return redirect("/login");
+        return redirect("/");
     }
 
 

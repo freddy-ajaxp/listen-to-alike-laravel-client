@@ -24,7 +24,7 @@
         </div>
         
         @elseif(session('admin')==1)
-        <a class="btn btn-default btn-sm " id="btn-dashboard" style='color:white' href="/dashboard">Logout</a>
+        <a class="btn btn-default btn-sm " id="btn-dashboard" style='' href="/logout">Logout</a>
         @endif
     </div>
 

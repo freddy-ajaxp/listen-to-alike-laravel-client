@@ -1,4 +1,4 @@
-<form id="form-add-link" name="form-add-link" class="form-horizontal" novalidate="">
+<form id="form-add-link" name="form-add-link" class="form-horizontal" >
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">

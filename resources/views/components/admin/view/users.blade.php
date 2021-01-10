@@ -174,11 +174,12 @@
                 }
                 , dataType: 'json'
                 , beforeSend: function() {
-                    toggleSpinner(true, "Deleteing This User Account");
+                    toggleSpinner(true, "Deleting This User Account");
                 }
                 , success: function(data) {
                     {
                         toggleSpinner(false, "");
+                        $('#modals').modal('hide');
                         $('#example').DataTable().ajax.reload();
 
                     }

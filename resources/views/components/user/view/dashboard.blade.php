@@ -268,8 +268,6 @@
         });
 
         $(document).on('submit', '#form-platform', function(event) {
-            alert("submit")
-
             event.preventDefault();
             var files = $('#image').get(0).files;
             formData = new FormData();
@@ -354,6 +352,7 @@
                     toggleSpinner(false, "");
                 }
             })
+            return false;
         });
 
         $(document).on('submit', '#form-custom', function(event) {
@@ -377,7 +376,8 @@
                     toggleSpinner(true, "Submitting Your Data");
                 }
                 , success: function(data) {
-                    toggleSpinner(false, "");
+                    toggleSpinner(false, ""); 
+                    $('#modals').modal('hide');
                     $('#example').DataTable().ajax.reload();
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
@@ -418,9 +418,8 @@
                     toggleSpinner(true, "Deleting Your Data");
                 }
                 , success: function(data) {
-                    $('#modals').modal('toggle');
+                    $('#modals').modal('hide');
                     toggleSpinner(false, "");
-                    //table.ajax.reload(); //table is not defined, mungkin karena di definisikan di fungsi lain
                     $('#example').DataTable().ajax.reload();
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
@@ -532,22 +531,15 @@
                 , processData: false
                 , beforeSend: function() {
                     toggleSpinner(true, "Submitting Your Data");
-                    console.log("before send")
                 }
                 , success: function(data) {
-                    console.log("1")
                     $('#example').DataTable().ajax.reload();
-                    console.log("2")
                     toggleSpinner(false, "");
-                    console.log("3")
                     $('#modals .dynamic-modal-container').html(data)
-                    console.log("4")
                     $('#modals').modal('show');
-                    
-
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
-                    console.log("in error")
+                    toggleSpinner(false, "");
                     let returnMessage = JSON.parse(xhr.responseText)
                     Swal.fire({
                         title: ajaxOptions + '!'

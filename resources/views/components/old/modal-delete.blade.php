@@ -1,6 +1,6 @@
 <!-- modal delete -->
     <div class="modal" id="modal-delete" role="dialog">
-        <form id="form-delete" name="form-delete" class="form-horizontal" novalidate="">
+        <form id="form-delete" name="form-delete" class="form-horizontal" >
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
