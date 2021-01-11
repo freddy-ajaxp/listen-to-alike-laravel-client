@@ -51,7 +51,7 @@
                                 </div>
                             </div>
                             <div style="text-align:center">
-                                <img id="image-preview-container" src="" style="max-height: 150px;">
+                                <img id="image-preview-container" src="" style="max-height: 150px; max-width: 100%;">
                                 <button id="clear-image" hidden> clear</button>
                             </div>
                         </div>
@@ -363,6 +363,7 @@
                     }
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
+                    toggleSpinner(false, "");
                     Swal.fire({
                         title: 'Oops! ' + ajaxOptions
                         , text: "error occured"
@@ -439,7 +440,7 @@
                 , dataType: 'json'
                 , beforeSend: function() {
                     {
-                        toggleSpinner(true, "Processing your request");
+                        toggleSpinner(true, "Deleting Logo");
                     }
                 }
                 , success: function(data) {

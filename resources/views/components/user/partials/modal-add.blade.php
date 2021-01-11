@@ -10,7 +10,7 @@
                 <div class="form-group">
                     <label for="inputName" class="col-sm-3 control-label">Title</label>
                     <div>
-                        <input type="text" class="form-control has-error" id="link_title" name="link_title" placeholder="title" value="">
+                        <input required type="text" class="form-control has-error" id="link_title" name="link_title" placeholder="title" value="">
                     </div>
                 </div>
 
@@ -43,13 +43,8 @@
                 <div>
                     <button type="button" name="add" id="add" class="btn btn-info btn-sm">Add New Row</button>
                 </div>
-
-                {{-- <table class="table table-borderless " id="user_table">
-            <tbody id="select-master">                            
-            </tbody>
-        </table> --}}
                 <div id="modal-dynamic-form">
-
+                    @include('components/user/partials/select-platform')
                 </div>
             </div>
             <div class="modal-footer">

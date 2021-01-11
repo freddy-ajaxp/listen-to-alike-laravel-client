@@ -36,6 +36,7 @@
                             <tr>
                                 <th>Email</th>
                                 <th>Name</th>
+                                <th>Status</th>
                                 <th>#</th>
                             </tr>
                         </thead>
@@ -65,6 +66,7 @@
 
 @push('javascript')
 <script type="text/javascript" src="{{ asset('assets/js/jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/js/popper.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/bootstrap.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/adminlte.js') }}"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
@@ -90,6 +92,21 @@
                     , name: 'name'
                 }
                 , {
+                    data: null
+                    , render: function(data, type, row) {
+                        if (row.admin == 0) {
+                            return `User`
+                        } else if (row.admin == 1) {
+                            return "Admin"
+                        }
+                        else if (row.admin == 2) {
+                            return "Super Admin"
+                        }
+                        
+                    }
+                    , orderable: false
+                }
+                , {
                     data: 'action'
                     , name: 'action'
                     , orderable: false
@@ -98,6 +115,46 @@
             , ]
         });
 
+        $(document).on('click', 'a[name="set-privilige"]', function(e) {
+            e.preventDefault();
+            var data = table.row($(this).closest('tr')).data();
+            role = $(this).data("privilige");
+            Swal.fire({
+            title: 'Are you sure?',
+            text: `Changing to ${role}. This Account will only able to access it's new menus and functionalities!`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Change it!'
+            }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , url: '{{ url("admin/setPrivilege") }}'
+                , method: 'post'
+                , data: {
+                    id: data.id,
+                    privilege: role
+                }
+                , success: function(linksPlatform) {
+                    $('#example').DataTable().ajax.reload(); 
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    let returnMessage = JSON.parse(xhr.responseText)
+                    Swal.fire({
+                        title: 'Oops! ' + ajaxOptions
+                        , text: returnMessage.error
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+                }
+            , })
+            }
+            })
+        })
 
         $('#example tbody').on('click', '#resetBtn', function() {
             var data = table.row($(this).closest('tr')).data();

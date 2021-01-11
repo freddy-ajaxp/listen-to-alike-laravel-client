@@ -144,7 +144,7 @@
         var count = 0;
         var platformContainer;
         dynamic_field(count);
-        {{-- createTempLink(); --}}
+        createTempLink();
         function dynamic_field() {
             $.get("{{ url('partial/view-select') }}", function(data, status) {
                 platformContainer = data;
@@ -175,7 +175,6 @@
 
         //delete temp link when entering dashboard
         $("#btn-dashboard").click(function() {
-            // localStorage.removeItem('links');
             localStorage.clear();
         });
 
@@ -190,7 +189,7 @@
                 <span style="color:#888;font-size:0.85em">${data.title}</span>
                 <div class="presignup-link__buttons" style="float:right">
 
-                <a href="/dasboard" class="btn btn-sm btn-secondary mr-1">Edit</a><a target="_blank" href="preview/${data.link}" class="btn btn-sm btn-secondary ">View
+                <a href="/dashboard" class="btn btn-sm btn-secondary mr-1">Edit</a><a target="_blank" href="preview/${data.link}" class="btn btn-sm btn-secondary ">View
                     </a></div>
             </div>
                 `);
@@ -278,7 +277,6 @@
                         toggleSpinner(false, "");
                         $('#modals .dynamic-modal-container').html(html)
                         $('#modals').modal('show');
-
                     }
                     , error: function(xhr, ajaxOptions, thrownError) {
                         let returnMessage = JSON.parse(xhr.responseText)
@@ -297,4 +295,6 @@
 </script>
 
 {{-- <script type="text/javascript" src="{{ asset('assets/js/form-validation.js') }}"></script> --}}
+
+{{-- @yield('js') --}}
 @endpush

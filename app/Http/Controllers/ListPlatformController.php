@@ -36,7 +36,8 @@ class ListPlatformController extends Controller
             //validasi
 
             //BAGIAN insert link_platforms
-            $id_platforms = array_map('trim',array_filter(explode(",", $data['id_platforms'])));
+            // $id_platforms = array_map('trim',array_filter(explode(",", $data['id_platforms'])));
+            $id_platforms = array_map('trim', explode(",", $data['id_platforms']));
             $data_platform = array_map('trim',array_filter(explode(",", $data['data_platform'])));
             $data_url_platform = array_map('trim',array_filter(explode(",", $data['data_url_platform'])));
             $data_text = array_map('trim',array_filter(explode(",", $data['data_text'])));
@@ -50,19 +51,11 @@ class ListPlatformController extends Controller
 
             // if array has different length, meaning some field at some [index] of array is null
             // this a little prevention from user bypassing front end validation 
-            if ((count($data_platform) !== count($data_url_platform)) || (count($data_url_platform) !== count($data_text))) {
-                return response()->json([
-                    'error'  => 'Harap lengkapi form'
-                ], 400);
-            }
-
-            // if array has different length, meaning some field at some [index] of array is null
-            // this a little prevention from user bypassing front end validation 
             if (
-                (count($data_url_platform) !==  count($data_platform))
+                (count($data_platform) !== count($data_url_platform)) 
                 || (count($data_url_platform) !== count($data_text))
-                || (count($data_url_platform) !== count($id_platforms)) //id platform bisa 0 untuk platform baru
-            ) {
+                || (count($data_url_platform) !== count($id_platforms))
+                ) {
                 return response()->json([
                     'error'  => 'Harap lengkapi form'
                 ], 400);
@@ -135,7 +128,9 @@ class ListPlatformController extends Controller
             $data = $request->all();
 
             //START VALIDATION
-            $id_platforms = array_map('trim',array_filter(explode(",", $data['id_platforms'])));
+            // $id_platforms = array_map('trim',array_filter(explode(", ", $data['id_platforms'])));
+            $id_platforms = array_map('trim', explode(",", $data['id_platforms']));
+
             $data_platform = array_map('trim',array_filter(explode(",", $data['data_platform'])));
             $data_url_platform = array_map('trim',array_filter(explode(",", $data['data_url_platform'])));
             $data_text = array_map('trim',array_filter(explode(",", $data['data_text'])));
@@ -146,9 +141,12 @@ class ListPlatformController extends Controller
                     'error'  => 'Harap isi minimal 1 platform'
                 ], 400);
             }
-
+            // print_r($data['id_platforms']);
+            // print_r($id_platforms);
+            // exit();
             // if array has different length, meaning some field at some [index] of array is null
             // this a little prevention from user bypassing front end validation 
+
             if (
                 (count($data_url_platform) !==  count($data_platform))
                 || (count($data_url_platform) !== count($data_text))
@@ -315,8 +313,13 @@ class ListPlatformController extends Controller
             $visit->save();
         }
 
-        $link['platforms'] = Link_platform::where('id_link', $link['link'][0]['id'])->get(['id', 'jenis_platform', 'url_platform', 'text']);
-        $link['video_id'] = strrchr($link['link'][0]['video_embed_url'], 'embed/');
+        $link['platforms'] = Link_platform::withTrashed()->where('id_link', $link['link'][0]['id'])->get(['id', 'jenis_platform', 'url_platform', 'text']);
+        
+        // print_r($link['platforms'][0]->list_platform);
+        // print_r($link['platforms'][0]->list_platform->id);
+        // exit();
+        
+        $link['video_id'] = substr($link['link'][0]['video_embed_url'], strrpos($link['link'][0]['video_embed_url'], '/') + 1);
         $link['image_path'] = $link['link'][0]['image_path'];
 
         // return response()->json($link);
@@ -405,8 +408,10 @@ class ListPlatformController extends Controller
     function addModal(Request $request)
     {
         $data = $request->all();
+        $platforms = List_platform::where('published', 1)->get(['id', 'platform_name', 'logo_image_path', 'platform_regex', 'published'])->toArray();
+        $text = List_text::get(['id', 'text'])->toArray();
         try {
-            return view('components/user/partials/modal-add'); //ini untuk dynamic modal   
+            return view('components/user/partials/modal-add')->with(['platforms' => $platforms, 'texts' => $text, 'emptyLayout' => true]); //ini untuk dynamic modal   
         } catch (\Throwable $th) {
             throw $th;
         }

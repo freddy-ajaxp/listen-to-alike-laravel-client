@@ -136,6 +136,7 @@ Route::post('admin/deleteText', 'AdminController@deleteText');
 Route::post('admin/editPlatform', 'AdminController@editPlatform');
 Route::get('admin/editText', 'AdminController@editText');
 Route::post('admin/resetPassword', 'AdminController@resetPassword')->name('admin.reset-pwd');
+Route::post('admin/setPrivilege', 'AdminController@setPrivilege');
 
 
 

@@ -208,7 +208,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
-                , url: '{{ url("user/changePassword") }}'
+                , url: '{{ url("user/changeUsername") }}'
                 , method: 'post'
                 , data: {
                     id: id_user

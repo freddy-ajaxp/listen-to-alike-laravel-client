@@ -22,7 +22,7 @@ class Link_platform extends Model
 
     public function list_platform()
     {
-        return $this->belongsTo(List_platform::class,'jenis_platform');
+        return $this->belongsTo(List_platform::class,'jenis_platform')->withTrashed();
     }
 
     public function list_text()

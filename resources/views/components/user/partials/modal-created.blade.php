@@ -47,40 +47,29 @@
                             }
 
                         </style>
-                        {{-- <script>
-                            // bypassPlatformsDraw
-                            function bypassPlatformsDraw(sHash, aPlatforms) {
+                        <script>
+                            toSave = {!!json_encode($data) !!};
+                            var a = JSON.parse(localStorage.getItem('links')) || [];
+                            a.push(toSave);
+                            console.log(a);
+                            localStorage.setItem('links', JSON.stringify(a));
+                            $('#dynamic-temp-link').html("");
+                                a.forEach(function(data) {
+                                    $('#dynamic-temp-link').append(`
+                <div class="presignup-link" style="overflow:hidden" id="dynamic-temp-link">
+                <a class="mr-2" target="_blank" style="display:inline-block;font-weight:bold;color:#1a436d" href="preview/${data.link}">
+                    hard.co.ded/${data.link}
+                </a>
+                <span style="color:#888;font-size:0.85em">${data.title}</span>
+                <div class="presignup-link__buttons" style="float:right">
 
-                                var eContainer = document.querySelector('.bypass-links__container');
+                <a href="/dashboard" class="btn btn-sm btn-secondary mr-1">Edit</a><a target="_blank" href="preview/${data.link}" class="btn btn-sm btn-secondary ">View
+                    </a></div>
+            </div>
+                `);
+                                });
 
-                                eContainer.innerHTML = "";
-
-                                for (var i = 0; i < aPlatforms.length; i++) {
-
-                                    var sPlatformType = aPlatforms[i].platform_type;
-
-                                    // Skip custom platforms
-                                    if ((sPlatformType === 'custom_platform') || (sPlatformType === 'custom_text')) continue;
-
-                                    eContainer.innerHTML += `
-                                            <div class="bypass-links__link">
-                                                <span class="bypass-links__link-platform">
-                                                    <img class="bypass-links__link-platform-image" src="/images/music-platforms/${aPlatforms[i].platform_type}.svg" alt="${aPlatforms[i].platform_type}">
-                                                </span>
-                                                <span class="bypass-links__link-url">
-                                                    <a class="mr-2" href="//li.sten.to/${sHash}/${aPlatforms[i].platform_type}" target="_blank"><ion-icon class='mr-1' style='vertical-align:middle' name='link-outline'></ion-icon> li.sten.to/${sHash}/${aPlatforms[i].platform_type}</a>
-                                                </span>
-                                                 <div>
-                                                    <button class='btn btn-sm bypass-links__link-copy btn-secondary mr-1' onclick='javascript:copyToClipboard("li.sten.to/${sHash}/${aPlatforms[i].platform_type}")'>Copy</button>
-                                                    <a href="//li.sten.to/${sHash}/${aPlatforms[i].platform_type}" class="btn btn-sm bypass-links__link-copy btn-secondary" target="_blank">View</a>
-                                                </div>
-                                            </div>`;
-
-                                }
-
-                            }
-
-                        </script> --}}
+                        </script>
                     </div>
                 </div>
             </div>

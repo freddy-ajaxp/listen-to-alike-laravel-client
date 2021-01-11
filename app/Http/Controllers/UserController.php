@@ -96,7 +96,6 @@ class UserController extends Controller
 
     function logout(Request $request)
     {
-        dd($request->session()->all());
         Session::flush();
         $request->session()->forget('email');
         $request->session()->forget('id');
@@ -144,10 +143,6 @@ class UserController extends Controller
            if (!$data['name'] ) {
             return response()->json(['error' => 'Please fill all fields'], 400);
             }
-
-            $hashed = Hash::make($data['password'], [
-                'rounds' => 12,
-            ]);
 
             $user = User::find($data['id']);
             $user->name = $data['name'];

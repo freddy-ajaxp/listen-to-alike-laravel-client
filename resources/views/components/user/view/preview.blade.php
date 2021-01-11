@@ -299,7 +299,7 @@
 
 <div id="container" class="container">
 
-    {{-- menentukan gambar di background, gambar menjadi prioritas ditampilkan barukemudian thumbnail video --}}
+    {{-- menentukan gambar di background, gambar menjadi prioritas ditampilkan baru kemudian thumbnail video --}}
     <div id="bg_container" style="display: block;">
         @if($data['image_path'])
         <img id="bg_img" src="https://res.cloudinary.com/dfpmdlf8l/image/upload/{{$data['image_path']}}.jpg">
@@ -333,8 +333,9 @@
 
                 @foreach($data['platforms'] as $platform)
                 <div class='music-link__container' data-url="{{$platform['url_platform'] }}">
-                    <img class='music-link__logo' onerror=this.src="{{asset('images/icons/headphone.svg')}}"   src="https://res.cloudinary.com/dfpmdlf8l/image/upload/v1606372945/assets/logo/{{$platform['jenis_platform'] }}.svg" style="max-height:40px">
-                    <button class='music-link__button' data-id-platform="{{$platform['id'] }}" data-url="{{$platform['url_platform'] }}">{{$platform['text'] }}</button>
+                {{-- onerror=this.src="{{asset('images/icons/headphone.svg')}}"  --}}
+                    <img class='music-link__logo'   src="https://res.cloudinary.com/dfpmdlf8l/image/upload/{{$platform->list_platform->logo_image_path }}" style="max-height:40px">
+                    <button class='music-link__button' data-id-platform="{{$platform['id'] }}" data-url="{{$platform['url_platform'] }}">{{$platform->list_text->text }}</button>
                 </div>
                 @endforeach
             </div>

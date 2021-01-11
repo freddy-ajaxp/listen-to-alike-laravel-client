@@ -338,6 +338,8 @@
                     toggleSpinner(true, "Submitting Your Data");
                 }
                 , success: function(data) {
+                    $('#modals').modal('hide');
+                    toggleSpinner(false, "");
                     $('#example').DataTable().ajax.reload();
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
@@ -510,11 +512,17 @@
                 .map(function() {
                     return ' ' + $(this).val();
                 }).get();
+            
+            var id_platforms = $("input[name='id_platforms[]']")
+                .map(function() {
+                    return ' ' + $(this).val();
+                }).get();
 
             //log for debug purpose
             //appending data to sent
             formData.append('link_title', link_title);
             formData.append('image', files[0]); //only 1 image, the first index     
+            formData.append('id_platforms', id_platforms);
             formData.append('video_embed_url', video_embed_url);
             formData.append('data_platform', data_platform);
             formData.append('data_url_platform', data_url_platform);

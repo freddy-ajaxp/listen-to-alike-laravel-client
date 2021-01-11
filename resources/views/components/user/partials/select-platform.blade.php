@@ -1,6 +1,6 @@
 @if(isset($emptyLayout) && $emptyLayout)
 <div class="form-group">
-    <input type="hidden" name="id_platforms[]"/>
+    <input type="hidden" name="id_platforms[]" value='0'/>
     <div class="form-row">
         <div class="col-sm-2">
             <div class="">
@@ -79,7 +79,7 @@
         @if($dt['id'] !== 0)
             <input type="hidden" name="id_platforms[]" value="{{$dt['id']}}" />
         @else
-            <input type="hidden" name="id_platforms[]" />
+            <input type="hidden" name="id_platforms[]" value='0/>
         @endif
     <div class="form-row">
 

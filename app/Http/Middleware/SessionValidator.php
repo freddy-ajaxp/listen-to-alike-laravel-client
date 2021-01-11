@@ -33,7 +33,7 @@ class SessionValidator
       
     }
 
-    if (session()->get('admin') == 1) {
+    if (session()->get('admin') > 0) {
       if ($request->is('register') || $request->is('dashboard') || $request->is('login')) {
         return redirect("/admin");
       } else {

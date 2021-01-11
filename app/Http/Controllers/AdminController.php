@@ -48,8 +48,26 @@ class AdminController extends Controller
             ->addColumn('action', function ($row) {
                 $btn = '<button id="resetBtn" class="btn btn-secondary">Reset Password</button>
                            <button id="deactivateBtn" class="btn btn-danger">Hapus User</button> '
-                    . "<a href='getUserDataById/$row->id'" . 'id="viewBtn"  class="btn btn-info">Lihat</button>
-                           ';
+                    . "<a href='getUserDataById/$row->id'" . 'id="viewBtn"  class="btn btn-info">Lihat</button> </a> ' ;
+                
+                    if (Session::get('admin') == 2) {
+                        $disabled= "";
+                        if($row->admin ==  2){
+                            $disabled = ' disabled '; 
+                        }
+                        
+                        $btn .= '
+                        <div class="dropdown">
+                        <button ' .$disabled .' class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Set Privilege
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" name="set-privilige" data-privilige="user" >User</a>
+                          <a class="dropdown-item" name="set-privilige" data-privilige="admin">Admin </a>
+                        </div>
+                      </div>';
+                    }                    
+                    ;
                 return $btn;
             })
             ->rawColumns(['action'])
@@ -103,7 +121,7 @@ class AdminController extends Controller
         // if ($request->ajax()) {
         if ('XMLHttpRequest' == request()->headers->get("X-Requested-With")) {
             $data = $request->all();
-            $request->validate(['image' => 'required|image|mimes:svg,jpg,JPG|max:1024',]);
+            // $request->validate(['image' => 'required|image|mimes:svg,jpg,JPG|max:1024',]);
             if (!$request->hasFile('image')) {
                 return response()->json([
                     `'failed'  => 'you have to choose a logo to be uploaded'`
@@ -118,12 +136,11 @@ class AdminController extends Controller
                 ]
             );
             $namaImage =  $uploadedFileUrl->getPublicId();
-            // $namaImage = 'assets/logo/fqmkqcwgsoldqfkarjta';
-
+            $extensiFile =  $uploadedFileUrl->getExtension();
             //BAGIAN CREATE DATA 
             $list_platform = new List_platform();
             $list_platform->platform_name = $data['platform_name'];
-            $list_platform->logo_image_path = $namaImage;
+            $list_platform->logo_image_path = $namaImage .'.' .$extensiFile;
             $list_platform->platform_regex = $data['platform_url'];
             $list_platform->createdAt = date("Y-m-d");
             $list_platform->updatedAt = date("Y-m-d");
@@ -150,7 +167,7 @@ class AdminController extends Controller
                 ], 400);
             }
             //validasi ukuran type image
-            $request->validate(['image' => 'required|image|mimes:svg,jpg,JPG|max:1024',]);
+            // $request->validate(['image' => 'required|image|mimes:svg,jpg,JPG|max:1024',]);
 
             if ($request->file('image')) {
                 //BAGIAN upload to cloud kalau ada gambar baru
@@ -281,6 +298,25 @@ class AdminController extends Controller
         $link->forceDelete();
         return response()->json(['success' => 'Data is deleted permanently'], 200);
     }
+    
+    function setPrivilege(Request $request)
+    {
+        
+        $data = $request->all();
+        $user = User::find($data['id']);
+        switch ($data['privilege']) {
+            case 'user' :
+                $user->admin= 0;
+                break;
+            case 'admin':
+                $user->admin= 1;
+                break;
+        }
+        $user->save();
+        
+        return response()->json(['success' => 'Action Success'], 200);
+    }
+
     function publishPlatform(Request $request)
     {
         $data = $request->all();
