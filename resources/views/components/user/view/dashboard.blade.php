@@ -257,13 +257,13 @@
             status ? $("#overlay").css("display", "block") : $("#overlay").css("display", "none")
 
         }
-
-        $('#checkbox').click(function() {
+        
+        $(document).on('click', '#checkbox', function(event) {
             if ($(this).prop("checked") == true) {
-                $("#video_embed_url_add").attr("disabled", false);
+                $("#video_embed_url").attr("disabled", false);
             } else {
-                $("#video_embed_url_add").attr("disabled", true);
-                $('#video_embed_url_add').val('')
+                $("#video_embed_url").attr("disabled", true);
+                $('#video_embed_url').val('')
             }
         });
 
@@ -346,7 +346,7 @@
                     let returnMessage = JSON.parse(xhr.responseText)
                     Swal.fire({
                         title: ajaxOptions + '!'
-                        , text: returnMessage.error
+                        , text: returnMessage.error || returnMessage.errors.image.join()
                         , icon: 'error'
                         , confirmButtonText: 'Confirm'
                     })
@@ -386,7 +386,7 @@
                     let returnMessage = JSON.parse(xhr.responseText)
                     Swal.fire({
                         title: ajaxOptions + '!'
-                        , text: returnMessage.failed
+                        , text: returnMessage.error
                         , icon: 'error'
                         , confirmButtonText: 'Confirm'
                     })
@@ -551,7 +551,7 @@
                     let returnMessage = JSON.parse(xhr.responseText)
                     Swal.fire({
                         title: ajaxOptions + '!'
-                        , text: returnMessage.error
+                        , text: returnMessage.error || returnMessage.errors.image.join()
                         , icon: 'error'
                         , confirmButtonText: 'Confirm'
                     })

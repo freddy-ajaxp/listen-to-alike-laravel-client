@@ -144,6 +144,11 @@ class UserController extends Controller
             return response()->json(['error' => 'Please fill all fields'], 400);
             }
 
+            if(strlen($data['name']) != 8){
+                return response()->json([
+                    'error'  => 'Nama harus berjumlah minimal 8 karakter'
+                ], 400);
+            }    
             $user = User::find($data['id']);
             $user->name = $data['name'];
             $user->save();

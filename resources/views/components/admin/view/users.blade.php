@@ -275,6 +275,7 @@
                     toggleSpinner(true, "Processing request");
                 }
                 , success: function(data) {
+                    $('#modals').modal('hide');
                     toggleSpinner(false, "");
                     Swal.fire({
                         title: 'success'

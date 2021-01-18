@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Middleware;
-
+use Illuminate\Support\Facades\View;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,8 +41,9 @@ Route::group(['middleware' => 'revalidate'], function()
 Route::get('/', function () {
     return redirect("/landing");
 });
-Route::get('/landing', function () {
-    return view('components/user/view/landing');
+Route::get('/landing', function (Request $request) {    
+    // $view = (string)View::make('users.index',$data);
+    return view('components/user/view/landing')->with(['userIsLoggedIn' => $request->session()->get('email')]);
 });
 
 Route::get('/register', function () {
@@ -59,6 +60,9 @@ Route::get('/logout', function (Request $request) {
 Route::get('/preview/{short_link}', 'ListPlatformController@preview');
 Route::get('/detail/{short_link}', 'ListPlatformController@detail')->middleware('sessionvalidator');
 Route::post('/click', 'ListPlatformController@viewCtr');
+Route::post('/savePreSignup', 'ListPlatformController@savePreSignup');
+Route::post('/report', 'ListPlatformController@report');
+
 
 // Route::get('dynamic-field', 'ListPlatformController@index');
 

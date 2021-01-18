@@ -1,5 +1,5 @@
 @extends('components.user.layouts.default')
-@section('title', "Website - " .$data['link'][0]['title'])
+@section('title', $data['link'][0]['title'])
 @push('stylesheets')
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;600&display=swap" rel="stylesheet">
@@ -28,7 +28,7 @@
     #content {
         position: relative;
         padding: 0.5em;
-        z-index: 5555;
+        z-index: 555;
         width: 100%;
         margin: 0 auto 1em auto;
         max-width: 400px;
@@ -304,7 +304,7 @@
         @if($data['image_path'])
         <img id="bg_img" src="https://res.cloudinary.com/dfpmdlf8l/image/upload/{{$data['image_path']}}.jpg">
         @elseif($data['link'][0]['video_embed_url'])
-        <img id="bg_img" src="https://img.youtube.com/vi/{{$data['video_id']}}/maxresdefault.jpg">
+        <img id="bg_img" src="https://img.youtube.com/vi/{{$data['video_id']}}/1.jpg">
         @else
         <img id="bg_img" src="">
         @endif
@@ -315,14 +315,14 @@
     <div id="content">
         @if($data['link'][0]['video_embed_url'])
         <div id="youtube_video">
-            <iframe src={{$data['link'][0]['video_embed_url']}} allowfullscreen="" frameborder="0">
+            <iframe id="videoFrame" src={{$data['link'][0]['video_embed_url']}} allowfullscreen="" frameborder="0">
             </iframe>
         </div>
         @endif
         @if($data['image_path'] && !$data['link'][0]['video_embed_url'])
         <img id="user-artwork" src="https://res.cloudinary.com/dfpmdlf8l/image/upload/{{$data['image_path']}}.jpg" style="display:block;width:100%;">
         @endif
-        <input type="hidden" name="id-link" value="{{$data['link'][0]['id']}}"/>
+        <input type="hidden" name="id-link" value="{{$data['link'][0]['id']}}" />
         <h1 class="platforms-list__name">
             {{$data['link'][0]['title']}}
         </h1>
@@ -333,8 +333,8 @@
 
                 @foreach($data['platforms'] as $platform)
                 <div class='music-link__container' data-url="{{$platform['url_platform'] }}">
-                {{-- onerror=this.src="{{asset('images/icons/headphone.svg')}}"  --}}
-                    <img class='music-link__logo'   src="https://res.cloudinary.com/dfpmdlf8l/image/upload/{{$platform->list_platform->logo_image_path }}" style="max-height:40px">
+                    {{-- onerror=this.src="{{asset('images/icons/headphone.svg')}}" --}}
+                    <img class='music-link__logo' src="https://res.cloudinary.com/dfpmdlf8l/image/upload/{{$platform->list_platform->logo_image_path }}" style="max-height:40px">
                     <button class='music-link__button' data-id-platform="{{$platform['id'] }}" data-url="{{$platform['url_platform'] }}">{{$platform->list_text->text }}</button>
                 </div>
                 @endforeach
@@ -348,39 +348,40 @@
         {{-- <a target="_blank" style='color:#ccc;text-decoration: none;font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px' href="https://li.sten.to/privacy">Privacy &amp; Cookies</a> --}}
     </div>
 </div>
+@include('components/admin/components/report-button')
 @endsection
 
 
 @push('javascript')
 <script type="text/javascript" src="{{ asset('assets/js/jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/js/popper.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/bootstrap.js') }}"></script>
 <script>
     $(document).ready(function() {
-            var myInteger = {!! json_encode($data) !!};
-            {{-- alert(myInteger.link[0].video_embed_url) --}}
-        // If user uploaded artwork
 
 
-        {{-- var myRequest = new Request('index1.html');
-        $.get( "https://www.youtube.com", function( data ) {
-            alert(data); // returns 200
-        }); --}}
+        $('#videoFrame').on('load', function(e) {
+            $(this).show();
+        });
 
-        $(".music-link__button").click(function(e) {
+        $('.music-link__button').on('click', function(e) {
             var loadurl = $(this).attr('data-url');
             var idPlatform = $(this).attr('data-id-platform');
             var idLink = $("input[name='id-link']").val();
-            var win = window.open(loadurl, '_blank');  
+            var win = window.open(loadurl, '_blank');
 
-             $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                    , url: '{{ url("/click") }}'
-                    , method: 'post'
-                    , data: { link_platform_id: idPlatform, link_id: idLink} 
-                    , dataType: 'json'
-                })
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , url: '{{ url("/click") }}'
+                , method: 'post'
+                , data: {
+                    link_platform_id: idPlatform
+                    , link_id: idLink
+                }
+                , dataType: 'json'
+            })
 
             if (win) {
                 //Browser has allowed it to be opened
@@ -394,8 +395,57 @@
         });
     });
 
-</script>
-<script>
+
+    $('#modals').on('hidden.bs.modal', function() {
+        $('#form-report')[0].reset();
+    });
+    $(document).on('submit', '#form-report', function(e) {
+        e.preventDefault();
+        var idLink = $("input[name='id-link']").val();
+        var messageText = $('textarea#reason').val();
+        var reportedReasons = $('input[name="reasons[]"]:checked').map(function() {
+            return $(this).data('id');
+        }).get();
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+            , url: '{{ url("/report") }}'
+            , method: 'post'
+            , data: {
+                reasons: reportedReasons
+                , messageText: messageText
+                , idLink: idLink
+            }
+            , dataType: 'json'
+            , beforeSend: function(xhr) {
+                toggleSpinner(true, "Submitting your report");
+            }
+            , success: function(html) {
+                toggleSpinner(false, "");
+                $('#modals').modal('hide');
+                Swal.fire({
+                    title: 'success'
+                    , text: "Thankyou for your feedback"
+                    , icon: 'success'
+                    , confirmButtonText: 'Confirm'
+                })
+            }
+            , error: function(xhr, ajaxOptions, thrownError) {
+                let returnMessage = JSON.parse(xhr.responseText)
+                toggleSpinner(false, "");
+                Swal.fire({
+                    title: ajaxOptions + '!'
+                    , text: returnMessage.error || returnMessage.errors.image.join()
+                    , icon: 'error'
+                    , confirmButtonText: 'Confirm'
+                })
+            }
+        })
+
+
+    });
 
 </script>
+
 @endpush

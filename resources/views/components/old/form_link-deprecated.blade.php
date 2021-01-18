@@ -35,8 +35,8 @@
                         </p>
                         <img id="image-preview-container" src="" style="max-height: 150px;">
                         <input id="image" class="music-link__upload-input" type="file" name="image" accept="image/*" />
-                    </div>
-                    <button id="clear-image" hidden> clear</button>
+                        <button id="clear-image" hidden> clear</button>
+                    </div>                    
                 </div>
                 <div class="music-link__top-block-right">
                     <div class="form-group">
@@ -88,7 +88,7 @@
         <div style='padding:0.5em;text-align:center'>
             <p style='font-size:0.8em;color:#a5a5a5'>By using this service, you agree to
                 ListenTo's
-                <a href="../terms" style='color:#a5a5a5'>Terms of Service</a> and <a href="../privacy" style='color:#a5a5a5'>Privacy Policy.</a></p>
+                <a href="#" style='color:#a5a5a5'>Terms of Service</a> and <a href="#" style='color:#a5a5a5'>Privacy Policy.</a></p>
         </div>
     </div>
 </div>

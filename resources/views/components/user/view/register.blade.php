@@ -27,7 +27,7 @@
                 <form action="user/register" method="post" id="form-register">
                     {{ csrf_field() }}
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" name="name" placeholder="Username">
+                        <input required type="text" class="form-control" name="name" placeholder="Username">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>
@@ -35,7 +35,7 @@
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        <input type="email" class="form-control" name="email" placeholder="Email">
+                        <input required type="email" class="form-control" name="email" placeholder="Email">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        <input type="password" class="form-control" name="password" placeholder="Password">
+                        <input required type="password" class="form-control" name="password" placeholder="Password">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
@@ -51,7 +51,7 @@
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        <input type="password" class="form-control" name="confirmPassword" placeholder="Retype password">
+                        <input required type="password" class="form-control" name="confirmPassword" placeholder="Retype password">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
@@ -60,9 +60,7 @@
                     </div>
                     <div class="row">
                         <div class="col-8">
-
                             <a href="/login" class="text-center">already have account</a>
-
                         </div>
                         <!-- /.col -->
                         <div class="col-4">

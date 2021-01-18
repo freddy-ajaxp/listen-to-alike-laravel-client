@@ -80,21 +80,25 @@ class TableController extends Controller
 
         $data = $request->all();
         $result = Link::where('short_link', $data['short_link'])->first();
-        
+        if($result && ($result->short_link ==  $data['short_link'])){
+            return response()->json([
+                'error'  => 'Harap masukkan short link yang baru'
+            ], 400);
+        }
         if($result){
             return response()->json([
-                'failed'  => 'Short Link sudah terpakai'
+                'error'  => 'Short Link sudah terpakai'
             ], 400);
         }
         if(strlen($data['short_link']) != 8){
             return response()->json([
-                'failed'  => 'Short Link harus berjumlah 8 karakter'
+                'error'  => 'Short Link harus berjumlah 8 karakter'
             ], 400);
         }
 
         if(preg_match('/\s/', $data['short_link'])){
             return response()->json([
-                'failed'  => 'Short Link tidak boleh mengandung spasi'
+                'error'  => 'Short Link tidak boleh mengandung spasi'
             ], 400);
         }
       

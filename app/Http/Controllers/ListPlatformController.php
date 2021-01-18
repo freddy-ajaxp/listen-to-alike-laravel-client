@@ -6,8 +6,11 @@ use App\Link;
 use App\Link_platform;
 use App\List_platform;
 use App\List_text;
+use App\Report;
+use App\Report_reason;
 use App\User;
 use App\Clickthrough;
+use App\Report_reason as AppReport_reason;
 use App\Text;
 use App\Visit;
 use Carbon\Carbon;
@@ -22,6 +25,7 @@ use Illuminate\Support\Str;
 use PhpParser\Node\Expr\List_;
 use PhpParser\Node\Stmt\Catch_;
 use PhpParser\Node\Stmt\TryCatch;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Validator;
 
 class ListPlatformController extends Controller
@@ -34,6 +38,10 @@ class ListPlatformController extends Controller
         if ($request->ajax()) {
             $data = $request->all();
             //validasi
+            if($request->file('image')){
+            $request->validate(['image' => 'image|mimes:svg,jpg,JPG|max:10240',]);
+            }
+
 
             //BAGIAN insert link_platforms
             // $id_platforms = array_map('trim',array_filter(explode(",", $data['id_platforms'])));
@@ -52,7 +60,8 @@ class ListPlatformController extends Controller
             // if array has different length, meaning some field at some [index] of array is null
             // this a little prevention from user bypassing front end validation 
             if (
-                (count($data_platform) !== count($data_url_platform)) 
+                !array_key_exists('link_title', $data)
+                || (count($data_platform) !== count($data_url_platform)) 
                 || (count($data_url_platform) !== count($data_text))
                 || (count($data_url_platform) !== count($id_platforms))
                 ) {
@@ -128,6 +137,11 @@ class ListPlatformController extends Controller
             $data = $request->all();
 
             //START VALIDATION
+            if($request->file('image')){
+                $request->validate(['image' => 'image|mimes:svg,jpg,JPG|max:10240',]);
+                }
+
+                
             // $id_platforms = array_map('trim',array_filter(explode(", ", $data['id_platforms'])));
             $id_platforms = array_map('trim', explode(",", $data['id_platforms']));
 
@@ -141,14 +155,12 @@ class ListPlatformController extends Controller
                     'error'  => 'Harap isi minimal 1 platform'
                 ], 400);
             }
-            // print_r($data['id_platforms']);
-            // print_r($id_platforms);
-            // exit();
             // if array has different length, meaning some field at some [index] of array is null
             // this a little prevention from user bypassing front end validation 
 
             if (
-                (count($data_url_platform) !==  count($data_platform))
+                !array_key_exists('link_title', $data)
+                || (count($data_url_platform) !==  count($data_platform))
                 || (count($data_url_platform) !== count($data_text))
                 || (count($data_url_platform) !== count($id_platforms)) //id platform bisa 0 untuk platform baru
             ) {
@@ -199,7 +211,8 @@ class ListPlatformController extends Controller
             }
 
             //save LINK
-            $link->video_embed_url = $data['video_embed_url'];
+            $video_embed_url = str_replace("watch?v=", "embed/", $data['video_embed_url']);
+            $link->video_embed_url = $video_embed_url;
             $link->title = $data['link_title'];
             $link->save();
             //END LINK
@@ -284,9 +297,7 @@ class ListPlatformController extends Controller
         $ip = $request->ip();
         $referer = request()->getHost();
 
-        // dd(session()->get('id'));
         $link['link'] = Link::where('short_link', $short_link)->get()->toArray();
-
         if ($link['link'] == null) {
             abort(404);
         }
@@ -314,17 +325,20 @@ class ListPlatformController extends Controller
         }
 
         $link['platforms'] = Link_platform::withTrashed()->where('id_link', $link['link'][0]['id'])->get(['id', 'jenis_platform', 'url_platform', 'text']);
-        
-        // print_r($link['platforms'][0]->list_platform);
-        // print_r($link['platforms'][0]->list_platform->id);
-        // exit();
-        
         $link['video_id'] = substr($link['link'][0]['video_embed_url'], strrpos($link['link'][0]['video_embed_url'], '/') + 1);
         $link['image_path'] = $link['link'][0]['image_path'];
 
-        // return response()->json($link);
-        // return view('layouts/preview')->with('data',$link);
-        return view('components/user/view/preview')->with('data', $link);
+        //check if url for iframe is return 200,
+        // Use get_headers() function 
+        $vidUrlExist = @get_headers($link['link'][0]['video_embed_url']); 
+
+        // Use condition to check the existence of URL 
+        if(!($vidUrlExist && strpos( $vidUrlExist[0], '200'))) {  
+            $link['link'][0]['video_embed_url']=""; 
+        } 
+        
+        $reasons = Report_reason::get();
+        return view('components/user/view/preview')->with(['data' =>  $link, 'reasons' => $reasons]);
     }
 
     function detail(Request $request, $short_link)
@@ -417,6 +431,13 @@ class ListPlatformController extends Controller
         }
     }
 
+    function savePreSignup(Request $request){
+        //save presgnup Links guest made
+        $data = $request->all();
+        $shortlinks = array_column(json_decode($data['links']), 'link');
+        $idUser = $request->session()->get('id'); 
+        Link::where('short_link', $shortlinks)->update(['id_user' => $idUser]);;   
+    }
 
 
     function customModal(Request $request)
@@ -428,38 +449,27 @@ class ListPlatformController extends Controller
         }
     }
 
+    function report(Request $request){
+        $data = $request->all();
+        $ip = $request->ip();
+        //upsert
+        print_r($data);
+        for ($i = 0; $i < count($data['reasons']); $i++) {
+            //kalau menggunakan id di form =0
+                $new_data = new Report;
+                $new_data->link = $data['idLink'];
+                $new_data->ip_reporter = $ip;
+                $new_data->reason = $data['reasons'][$i];
+                $new_data->additional_reason = $data['messageText'];
+                $new_data->createdAt = date("Y-m-d");
+                $new_data->updatedAt = date("Y-m-d");
+                $new_data->save();
+        }
+
+
+    }
     function dummy()
     {
-        $data = Link_platform::all();
-        return view('components/user/view/test')->with(['data' => $data]);  //ini untuk dynamic modal   
 
-        //ini rancangana untuk ambil statistik per date
-        // $dt = Carbon::create(2012, 1, 31, 0);
-        // $data = Visit::where('createdAt', '>=', $dt->subMonth())
-        //                 ->groupBy(DB::raw('Date(createdAt)'))
-        //                 ->orderBy('createdAt', 'DESC')->get()->toArray();
-        // dd($data);
-    }
-
-    function dummysoftdelete()
-    {
-
-
-            /*
-384
-*/
-            // $data = Link_platform::find(384);
-            $data = Link_platform::findMany([396, 397])->each(function ($item) {
-                $item->delete();
-            });
-        echo "success sfot delete";
-        exit();
-    }
-
-    function dummyshowsoftdelete()
-    {
-        $data = Link_platform::onlyTrashed()->get()->toArray();
-        print_r($data);
-        exit();
     }
 }

@@ -35,17 +35,17 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label>Platform Name</label>
-                                <input name="platform_name" type="text" class="form-control" placeholder="cth: soundcloud">
+                                <input required name="platform_name" type="text" class="form-control" placeholder="cth: soundcloud">
                             </div>
                             <div class="form-group">
                                 <label>Platform URL</label>
                                 <input type="text" class="form-control" name="platform_url" placeholder="cth: https://soundcloud.com/">
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputFile">Logo (format .SVG)</label>
+                                <label for="exampleInputFile">Logo (format .SVG / .PNG)</label>
                                 <div class="input-group">
                                     <div class="custom-file">
-                                        <input name="svg" id="svg" type="file" class="custom-file-input" id="exampleInputFile">
+                                        <input name="svg" id="svg" type="file" accept="image/*" class="custom-file-input" id="exampleInputFile">
                                         <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                                     </div>
                                 </div>
@@ -241,7 +241,7 @@
                     $('#id_delete_logo').val(data.id);
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
-                    let returnMessage = JSON.parse(xhr.responseText)
+                    let returnMessage = JSON.parse(xhr.responseText);
                     Swal.fire({
                         title: 'Oops! ' + ajaxOptions
                         , text: returnMessage.error
@@ -324,6 +324,10 @@
             $('#svg').val('');
             $("#clear-image").attr("hidden", true);
         });
+        //reset all form on modal close
+        $('#modals').on('hidden.bs.modal', function() {
+                $('#form-platform')[0].reset();
+        });
 
         //submit form logo
         $('#form-platform').on('submit', function(event) {
@@ -332,14 +336,23 @@
             formData = new FormData();
             platform_name = $('input[name="platform_name"]').val()
             platform_url = $('input[name="platform_url"]').val()
-
-
-            //appending data to sent
             formData.append('platform_name', platform_name);
             formData.append('platform_url', platform_url);
-            formData.append('image', files[0]); //only 1 image, the first index     
-
-
+            if(files.length != 0){
+                if(!validasiFileExt(files)){
+                    Swal.fire({
+                        title: "Error"
+                        , text: "Harap piih file dengan format yang ditentukan"
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+                    return 0;
+                }
+                else {
+                    formData.append('image', files[0]); //only 1 image, the first index
+                }
+            }
+            console.log(files)
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -364,9 +377,10 @@
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
                     toggleSpinner(false, "");
+                    let returnMessage = JSON.parse(xhr.responseText)
                     Swal.fire({
                         title: 'Oops! ' + ajaxOptions
-                        , text: "error occured"
+                        , text: returnMessage.error || returnMessage.errors.image.join()
                         , icon: 'error'
                         , confirmButtonText: 'Confirm'
                     })
@@ -381,13 +395,11 @@
             formData = new FormData();
             id = $('#id').val()
             userErasingImage = $('#userErasingImage').val()
-            {{-- console.log(id)
-            console.log(files)
-            console.log(userErasingImage) --}}
             //appending data to sent
             formData.append('id', id);
             formData.append('userErasingImage', userErasingImage);
             if(files.length !== 0){
+                validasiFileExt(files);
             formData.append('image', files[0]); //only 1 image, the first index
             }
             $.ajax({
@@ -416,7 +428,7 @@
                     toggleSpinner(false, "");
                     Swal.fire({
                         title: 'Oops! ' + ajaxOptions
-                        , text: returnMessage.error
+                        , text: returnMessage.error || returnMessage.errors.image.join()
                         , icon: 'error'
                         , confirmButtonText: 'Confirm'
                     })
@@ -464,5 +476,15 @@
         });
     });
 
+
+function validasiFileExt(files){
+    var validImageTypes = ["image/svg", "image/png", "image/svg+xml"];
+                if ($.inArray(files[0].type, validImageTypes) < 0) {
+                    return false;
+                }
+                else {
+                    return true;
+                    }
+}
 </script>
 @endpush

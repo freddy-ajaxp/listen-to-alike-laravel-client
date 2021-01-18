@@ -14,5 +14,6 @@ return [
     */
 
     'site_url' => env('SITE_URL','shor.tn/'),
+    'site_title' => env('SITE_URL','shor.tn'),
 
 ];

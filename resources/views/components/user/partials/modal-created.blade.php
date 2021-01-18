@@ -58,7 +58,7 @@
                                     $('#dynamic-temp-link').append(`
                 <div class="presignup-link" style="overflow:hidden" id="dynamic-temp-link">
                 <a class="mr-2" target="_blank" style="display:inline-block;font-weight:bold;color:#1a436d" href="preview/${data.link}">
-                    hard.co.ded/${data.link}
+                    {{config('constants.site_title')}}/${data.link}
                 </a>
                 <span style="color:#888;font-size:0.85em">${data.title}</span>
                 <div class="presignup-link__buttons" style="float:right">

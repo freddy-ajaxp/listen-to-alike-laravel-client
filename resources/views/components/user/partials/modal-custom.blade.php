@@ -9,15 +9,14 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Data Link:</p>
+                    <p>URL Link:</p>
                     <input type="hidden" id="id_custom" />
                     <div class="col-auto">
-                        <label class="sr-only" for="inlineFormInputGroup">Username</label>
-                        <div class="input-group mb-2">
+                        <div class="input-group mb-2" for="custom-link">
                             <div class="input-group-prepend">
-                                <div class="input-group-text">link.pendek/</div>
+                                <div class="input-group-text">{{config('constants.site_url')}}</div>
                             </div>
-                            <input type="text" name="custom-link" class="form-control form-control-sm" placeholder="URL dari platform" value="${eachData.url_platform}" />
+                            <input type="text" name="custom-link" class="form-control" placeholder="URL dari platform" value="${eachData.url_platform}" />
                         </div>
                     </div>
 

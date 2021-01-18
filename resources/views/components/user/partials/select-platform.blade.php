@@ -8,11 +8,7 @@
                     @php
                     @endphp
                 </label>
-
-                
                 <select name="data_platform[]" class="custom-select ">
-                {{-- <select name="data_platform[]" class="custom-select selectpicker"> --}}
-
                     @foreach($platforms as $key => $platform)
                     <option value="{{$platform['id']}}">{{$platform['platform_name']}}</option>
                     @endforeach

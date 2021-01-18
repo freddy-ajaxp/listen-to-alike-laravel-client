@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 04, 2021 at 05:54 AM
+-- Generation Time: Jan 15, 2021 at 01:05 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.2.34
 
@@ -54,7 +54,8 @@ CREATE TABLE `clickthroughs` (
 --
 
 INSERT INTO `clickthroughs` (`id`, `link_id`, `link_platform_id`, `ip`, `createdAt`, `updatedAt`) VALUES
-(1, 338, 389, '127.0.0.1', '2020-12-26 17:00:00', '2020-12-26 17:00:00');
+(2, 439, 533, '127.0.0.1', '2021-01-13 17:00:00', '2021-01-13 17:00:00'),
+(3, 439, 534, '127.0.0.1', '2021-01-13 17:00:00', '2021-01-13 17:00:00');
 
 -- --------------------------------------------------------
 
@@ -70,50 +71,33 @@ CREATE TABLE `links` (
   `short_link` varchar(255) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
-  `title` varchar(255) DEFAULT NULL
+  `deletedAt` datetime DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `show_status` tinyint(4) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `links`
 --
 
-INSERT INTO `links` (`id`, `image_path`, `video_embed_url`, `id_user`, `short_link`, `createdAt`, `updatedAt`, `title`) VALUES
-(324, NULL, NULL, NULL, 'xivs5DrjKz', '2020-12-16 00:00:00', '2020-12-16 00:00:00', 'Blackpink'),
-(325, 'xye8aoedgrqtx7z5qmay', 'https://www.youtube.com/embed/e-ORhEE9VVg', NULL, 'brCXnOFPm', '2020-12-16 00:00:00', '2020-12-16 00:00:00', 'Melihat Angkasa'),
-(329, 'xye8aoedgrqtx7z5qmay', 'https://www.youtube.com/embed/_Hu446ApWaY', NULL, 'ldLD3958t', '2020-12-17 00:00:00', '2020-12-17 00:00:00', 'BLACKPINK - \'How You Like That\' M/V'),
-(331, 'mapcxjjg69tvwut0minw', 'https://www.youtube.com/embed/e-ORhEE9VVg', NULL, 'LQTK5nijk', '2020-12-17 00:00:00', '2020-12-17 00:00:00', 'landing create link loggedout'),
-(332, 'c4gx13berwnwtgrokhpe', 'https://www.youtube.com/embed/bmVKaAV_7-A', NULL, 'zyCDqny5I', '2020-12-17 00:00:00', '2020-12-17 00:00:00', 'https://www.youtube.com/watch?v=bmVKaAV_7-A'),
-(333, 'nsrksbh7bm83qy60resl', 'https://www.youtube.com/embed/bmVKaAV_7-A', NULL, 'vEDukhfZJ', '2020-12-17 00:00:00', '2020-12-17 00:00:00', 'https://www.youtube.com/watch?v=bmVKaAV_7-A'),
-(334, 'fmlr117hytrqr3y5zgso', 'https://www.youtube.com/embed/bmVKaAV_7-A', NULL, 'xgWQ9ORRT', '2020-12-17 00:00:00', '2020-12-17 00:00:00', 'https://www.youtube.com/watch?v=bmVKaAV_7-A'),
-(335, 'yo4vxcc5ejkyqmeeeavo', 'https://www.youtube.com/embed/bmVKaAV_7-A', NULL, '6UufMASeF', '2020-12-17 00:00:00', '2020-12-17 00:00:00', 'https://www.youtube.com/watch?v=bmVKaAV_7-A'),
-(338, 'lswuu9nccu6tx0nimblm', 'https://www.youtube.com/watch?v=ioNng23DkIM', 4, 'HXs4yfGD9xxx', '2020-12-18 00:00:00', '2020-12-18 00:00:00', 'ses dumm'),
-(340, NULL, NULL, 4, 'ybONvzVVK', '2020-12-24 00:00:00', '2020-12-24 00:00:00', 'A Title'),
-(341, NULL, 'asdasdasd', 4, 'XvEDSMJLB', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testasd'),
-(342, NULL, 'asdasdasd', 4, 'cIus5e6Cm', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testasd'),
-(343, NULL, 'asdasdasd', 4, '08dZbOXfk', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testasd'),
-(344, NULL, 'asdasdasd', 4, 'zR4sV3S6N', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testasd'),
-(345, NULL, 'asdasdasd', 4, '4cWSi11ZR', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testasd'),
-(346, NULL, 'asdasdasd', 4, 'ngoTiLTbm', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testasd'),
-(347, NULL, 'asdasdasd', 4, 'ysDNs7dKK', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testasd'),
-(348, NULL, 'asdasdasd', 4, 'TFNqnFWLw', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testasd'),
-(349, NULL, 'asdasdasd', 4, 'H1G2pGaLZ', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testasd'),
-(350, NULL, 'asdasdasd', 4, '7RNjDOaZm', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testasd'),
-(351, NULL, 'asdasdasd', 4, '6shegL5rV', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testasd'),
-(355, NULL, 'asdasdasd', 4, '5Ilu72hWr', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testasd'),
-(357, NULL, 'asdasdasd', 4, 'Rkv1Ldim3', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testasd'),
-(358, NULL, 'asdasdasd', 4, '86gNTfwDe', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testasd'),
-(359, NULL, 'asdasdasd', 4, 'jqDvYd5Vm', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testasd'),
-(360, NULL, 'asdasdasd', 4, 'v0Xsgn2Hw', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testasd'),
-(361, NULL, 'asdasdasd', 4, 'a5xxIPwdG', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testasd'),
-(362, NULL, 'asdasdasd', 4, 'zTp6dsxV8', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testasd'),
-(363, NULL, 'asdasdasd', 4, '8PEsjZU8T', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testasd'),
-(364, NULL, 'asdasdasd', 4, '65SQT76aS', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testasd'),
-(365, NULL, 'test', 4, 'WKICncfyE', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testtest'),
-(366, NULL, 'test', 4, 'yJYzgJ1CO', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testtest'),
-(367, NULL, 'test', 4, 'M56Stg5AO', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testtest'),
-(368, NULL, 'test', 4, '17K8KXn1d', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testtest'),
-(369, NULL, 'test', 4, 'dXOkMkLqJ', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testtest'),
-(370, NULL, 'test', 4, 'tLb4dvyXw', '2020-12-27 00:00:00', '2020-12-27 00:00:00', 'testtest');
+INSERT INTO `links` (`id`, `image_path`, `video_embed_url`, `id_user`, `short_link`, `createdAt`, `updatedAt`, `deletedAt`, `title`, `show_status`) VALUES
+(338, 'lswuu9nccu6tx0nimblm', 'https://www.youtube.com/embed/ioNng23DkIM', 4, 'HXs4yfGD9xxx', '2020-12-18 00:00:00', '2020-12-18 00:00:00', NULL, 'ses dumm', 1),
+(344, NULL, 'asdasdasd', 4, 'zR4sV3S6N', '2020-12-27 00:00:00', '2020-12-27 00:00:00', NULL, 'testasd', 1),
+(345, NULL, 'asdasdasd', 4, '4cWSi11ZR', '2020-12-27 00:00:00', '2020-12-27 00:00:00', NULL, 'testasd', 1),
+(348, NULL, 'asdasdasd', 4, 'TFNqnFWLw', '2020-12-27 00:00:00', '2020-12-27 00:00:00', '2021-01-15 04:32:59', 'testasd', 1),
+(349, NULL, 'asdasdasd', 4, 'H1G2pGaLZ', '2020-12-27 00:00:00', '2020-12-27 00:00:00', '2021-01-15 04:33:18', 'testasd', 1),
+(350, NULL, 'asdasdasd', 4, 'xxaxaxax', '2020-12-27 00:00:00', '2020-12-27 00:00:00', NULL, 'testasd', 2),
+(357, NULL, 'asdasdasd', 4, 'Rkv1Ldim3', '2020-12-27 00:00:00', '2020-12-27 00:00:00', '2021-01-08 10:15:16', 'testasd', 1),
+(358, NULL, 'asdasdasd', 4, '86gNTfwDe', '2020-12-27 00:00:00', '2020-12-27 00:00:00', '2021-01-06 08:33:17', 'testasd', 1),
+(359, NULL, 'asdasdasd', 4, 'jqDvYd5Vm', '2020-12-27 00:00:00', '2020-12-27 00:00:00', '2021-01-08 10:15:11', 'testasd', 1),
+(372, NULL, 'https://www.youtube.com/embed/_Hu446ApWaY', 4, 'k0Egckq7w', '2021-01-04 00:00:00', '2021-01-04 00:00:00', NULL, 'percobaan', 1),
+(374, NULL, 'sad bgt', 4, 'nE3myxmoL', '2021-01-06 00:00:00', '2021-01-06 00:00:00', NULL, 'sad', 1),
+(375, NULL, 'adadadasdasd', 4, 'Uyw5eznY0', '2021-01-06 00:00:00', '2021-01-06 00:00:00', '2021-01-15 08:10:48', 'aaaa baru nih', 1),
+(376, NULL, 'adadadasdasd', 4, 'sadq2131', '2021-01-06 00:00:00', '2021-01-06 00:00:00', '2021-01-11 09:02:06', 'aaaa baru nih', 1),
+(439, 'cdhcu8yqip6bflxugfob', 'https://www.youtube.com/embed/_Hu446ApWaY', 4, 'XdgcNWcgg', '2021-01-11 00:00:00', '2021-01-11 00:00:00', NULL, 'tes', 1),
+(453, NULL, 'baru', 4, 'FhNSXGb5I', '2021-01-15 00:00:00', '2021-01-15 00:00:00', NULL, 'sebuah', 1),
+(454, 'cdntqgpbqgl9vfzs6n0v', 'Bumi Biru', 4, '3NUtTUWMb', '2021-01-15 00:00:00', '2021-01-15 00:00:00', NULL, 'Bumi Biru', 1),
+(455, NULL, '', 4, 'Sf0bdMRkk', '2021-01-15 00:00:00', '2021-01-15 00:00:00', NULL, 'sad', 1);
 
 -- --------------------------------------------------------
 
@@ -124,56 +108,40 @@ INSERT INTO `links` (`id`, `image_path`, `video_embed_url`, `id_user`, `short_li
 CREATE TABLE `link_platforms` (
   `id` int(11) NOT NULL,
   `url_platform` varchar(255) DEFAULT NULL,
-  `jenis_platform` varchar(255) DEFAULT NULL,
-  `text` varchar(255) DEFAULT NULL,
+  `jenis_platform` int(11) DEFAULT NULL,
+  `text` int(11) DEFAULT NULL,
   `id_link` int(11) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
-  `updatedAt` datetime NOT NULL
+  `updatedAt` datetime NOT NULL,
+  `deletedAt` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `link_platforms`
 --
 
-INSERT INTO `link_platforms` (`id`, `url_platform`, `jenis_platform`, `text`, `id_link`, `createdAt`, `updatedAt`) VALUES
-(373, 'https://www.youtube.com/watch?v=ioNng23DkIM', 'youtube', 'Listen', 324, '2020-12-16 00:00:00', '2020-12-16 00:00:00'),
-(374, 'https://www.youtube.com/watch?v=e-ORhEE9VVg', 'youtube', 'Watch', 325, '2020-12-16 00:00:00', '2020-12-16 00:00:00'),
-(378, 'https://www.youtube.com/watch?v=_Hu446ApWaY', 'youtube', 'Listen', 329, '2020-12-17 00:00:00', '2020-12-17 00:00:00'),
-(380, '', '', '', 331, '2020-12-17 00:00:00', '2020-12-17 00:00:00'),
-(381, 'https://www.youtube.com/watch?v=bmVKaAV_7-A', 'spotify', 'Play', 332, '2020-12-17 00:00:00', '2020-12-17 00:00:00'),
-(382, 'https://www.youtube.com/watch?v=bmVKaAV_7-A', 'youtube', 'Listen', 332, '2020-12-17 00:00:00', '2020-12-17 00:00:00'),
-(383, '', '', '', 333, '2020-12-17 00:00:00', '2020-12-17 00:00:00'),
-(384, '', '', '', 334, '2020-12-17 00:00:00', '2020-12-17 00:00:00'),
-(385, '', '', '', 335, '2020-12-17 00:00:00', '2020-12-17 00:00:00'),
-(388, 'https://www.youtube.com/watch?v=ioNng23DkIM', 'spotify', 'Listen', 338, '2020-12-18 00:00:00', '2020-12-23 00:00:00'),
-(389, 'sad', 'youtube', 'Play', 338, '2020-12-18 00:00:00', '2020-12-23 00:00:00'),
-(392, 'asdasd', 'spotify', 'Listen', 340, '2020-12-24 00:00:00', '2021-01-03 00:00:00'),
-(393, 'asdasdasd', 'youtube', 'Listen', 341, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(394, 'tes', 'spotify', 'Listen', 342, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(395, 'tes', 'spotify', 'Listen', 343, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(396, 'tes', 'spotify', 'Listen', 344, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(397, 'asda', 'spotify', 'Listen', 345, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(398, 'asd', 'spotify', 'Listen', 346, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(399, 'tes', 'spotify', 'Listen', 347, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(400, 'tes', 'spotify', 'Listen', 348, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(401, 'asd', 'youtube', 'Listen', 349, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(402, 'asdasd', 'spotify', 'Listen', 350, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(403, 'asd', 'spotify', 'Listen', 351, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(407, 'asd', 'youtube', 'Listen', 355, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(409, 'sad', 'spotify', 'Listen', 357, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(410, 'asda', 'youtube', 'Listen', 358, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(411, 'asd', 'youtube', 'Listen', 359, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(412, 'adasd', 'spotify', 'Listen', 360, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(413, 'adasd', 'spotify', 'Listen', 361, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(414, 'ada', 'youtube', 'Listen', 362, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(415, 'asdasd', 'spotify', 'Listen', 363, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(416, 'asdasd', 'spotify', 'Listen', 364, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(417, 'test', 'spotify', 'Listen', 365, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(418, 'asd', 'spotify', 'Listen', 366, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(419, 'asd', 'youtube', 'Listen', 367, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(420, 'asd', 'spotify', 'Listen', 338, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(421, 'asd', 'spotify', 'Listen', 369, '2020-12-27 00:00:00', '2020-12-27 00:00:00'),
-(422, 'asd', 'spotify', 'Listen', 370, '2020-12-27 00:00:00', '2020-12-27 00:00:00');
+INSERT INTO `link_platforms` (`id`, `url_platform`, `jenis_platform`, `text`, `id_link`, `createdAt`, `updatedAt`, `deletedAt`) VALUES
+(388, 'https://www.youtube.com/watch?v=ioNng23DkIM', 11, 1, 338, '2020-12-18 00:00:00', '2021-01-14 00:00:00', NULL),
+(432, 'MASUK NIH', 11, 1, NULL, '2021-01-06 00:00:00', '2021-01-06 00:00:00', NULL),
+(433, 'asdasd', 11, 1, NULL, '2021-01-06 00:00:00', '2021-01-06 00:00:00', NULL),
+(440, 'asdasd', 11, 1, 372, '2021-01-06 00:00:00', '2021-01-06 00:00:00', '2021-01-06 05:07:38'),
+(441, 'data masuk kedua', 11, 1, 372, '2021-01-06 00:00:00', '2021-01-06 00:00:00', '2021-01-06 05:08:44'),
+(442, 'data masuk ketiga', 19, 1, 372, '2021-01-06 00:00:00', '2021-01-06 00:00:00', '2021-01-06 05:11:57'),
+(443, 'BARU', 11, 14, 372, '2021-01-06 00:00:00', '2021-01-06 00:00:00', '2021-01-06 05:09:13'),
+(445, 'zzzz', 11, 1, 372, '2021-01-06 00:00:00', '2021-01-06 00:00:00', '2021-01-06 05:09:54'),
+(467, '', 11, 1, 374, '2021-01-06 00:00:00', '2021-01-06 00:00:00', NULL),
+(468, 'TEST YG INI UNTUK LIHATa', 11, 1, 375, '2021-01-06 00:00:00', '2021-01-06 00:00:00', '2021-01-11 06:36:25'),
+(469, 'apah', 11, 1, 376, '2021-01-06 00:00:00', '2021-01-11 00:00:00', NULL),
+(533, 'https://www.youtube.com/watch?v=_Hu446ApWaY', 22, 10, 439, '2021-01-11 00:00:00', '2021-01-11 00:00:00', NULL),
+(534, 'https://www.youtube.com/watch?v=_Hu446ApWaY', 11, 1, 439, '2021-01-11 00:00:00', '2021-01-11 00:00:00', NULL),
+(535, 'asd', 11, 11, 375, '2021-01-11 00:00:00', '2021-01-11 00:00:00', '2021-01-11 08:50:42'),
+(536, 'asd edited', 11, 14, 375, '2021-01-11 00:00:00', '2021-01-11 00:00:00', '2021-01-11 08:53:27'),
+(537, 'INI NIH', 11, 1, 375, '2021-01-11 00:00:00', '2021-01-11 00:00:00', '2021-01-11 08:54:43'),
+(538, 'pengganti INI NIH EDITED SELASA', 11, 11, 375, '2021-01-11 00:00:00', '2021-01-12 00:00:00', '2021-01-12 06:28:25'),
+(541, 'coklat kue', 11, 1, 375, '2021-01-12 00:00:00', '2021-01-12 00:00:00', NULL),
+(553, 'asdasd', 11, 1, 453, '2021-01-15 00:00:00', '2021-01-15 00:00:00', NULL),
+(554, 'Bumi Biru', 11, 1, 454, '2021-01-15 00:00:00', '2021-01-15 00:00:00', NULL),
+(555, 'asd', 11, 1, 455, '2021-01-15 00:00:00', '2021-01-15 00:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -186,19 +154,20 @@ CREATE TABLE `list_platforms` (
   `platform_name` varchar(255) DEFAULT NULL,
   `logo_image_path` varchar(255) DEFAULT NULL,
   `platform_regex` varchar(255) DEFAULT NULL,
+  `published` tinyint(4) NOT NULL DEFAULT 1,
   `createdAt` datetime NOT NULL,
-  `updatedAt` datetime NOT NULL
+  `updatedAt` datetime NOT NULL,
+  `deletedAt` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `list_platforms`
 --
 
-INSERT INTO `list_platforms` (`id`, `platform_name`, `logo_image_path`, `platform_regex`, `createdAt`, `updatedAt`) VALUES
-(11, 'spotify', 'assets/logo/spotify.svg', 'www.spotify.com', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(12, 'youtube', 'assets/logo/youtube.svg', 'www.youtube.com', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(18, 'deezer', 'assets/logo/hdlqx1eapvx1yr0ejzpa', 'https://www.deezer.com/', '2020-12-22 00:00:00', '2020-12-22 00:00:00'),
-(19, 'dummy', 'assets/logo/ky7qw4ranndorkmvf2ow', 'dummy.com', '2021-01-04 00:00:00', '2021-01-04 00:00:00');
+INSERT INTO `list_platforms` (`id`, `platform_name`, `logo_image_path`, `platform_regex`, `published`, `createdAt`, `updatedAt`, `deletedAt`) VALUES
+(11, 'spotify', 'assets/logo/spotify.svg', 'www.spotify.com', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL),
+(19, 'dummy', 'assets/logo/ky7qw4ranndorkmvf2ow', 'dummy.com', 1, '2021-01-04 00:00:00', '2021-01-04 00:00:00', NULL),
+(22, 'youtube', 'assets/logo/preud4qgvghzhcrqssif', 'https://www.youtube.com', 1, '2021-01-11 00:00:00', '2021-01-11 00:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -233,10 +202,8 @@ INSERT INTO `list_text` (`id`, `text`, `createdAt`, `updatedAt`) VALUES
 (13, 'Pre-Save', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (14, 'Pre-Add', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (15, 'Buy Tickets', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(16, 'Get Tickets', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (17, 'View Ticket Prices', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (18, 'Discover', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(19, 'Kunjungi', '2021-01-03 00:00:00', '2021-01-03 00:00:00'),
 (20, 'Check it Out', '2021-01-04 00:00:00', '2021-01-04 00:00:00');
 
 -- --------------------------------------------------------
@@ -258,6 +225,53 @@ CREATE TABLE `migrations` (
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (1, '2020_12_26_110455_create_visit_table', 1),
 (2, '2020_12_26_110846_create_clickthrough_table', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `report`
+--
+
+CREATE TABLE `report` (
+  `id` int(11) NOT NULL,
+  `link` int(11) NOT NULL,
+  `ip_reporter` varchar(32) NOT NULL,
+  `reason` int(11) NOT NULL,
+  `additional_reason` text DEFAULT NULL,
+  `validated` tinyint(4) NOT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `report`
+--
+
+INSERT INTO `report` (`id`, `link`, `ip_reporter`, `reason`, `additional_reason`, `validated`, `createdAt`, `updatedAt`) VALUES
+(1, 454, '127.0.0.1', 2, 'asd', 0, '2021-01-15 00:00:00', '2021-01-15 00:00:00'),
+(2, 454, '127.0.0.1', 3, 'asd', 0, '2021-01-15 00:00:00', '2021-01-15 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `report_reason`
+--
+
+CREATE TABLE `report_reason` (
+  `id` int(11) NOT NULL,
+  `reason` varchar(128) NOT NULL,
+  `text` varchar(128) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `report_reason`
+--
+
+INSERT INTO `report_reason` (`id`, `reason`, `text`) VALUES
+(1, 'Pornography', 'This link contains Pornography'),
+(2, 'Violence', 'This link contains/inciting Violence'),
+(3, 'Copyright Issues', 'I have copyright issues with this Link'),
+(4, 'Breaking Law', 'I believe this Link is breaking law');
 
 -- --------------------------------------------------------
 
@@ -292,6 +306,7 @@ CREATE TABLE `users` (
   `name` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `admin` tinyint(1) NOT NULL DEFAULT 0,
+  `active` tinyint(4) NOT NULL DEFAULT 1,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -300,10 +315,11 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `email`, `name`, `password`, `admin`, `createdAt`, `updatedAt`) VALUES
-(3, 'test@test.com', NULL, '$2b$10$GJOC1oP3SziiaaUlJ8M.HuzTZ7lXq2Z4eCNtGpU0rfB9qI3sGB1RS', 1, '2020-11-10 05:05:51', '2020-11-10 05:05:51'),
-(4, 'test2@test.com', 'nama test 2', '$2y$12$YLKo.ayVvBmsEWnHA6Y2OON1CkgwNx8j/N1CiHLZOjCY.2NvKVwYS', 0, '2020-11-18 02:08:05', '2021-01-03 11:10:09'),
-(5, 'mail88@mail.com', NULL, '$2y$12$ExUIErZWgNpcSuGUxf.QK.fkFS.w55WrMceHjZWy7ME.VIy2bGa2i', 0, '2020-12-02 00:00:00', '2020-12-02 00:00:00');
+INSERT INTO `users` (`id`, `email`, `name`, `password`, `admin`, `active`, `createdAt`, `updatedAt`) VALUES
+(3, 'test@test.com', NULL, '$2b$10$GJOC1oP3SziiaaUlJ8M.HuzTZ7lXq2Z4eCNtGpU0rfB9qI3sGB1RS', 1, 1, '2020-11-10 05:05:51', '2020-11-10 05:05:51'),
+(4, 'test2@test.com', 'user kedua', '$2y$12$4LG4IL1LrG6bTcVe/nFakeszklLN95lt3.9riwSCKFkqIwB9ELdWS', 0, 1, '2020-11-18 02:08:05', '2021-01-11 09:07:23'),
+(10, 'SA@SA.com', 'SA', '$2y$12$YNanVa4s34ecKLlHJyM.tOLPVSWmmuHsmomMogBqvW03I6syOQhJK', 2, 1, '2020-11-10 05:05:51', '2021-01-15 01:22:50'),
+(11, 'test3@test.com', 'test3', '$2y$12$vxMm9PQwvb7i56Lwpo1NSeadNxAk5LDNuHKjmMfgEaGaDalICSWFa', 0, 1, '2021-01-12 00:00:00', '2021-01-12 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -326,20 +342,12 @@ CREATE TABLE `visits` (
 
 INSERT INTO `visits` (`id`, `link_id`, `ip`, `referer`, `createdAt`, `updatedAt`) VALUES
 (1, 338, '127.0.0.1', 'Localhost', '2020-12-25 17:00:00', '2020-12-25 17:00:00'),
-(2, 370, '127.0.0.1', 'Localhost', '2020-12-26 17:00:00', '2020-12-26 17:00:00'),
 (3, 338, '121.11.22.3', 'Youtube', '2020-12-25 17:00:00', '2020-12-25 17:00:00'),
 (4, 338, '127.0.0.1\r\n312.123.13.1', 'Youtube', '2020-12-25 17:00:00', '2020-12-25 17:00:00'),
-(5, 340, '127.0.0.1', 'Direct', '2020-12-27 17:00:00', '2020-12-27 17:00:00'),
-(6, 340, '127.0.0.2', 'Youtube', '2020-12-27 17:00:00', '2020-12-27 17:00:00'),
-(7, 340, '127.0.0.2', 'Youtube', '2020-12-27 17:00:00', '2020-12-27 17:00:00'),
-(8, 329, '127.0.0.1', 'localhost', '2020-12-27 17:00:00', '2020-12-27 17:00:00'),
-(9, 324, '127.0.0.1', 'localhost', '2020-12-27 17:00:00', '2020-12-27 17:00:00'),
-(10, 334, '127.0.0.1', 'localhost', '2020-12-27 17:00:00', '2020-12-27 17:00:00'),
-(11, 335, '127.0.0.1', 'localhost', '2020-12-27 17:00:00', '2020-12-27 17:00:00'),
-(12, 331, '127.0.0.1', 'localhost', '2020-12-27 17:00:00', '2020-12-27 17:00:00'),
-(13, 325, '127.0.0.1', 'localhost', '2020-12-27 17:00:00', '2020-12-27 17:00:00'),
-(14, 346, '127.0.0.1', 'localhost', '2020-12-27 17:00:00', '2020-12-27 17:00:00'),
-(16, 364, '127.0.0.1', 'localhost', '2021-01-01 17:00:00', '2021-01-01 17:00:00');
+(17, 350, '127.0.0.1', 'localhost', '2021-01-04 17:00:00', '2021-01-04 17:00:00'),
+(22, 439, '127.0.0.1', 'localhost', '2021-01-10 17:00:00', '2021-01-10 17:00:00'),
+(23, 372, '127.0.0.1', 'localhost', '2021-01-14 17:00:00', '2021-01-14 17:00:00'),
+(24, 454, '127.0.0.1', 'localhost', '2021-01-14 17:00:00', '2021-01-14 17:00:00');
 
 --
 -- Indexes for dumped tables
@@ -373,7 +381,9 @@ ALTER TABLE `links`
 ALTER TABLE `link_platforms`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_link` (`id_link`),
-  ADD KEY `id_link_2` (`id_link`);
+  ADD KEY `id_link_2` (`id_link`),
+  ADD KEY `jenis_platform` (`jenis_platform`),
+  ADD KEY `text` (`text`);
 
 --
 -- Indexes for table `list_platforms`
@@ -391,6 +401,20 @@ ALTER TABLE `list_text`
 -- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `report`
+--
+ALTER TABLE `report`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `reason` (`reason`),
+  ADD KEY `link` (`link`);
+
+--
+-- Indexes for table `report_reason`
+--
+ALTER TABLE `report_reason`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -428,31 +452,31 @@ ALTER TABLE `action_list_latforms`
 -- AUTO_INCREMENT for table `clickthroughs`
 --
 ALTER TABLE `clickthroughs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `links`
 --
 ALTER TABLE `links`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=371;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=456;
 
 --
 -- AUTO_INCREMENT for table `link_platforms`
 --
 ALTER TABLE `link_platforms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=423;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=556;
 
 --
 -- AUTO_INCREMENT for table `list_platforms`
 --
 ALTER TABLE `list_platforms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `list_text`
 --
 ALTER TABLE `list_text`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -461,16 +485,28 @@ ALTER TABLE `migrations`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `report`
+--
+ALTER TABLE `report`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `report_reason`
+--
+ALTER TABLE `report_reason`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `visits`
 --
 ALTER TABLE `visits`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- Constraints for dumped tables
@@ -492,7 +528,16 @@ ALTER TABLE `links`
 -- Constraints for table `link_platforms`
 --
 ALTER TABLE `link_platforms`
-  ADD CONSTRAINT `link_platforms_ibfk_1` FOREIGN KEY (`id_link`) REFERENCES `links` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `link_platforms_ibfk_1` FOREIGN KEY (`id_link`) REFERENCES `links` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `link_platforms_ibfk_2` FOREIGN KEY (`jenis_platform`) REFERENCES `list_platforms` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `link_platforms_ibfk_3` FOREIGN KEY (`text`) REFERENCES `list_text` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `report`
+--
+ALTER TABLE `report`
+  ADD CONSTRAINT `report_ibfk_1` FOREIGN KEY (`reason`) REFERENCES `report_reason` (`id`),
+  ADD CONSTRAINT `report_ibfk_2` FOREIGN KEY (`link`) REFERENCES `links` (`id`);
 
 --
 -- Constraints for table `visits`

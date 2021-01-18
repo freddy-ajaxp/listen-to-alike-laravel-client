@@ -48,12 +48,13 @@
                         
                         <input id="image" class="music-link__upload-input" type="file" name="image" accept="image/*" />
                         <input type="hidden" id="userErasingImage" value=false>
-                    </div>
-                    @if($link['image_path'])
+                         @if($link['image_path'])
                     <button id="clear-image"> clear</button>
                     @else
                     <button id="clear-image" hidden> clear</button>    
                     @endif
+                    </div>
+                   
                 </div>
                 <div>
                     <button type="button" name="add" id="add" class="btn btn-info btn-sm">Add New Row</button>

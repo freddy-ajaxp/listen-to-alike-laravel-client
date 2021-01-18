@@ -18,7 +18,7 @@
                 <div class="form-group">
                     <div class="col-md-12 mb-2">
                     </div>
-                    <label for="exampleInputFile">Logo (format .SVG)</label>
+                    <label for="exampleInputFile">Logo (format .SVG / .PNG)</label>
                     <div class="music-link__upload-art">
                         <img id="image-preview-container-edit" src="https://res.cloudinary.com/dfpmdlf8l/image/upload/{{$data['logo_image_path']}}" style="max-height: 150px;" alt="">
                         <input id="image" class="music-link__upload-input" type="file" name="image"  accept="image/*"/>

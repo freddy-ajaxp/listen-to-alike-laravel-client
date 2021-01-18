@@ -117,15 +117,16 @@ class AdminController extends Controller
 
     function addPlatform(Request $request)
     {
-        // echo request()->headers->get("X-Requested-With");
-        // if ($request->ajax()) {
-        if ('XMLHttpRequest' == request()->headers->get("X-Requested-With")) {
             $data = $request->all();
-            // $request->validate(['image' => 'required|image|mimes:svg,jpg,JPG|max:1024',]);
+
             if (!$request->hasFile('image')) {
                 return response()->json([
-                    `'failed'  => 'you have to choose a logo to be uploaded'`
-                ]);
+                    'error'  => 'you have to choose a new logo to be uploaded'
+                ], 400);
+            }
+            else{
+                //validasi ukuran type image
+                $request->validate(['image' => 'required|image|mimes:svg,png|max:1024',]);
             }
 
             //BAGIAN upload to cloud
@@ -145,7 +146,7 @@ class AdminController extends Controller
             $list_platform->createdAt = date("Y-m-d");
             $list_platform->updatedAt = date("Y-m-d");
             $list_platform->save();
-        }
+        
         return response()->json([
             `'success'  => 'action success'`
         ]);
@@ -163,12 +164,14 @@ class AdminController extends Controller
             // karena harus ada gambar
             if (!$request->hasFile('image')) {
                 return response()->json([
-                    'error'  => 'you have to choose a logo to be uploaded'
+                    'error'  => 'you have to choose a new logo to be uploaded'
                 ], 400);
             }
-            //validasi ukuran type image
-            // $request->validate(['image' => 'required|image|mimes:svg,jpg,JPG|max:1024',]);
-
+            else{
+                //validasi ukuran type image
+                $request->validate(['image' => 'image|mimes:svg,png|max:1024',]);
+            }
+            
             if ($request->file('image')) {
                 //BAGIAN upload to cloud kalau ada gambar baru
                 $uploadedFileUrl = \Cloudinary::upload(
@@ -212,7 +215,7 @@ class AdminController extends Controller
             // this a little prevention from user bypassing front end validation 
             if (!$data['text']) {
                 return response()->json([
-                    'failed'  => 'Please fill all field'
+                    'error'  => 'Please fill all field'
                 ], 400);
             }
 
@@ -387,7 +390,7 @@ class AdminController extends Controller
     function editPlatformModal(Request $request)
     {
         $data = $request->all();
-        $platform = List_platform::where('id', $data['id'])->first()->toArray();
+        $platform = List_platform::withTrashed()->where('id', $data['id'])->first()->toArray();
         // dd($platform);
         return view('components/admin/partials/modal-edit-platform')->with('data', $platform);
     }
