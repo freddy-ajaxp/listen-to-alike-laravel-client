@@ -21,6 +21,17 @@
 
                     <label for="message-text" class="col-form-label">Please tell us the reason:</label>
 
+    {{-- @foreach($reasons as $key => $reason)
+				@foreach($reason->reports as $h)
+                {{$h->additional_reason }}
+				@endforeach
+	@endforeach --}}
+
+
+
+
+
+
                     @foreach($reasons as $key => $reason)
                     <div class="form-group">
                         <div class="form-check">

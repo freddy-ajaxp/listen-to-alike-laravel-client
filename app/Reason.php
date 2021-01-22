@@ -4,14 +4,19 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Report_reason extends Model
+class Reason extends Model
 {
     protected $fillable = [
         'reason', 'text'
     ];
     protected $primaryKey = 'id';
-    protected $table = 'report_reason';
+    protected $table = 'reason';
 	public $timestamps = false;
     const CREATED_AT = 'createdAt';
     const UPDATED_AT = 'updatedAt';
+
+    public function reports()
+    {
+        return $this->belongsToMany('App\Report' );
+    }   
 }

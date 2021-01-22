@@ -80,6 +80,13 @@ class TableController extends Controller
 
         $data = $request->all();
         $result = Link::where('short_link', $data['short_link'])->first();
+        
+        if($result->id_user != session()->get('id')){
+            return response()->json([
+                'error'  => 'Unauthorized Action'
+            ], 401);
+        }
+
         if($result && ($result->short_link ==  $data['short_link'])){
             return response()->json([
                 'error'  => 'Harap masukkan short link yang baru'
@@ -116,8 +123,6 @@ class TableController extends Controller
         try {
             $link = Link::where('id', $data['id'])->first()->toArray();
             $link_platform = Link_platform::where('id_link', $data['id'])->get(['id', 'jenis_platform', 'url_platform', 'text']);
-
-            print($link_platform);
             $platforms = List_platform::get(['id','platform_name','logo_image_path','platform_regex', 'published'])->toArray();
             $text = List_text::get(['id','text'])->toArray();
             return view('components/user/partials/modal-edit')->with(["link"=>$link, "result" => $link_platform, "platforms" => $platforms , "texts" => $text ]); //ini untuk dynamic modal   

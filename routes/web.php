@@ -59,6 +59,7 @@ Route::get('/logout', function (Request $request) {
 
 Route::get('/preview/{short_link}', 'ListPlatformController@preview');
 Route::get('/detail/{short_link}', 'ListPlatformController@detail')->middleware('sessionvalidator');
+Route::get('/getCountLinkChart', 'ListPlatformController@getCountLinkChart')->middleware('sessionvalidator');
 Route::post('/click', 'ListPlatformController@viewCtr');
 Route::post('/savePreSignup', 'ListPlatformController@savePreSignup');
 Route::post('/report', 'ListPlatformController@report');
@@ -98,6 +99,11 @@ Route::get('/admin/userList', function () {
     return view('components/admin/view/users')->with('components', $data);
 })->middleware('sessionvalidator');
 
+Route::get('/admin/reportList', function () {
+    $data['main'] = 'links';
+    return view('components/admin/view/reports');
+})->middleware('sessionvalidator');
+
 Route::get('/admin/setting', function () {
     return view('components/admin/view/setting');
 })->middleware('sessionvalidator');
@@ -119,9 +125,12 @@ Route::get('admin/getUserDataById/{id}', 'AdminController@getUserDataById')->nam
 Route::get('admin/getUserLinkList/{id_user}', 'AdminController@getUserLinkList')->name('admin.user-datatable');
 Route::get('admin/datatables', 'AdminController@datatables')->name('admin.datatables');
 Route::post('admin/deleteLink', 'AdminController@deleteLink')->name('admin.delete-link');
+Route::post('admin/banLink', 'AdminController@banLink')->name('admin.ban-link');
+Route::post('admin/pulihkanLink', 'AdminController@pulihkanLink')->name('admin.pulihkan-link');
 Route::post('admin/deleteUser', 'AdminController@deleteUser')->name('admin.delete-user');
 
 Route::get('admin/getAllUsers', 'AdminController@getAllUsers')->name('admin.all-users');
+Route::get('admin/getAllReports', 'AdminController@getAllReports')->name('admin.all-reports');
 Route::get('admin/getAllPlatforms', 'AdminController@getAllPlatforms')->name('admin.all-platforms');
 Route::post('admin/publishPlatform', 'AdminController@publishPlatform');
 Route::post('admin/hidePlatform', 'AdminController@hidePlatform');
@@ -136,6 +145,7 @@ Route::get('admin/modal/reset-pwd', 'AdminController@resetPwdModal');
 Route::get('admin/modal/edit-platform', 'AdminController@editPlatformModal');
 Route::get('admin/modal/edit-text', 'AdminController@editTextModal');
 Route::get('admin/modal/delete-text', 'AdminController@deleteTextModal');
+Route::get('admin/modal/ban-link', 'AdminController@banLinkModal');
 Route::post('admin/deleteText', 'AdminController@deleteText');
 Route::post('admin/editPlatform', 'AdminController@editPlatform');
 Route::get('admin/editText', 'AdminController@editText');

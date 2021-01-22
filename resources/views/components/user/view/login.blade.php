@@ -25,7 +25,7 @@
                 <form action="user/login" method="post" id="form-login">
                     {{ csrf_field() }}
                     <div class="input-group mb-3">
-                        <input required type="email" class="form-control" name="email" id="email" placeholder="Email">
+                        <input required type="email" class="form-control" name="email" id="email" placeholder="Email" au>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>

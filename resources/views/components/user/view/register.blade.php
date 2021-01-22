@@ -27,7 +27,7 @@
                 <form action="user/register" method="post" id="form-register">
                     {{ csrf_field() }}
                     <div class="input-group mb-3">
-                        <input required type="text" class="form-control" name="name" placeholder="Username">
+                        <input required type="text" class="form-control" name="name" placeholder="Username" minlength="8">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>
@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        <input required type="password" class="form-control" name="password" placeholder="Password">
+                        <input required type="password" class="form-control" name="password" placeholder="Password" minlength="8">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
@@ -51,7 +51,7 @@
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        <input required type="password" class="form-control" name="confirmPassword" placeholder="Retype password">
+                        <input required type="password" class="form-control" name="confirmPassword" placeholder="Retype password" minlength="8">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>

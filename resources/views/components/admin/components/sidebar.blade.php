@@ -33,22 +33,12 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{ url('admin/userList') }}" class="nav-link">
-                        {{-- <a href="{{ route('admin.all-users') }}" class="nav-link"> --}}
                         <i class="nav-icon fas fa-users"></i>
                         <p>
                             User
                         </p>
                     </a>
                 </li>
-                {{-- <li class="nav-item">
-                    <a href="/admin/setting" class="nav-link">
-                        <i class="nav-icon fas fa-cogs"></i>
-                        <p>
-                            Setting
-                        </p>
-                    </a>
-                </li> --}}
-
                 <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-edit"></i>
@@ -72,7 +62,14 @@
                         </li>
                     </ul>
                 </li>
-
+                 <li class="nav-item">
+                    <a href="{{ url('admin/reportList') }}" class="nav-link">
+                        <i class="nav-icon fas fa-exclamation"></i>
+                        <p>
+                            Aduan
+                        </p>
+                    </a>
+                </li>
 
 
             </ul>

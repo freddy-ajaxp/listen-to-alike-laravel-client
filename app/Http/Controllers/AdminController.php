@@ -7,6 +7,7 @@ use App\Link_platform;
 use App\List_platform;
 use App\User;
 use App\Text;
+use App\Report;
 use DataTables;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -69,6 +70,33 @@ class AdminController extends Controller
                     }                    
                     ;
                 return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+
+    public function getAllReports()
+    {
+        $allReports = Report::all();
+        // print_r($allReports->toArray());
+        // exit();
+        return Datatables::of($allReports)
+            ->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                $btn =  ($row->validated ? 
+                           "<button href='admin/publishing' id='pulihkanBtn' class='btn btn-success'>Pulihkan</button>"
+                           : 
+                           "<button href='admin/publishing' id='banBtn' class='btn btn-danger'>Larang</button>"
+                            );
+                return $btn;
+            })
+            ->addColumn('reasons', function ($row) {
+                if(!$row->reasons->toArray()){
+                    return "Tidak ada laporan";
+                }
+                return $row->reasons->map(function($reason) {
+                    return $reason->reason;
+                });
             })
             ->rawColumns(['action'])
             ->make(true);
@@ -301,6 +329,30 @@ class AdminController extends Controller
         $link->forceDelete();
         return response()->json(['success' => 'Data is deleted permanently'], 200);
     }
+
+    function banLink(Request $request)
+    {
+        $data = $request->all();
+        $report = Report::where('id', $data['idReport'])->first();
+        $report->validated = 1;
+        $report->save();
+        $link = Link::find($report->link);
+        $link->show_status = 2;
+        $link->save();
+        return response()->json(['success' => 'Link is now banned'], 200);
+    }
+
+    function pulihkanLink(Request $request)
+    {
+        $data = $request->all();
+        $report = Report::where('id', $data['idReport'])->first();
+        $report->validated = 0;
+        $report->save();
+        $link = Link::find($report->link);
+        $link->show_status = 1;
+        $link->save();
+        return response()->json(['success' => 'Link is now restored'], 200);
+    }
     
     function setPrivilege(Request $request)
     {
@@ -379,6 +431,13 @@ class AdminController extends Controller
         $data = $request->all();
         $data = Text::find($data['idText']);
         return view('components/admin/partials/modal-delete-text')->with('data', $data);
+    }
+
+    function banLinkModal(Request $request)
+    {
+        $data = $request->all();
+        // $data = Report::find($data['id']);
+        return view('components/admin/partials/modal-ban-link')->with('idReport', $data['id']);
     }
     function resetPwdModal(Request $request)
     {

@@ -52,20 +52,23 @@ class UserController extends Controller
 
         //check if any field empy
         if (in_array(null, $data)) {
-            // return response()->json(['error' => 'Please complete the registration form'], 400);
             return redirect('/register')->with('error', 'Please complete the registration form');
         }
-        // print_r('lewat');
-        // exit();
-        //check passwords match 
-        if ($data['password'] !== $data['confirmPassword']) {
+
+        if (strlen($data['name']) < 8) {
             // return response()->json(['error' => 'password does not match'], 400);
-            return redirect('/register')->with('error', 'Passwords does not match');
+            return redirect('/register')->with('error', 'Username minimal 8 character');
         }
 
         if (strlen($data['password']) < 8) {
             // return response()->json(['error' => 'password does not match'], 400);
             return redirect('/register')->with('error', 'Passwords minimal 8 character');
+        }
+
+        //check passwords match 
+        if ($data['password'] !== $data['confirmPassword']) {
+            // return response()->json(['error' => 'password does not match'], 400);
+            return redirect('/register')->with('error', 'Passwords does not match');
         }
 
         $result = User::where('email', $data['email'])->get()->toArray();
@@ -89,8 +92,6 @@ class UserController extends Controller
             $user->save();
 
             return redirect('/login')->with('success', 'Account Successfuly created');
-            // return response()->json(['success' => 'Your Account Is Succesfully Created', 
-            // 'data' => 'success'], 200);
         }
     }
 
@@ -108,7 +109,7 @@ class UserController extends Controller
     {
         if ($request->ajax()) {
             $data = $request->all();
-            $result = User::where('id', $data['id'])->get()->first();
+            $result = User::where('id', session()->get('id'))->get()->first();
             if (!Hash::check($data['oldpassword'], $result->password)) {
                 return response()->json(['error' => 'Password you entered is incorrect'], 400);
             }                    
@@ -144,12 +145,12 @@ class UserController extends Controller
             return response()->json(['error' => 'Please fill all fields'], 400);
             }
 
-            if(strlen($data['name']) != 8){
+            if(strlen($data['name']) < 8){
                 return response()->json([
                     'error'  => 'Nama harus berjumlah minimal 8 karakter'
                 ], 400);
             }    
-            $user = User::find($data['id']);
+            $user = User::find(session()->get('id'));
             $user->name = $data['name'];
             $user->save();
 

@@ -22,11 +22,13 @@
                                     <div class="col-sm-6">
                                         <h3>Detail Link <a href="{{ url('preview/' .$data['link'][0]['short_link']) }}" target="__blank">{{$data['link'][0]['short_link']}}</a></h3>
                                         @if(session()->has('admin'))
-                                        <a href="{{url('/admin')}}" >< kembali</a>
-                                        @else
-                                        <a href="{{url('/dashboard')}}" >< kembali</a>
-                                        @endif
-                                        
+                                        <a href="{{url('/admin')}}">
+                                            < kembali</a>
+                                                @else
+                                                <a href="{{url('/dashboard')}}">
+                                                    < kembali</a>
+                                                        @endif
+
                                     </div>
                                 </div>
                             </div><!-- /.container-fluid -->
@@ -38,25 +40,25 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="card card-primary card-outline">
-                                            <div class="card-body box-profile"> 
+                                            <div class="card-body box-profile">
 
                                                 <h3 class="profile-username text-center">{{$data['link'][0]['title']}}</h3>
 
                                                 <ul class="list-group list-group-unbordered mb-3">
                                                     <li class="list-group-item">
                                                         <b>Visit count</b> <a class="float-right">{{$data['link'][0]['count']}}</a>
-                                                        <img src="{{asset('images/icons/question-circle.svg')}}" style="margin-bottom: 10px;" data-toggle="tooltip" title="Jumlah kunjungan ke kedalam Link Anda"/>
+                                                        <img src="{{asset('images/icons/question-circle.svg')}}" style="margin-bottom: 10px;" data-toggle="tooltip" title="Jumlah kunjungan ke kedalam Link Anda" />
                                                     </li>
                                                 </ul>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                     <div class="col-lg-8 col-md-6">
-                                    <div class="card">
+                                        <div class="card">
                                             <div class="card-header border-0">
-                                                <h3 class="card-title">Clickthroughs 
-                                                <img src="{{asset('images/icons/question-circle.svg')}}"  style="margin-bottom: 10px;" data-toggle="tooltip" title="Jumlah klik pada tiap platform"/> 
+                                                <h3 class="card-title">Clickthroughs
+                                                    <img src="{{asset('images/icons/question-circle.svg')}}" style="margin-bottom: 10px;" data-toggle="tooltip" title="Jumlah klik pada tiap platform" />
                                                 </h3>
                                                 <div class="card-tools">
                                                     <a href="#" class="btn btn-tool btn-sm">
@@ -97,7 +99,7 @@
                                         <div class="card">
                                             <div class="card-header border-0">
                                                 <h3 class="card-title">Referring Domains
-                                                <img src="{{asset('images/icons/question-circle.svg')}}"  style="margin-bottom: 10px;" data-toggle="tooltip" title="Asal domain seseorang yang mengunjungi Link Anda"/>
+                                                    <img src="{{asset('images/icons/question-circle.svg')}}" style="margin-bottom: 10px;" data-toggle="tooltip" title="Asal domain seseorang yang mengunjungi Link Anda" />
                                                 </h3>
                                                 <div class="card-tools">
                                                     <a href="#" class="btn btn-tool btn-sm">
@@ -117,11 +119,11 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                    @foreach($data['referer'] as $key => $referer)
+                                                        @foreach($data['referer'] as $key => $referer)
                                                         <tr>
                                                             {{-- <td>{{ print_r($platform) }}</td> --}}
                                                             <td>
-                                                                    {{$referer->referer }}
+                                                                {{$referer->referer }}
                                                             </td>
                                                             <td>
                                                                 {{ $referer->count }}
@@ -132,11 +134,33 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        {{-- <div class="card">
+                                        <div class="card">
                                             <div class="card-body">
+                                                <form class="form-inline" id="form-visit-chart">
+                                                    <label>Bulan</label>
+                                                    <div class="form-group col-md-2">
+                                                        <select id="visit-mth" class="form-control">
+                                                             @foreach($monthList as $key => $month)
+                                                            <option @php if(date("m")==$month['urutan']){ echo "selected" ;}; @endphp value="{{$month['urutan']}}">{{$month['bulan']}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <label>Tahun</label>
+                                                    <div class="form-group col-md-4">
+                                                        <select id="visit-year" class="form-control">
+                                                        @unless($yearList)
+                                                            <option value="2021">2021</option>
+                                                        @endunless
+                                                            @foreach($yearList as $key => $year)
+                                                            <option @php if(date("Y")==$year){ echo "selected" ;}; @endphp value="{{$year}}">{{$year}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary mb-2">Cari</button>
+                                                </form>
                                                 <div class="d-flex">
                                                     <p class="d-flex flex-column">
-                                                        <span class="text-bold text-lg">{{$data['link'][0]['count']}}</span>
+                                                        <span class="text-bold text-lg" id="visitorThisMth">{{$data['link'][0]['count']}}</span>
                                                         <span>Visitors This Month</span>
                                                     </p>
                                                 </div>
@@ -144,7 +168,7 @@
                                                     <canvas id="visitors-chart" height="200"></canvas>
                                                 </div>
                                             </div>
-                                        </div> --}}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -186,7 +210,11 @@
 <script type="text/javascript" src="{{ asset('assets/js/alert.js') }}"></script>
 <script>
     $(function() {
-        'use strict'
+        var calendar = {!!json_encode($calendar) !!};
+        calendar = Object.keys(calendar)
+        var visits = {!!json_encode($visits) !!};
+        visits = Object.values(visits)
+        var maxVisit = {!!json_encode($maxVisit) !!};
 
         var ticksStyle = {
             fontColor: '#495057'
@@ -195,16 +223,13 @@
 
         var mode = 'index'
         var intersect = true
-
-
-
         var $visitorsChart = $('#visitors-chart')
         var visitorsChart = new Chart($visitorsChart, {
             data: {
-                labels:['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31']
+                labels: calendar
                 , datasets: [{
                     type: 'line'
-                    , data: [100, 120, 170, 167, 180, 177, 160]
+                    , data: visits
                     , backgroundColor: 'transparent'
                     , borderColor: '#007bff'
                     , pointBorderColor: '#007bff'
@@ -229,7 +254,6 @@
                 }
                 , scales: {
                     yAxes: [{
-                        // display: false,
                         gridLines: {
                             display: true
                             , lineWidth: '4px'
@@ -238,7 +262,8 @@
                         }
                         , ticks: $.extend({
                             beginAtZero: true
-                            , suggestedMax: 200
+                            , stepSize: 1
+                            , suggestedMax: maxVisit
                         }, ticksStyle)
                     }]
                     , xAxes: [{
@@ -251,6 +276,57 @@
                 }
             }
         })
+
+
+
+        //updating visit chart
+        function updateConfigAsNewObject(chartData) {
+            visitorsChart.data.datasets[0].data = chartData.arrDaysInMth;
+            visitorsChart.data.labels = Object.keys(chartData.calendar);
+            visitorsChart.options.scales.yAxes[0].ticks.suggestedMax = chartData.maxVisit;
+            $('#visitorThisMth').text(chartData.visitsInMonth)
+            visitorsChart.update();
+        }
+
+
+
+        $(document).on('submit', '#form-visit-chart', function(event) {
+            event.preventDefault();
+            linkId = {!!$data['link'][0]['id'] !!}
+            month = $('#visit-mth').val();
+            year = $('#visit-year').val();
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , dataType: "JSON"
+                , url: '{{ url("getCountLinkChart") }}'
+                , method: 'get'
+                , data: {
+                    linkId: linkId
+                    , month: month
+                    , year: year
+                }
+                , beforeSend: function() {
+                    toggleSpinner(true, "Processing request");
+                }
+                , success: function(chartData) {
+                    toggleSpinner(false, "") 
+                    updateConfigAsNewObject(chartData)
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    toggleSpinner(false, "");
+                    Swal.fire({
+                        title: 'Oops! ' + ajaxOptions
+                        , text: xhr.responseJSON.error
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+                }
+                , complete: function() {}
+            })
+        });
     })
 
 </script>

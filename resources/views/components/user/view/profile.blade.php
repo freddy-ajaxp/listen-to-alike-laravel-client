@@ -62,7 +62,7 @@
                                                     <div class="form-group row">
                                                         <label for="inputEmail3" class="col-sm-3 col-form-label">Name</label>
                                                         <div class="col-sm-9">
-                                                            <input type="text"  class="form-control" id="name" aria-describedby="basic-addon3" placeholder="User's Email" value="{{ $data['name'] }}">
+                                                            <input type="text"  class="form-control" id="name" aria-describedby="basic-addon3" placeholder="User's Email" value="{{ $data['name'] }}" minlength="8">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -82,19 +82,19 @@
                                                     <div class="form-group row">
                                                         <label for="password" class="col-sm-3 col-form-label">Old Password</label>
                                                         <div class="col-sm-9">
-                                                            <input type="password" class="form-control" name="pwd" id="old-password" placeholder="Password minimal 8 characters">
+                                                            <input type="password" required class="form-control" name="pwd" id="old-password" placeholder="Enter your old password" minlength="8"  >
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
                                                         <label for="password" class="col-sm-3 col-form-label">New Password</label>
                                                         <div class="col-sm-9">
-                                                            <input type="password" class="form-control" name="pwd" id="password" placeholder="Password minimal 8 characters">
+                                                            <input type="password" required class="form-control" name="pwd" id="password" placeholder="Password minimal 8 characters" minlength="8" pattern=".{8,12}">
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
                                                         <label for="password-confirmation" class="col-sm-3 col-form-label">Re-enter New Password</label>
                                                         <div class="col-sm-9">
-                                                            <input type="password" class="form-control" name="pwd" id="password-confirmation" aria-describedby="basic-addon3" placeholder="Re-enter password">
+                                                            <input type="password" required class="form-control" name="pwd" id="password-confirmation" arplaceholder="Re-enter password" minlength="8" pattern=".{8,12}">
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
