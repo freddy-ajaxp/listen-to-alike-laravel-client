@@ -6,6 +6,7 @@ use App\Link;
 use App\Link_platform;
 use App\List_platform;
 use App\List_text;
+use App\Notification;
 use App\Visit;
 
 use App\User;
@@ -53,10 +54,37 @@ class TableController extends Controller
                         //    <button id="viewBtn" class="btn btn-success">Visit</button>
                            return $btn;
                     })
+                    ->addColumn('status', function($row){
+                        $btn = '';
+                        if($row->show_status == 1){
+                            $btn= 'normal';
+                        }
+                        else if ($row->show_status == 2){
+                            $btn = "dibanned";
+                        }
+                        return $btn;
+                 })
                     ->rawColumns(['action'])
                     ->make(true);
         }
+    }
 
+    function getAllNotifications(Request $request)
+    {
+        $data = $request->all();
+        $id_user = $request->session()->get('id');
+        $data['id_user'] = $id_user;
+        // dd();
+        if ($request->ajax()) {
+            // $data = Link::where('id_user', $data['id_user'])->get();
+           
+            $data = DB::table('notifications')
+             ->select()
+             ->where('notifiable_id', $id_user) 
+             ->get();
+            // dd($data);
+            return Datatables::of($data)->make(true);
+        }
     }
 
     function getAllLinksById(Request $request)

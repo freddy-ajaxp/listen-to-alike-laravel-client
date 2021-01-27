@@ -8,6 +8,8 @@ use App\List_platform;
 use App\User;
 use App\Text;
 use App\Report;
+use App\Reason;
+use App\Notification;
 use DataTables;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -77,28 +79,51 @@ class AdminController extends Controller
 
     public function getAllReports()
     {
-        $allReports = Report::all();
-        // print_r($allReports->toArray());
-        // exit();
+        $allReports = Report::select(DB::raw('*, count(`link`)'))->groupBy('link');
+        // Report::get();//yg lama, it works
         return Datatables::of($allReports)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                $btn =  ($row->validated ? 
-                           "<button href='admin/publishing' id='pulihkanBtn' class='btn btn-success'>Pulihkan</button>"
-                           : 
-                           "<button href='admin/publishing' id='banBtn' class='btn btn-danger'>Larang</button>"
-                            );
-                return $btn;
+                $btn='';
+                if($row->links->show_status == 1){
+                    $btn = "<button href='admin/publishing' id='banBtn' class='btn btn-danger'>Larang</button>";
+                } 
+                else{
+                    $btn = "<button href='admin/publishing' id='pulihkanBtn' class='btn btn-success'>Pulihkan</button>";
+                }          
+                $btn .= " <button id='reportInfoBtn' class='btn btn-info'>Lihat Laporan</button>";
+                return $btn;    
+            })
+            ->addColumn('shortLink', function ($row) {
+                return $row->links->short_link;    
             })
             ->addColumn('reasons', function ($row) {
-                if(!$row->reasons->toArray()){
+                //ini yg awal, works
+                if(!$row->reasons->toArray()){ 
                     return "Tidak ada laporan";
                 }
                 return $row->reasons->map(function($reason) {
                     return $reason->reason;
                 });
+                // return $row->links;
             })
             ->rawColumns(['action'])
+            ->make(true);
+    }
+
+    public function getReportByLink(Request $request)
+    {
+        $data = $request->all();
+        // dd($data);
+        $allReports = Report::where('link', $data['linkId'])->get();
+        // print_r(($allReports));
+        // exit();
+        // Report::get();//yg lama, it works
+        return Datatables::of($allReports)
+            ->addIndexColumn()
+            ->addColumn('shortLink', function ($row) {
+                return $row->additional_reason;    
+            })
             ->make(true);
     }
 
@@ -146,7 +171,6 @@ class AdminController extends Controller
     function addPlatform(Request $request)
     {
             $data = $request->all();
-
             if (!$request->hasFile('image')) {
                 return response()->json([
                     'error'  => 'you have to choose a new logo to be uploaded'
@@ -333,12 +357,24 @@ class AdminController extends Controller
     function banLink(Request $request)
     {
         $data = $request->all();
+        if(!$data['banReason']){
+            return response()->json(['error' => 'Please specify reason'], 400);
+        }
+    
         $report = Report::where('id', $data['idReport'])->first();
         $report->validated = 1;
         $report->save();
         $link = Link::find($report->link);
         $link->show_status = 2;
         $link->save();
+
+        $userId = Link::where('id', $data['idLink'])->first('id_user')->value('id_user');
+        $notif = new Notification();
+        $notif->data = $data['banReason'];
+        $notif->notifiable_id = $userId;
+        $notif->created_at = date("Y-m-d H:i:s");
+        $notif->updated_at = date("Y-m-d H:i:s");
+        $notif->save();
         return response()->json(['success' => 'Link is now banned'], 200);
     }
 
@@ -436,13 +472,13 @@ class AdminController extends Controller
     function banLinkModal(Request $request)
     {
         $data = $request->all();
-        // $data = Report::find($data['id']);
-        return view('components/admin/partials/modal-ban-link')->with('idReport', $data['id']);
+        $link = Link::where('id', $data['idLink'])->first('short_link', 'title');
+        $data = Report::find($data['id']);
+        return view('components/admin/partials/modal-ban-link')->with(['idReport' => $data['id'], 'dataLink' => $link]);
     }
     function resetPwdModal(Request $request)
     {
         $data = $request->all();
-        // dd($data['id']);
         $user = User::where('id', $data['id'])->first(['email', 'id'])->toArray();
         return view('components/admin/partials/modal-reset-password')->with('data', $user);
     }
@@ -452,6 +488,20 @@ class AdminController extends Controller
         $platform = List_platform::withTrashed()->where('id', $data['id'])->first()->toArray();
         // dd($platform);
         return view('components/admin/partials/modal-edit-platform')->with('data', $platform);
+    }
+    function reportInfoModal(Request $request)
+    {
+        $data = $request->all();
+        // dd($data['idLink']);
+        // $platform = List_platform::withTrashed()->where('id', $data['id'])->first()->toArray();
+        // $allReports = Report::select(DB::raw('*, count(`link`)'))->groupBy('link');
+        $temp = DB::select("SELECT `reason_id`, COUNT(`reason_id`) `jumlah`, reason.reason
+        FROM (SELECT * FROM `reason_report` resrep WHERE resrep.report_id in ( SELECT `id` FROM `report` rep WHERE rep.link = ${data['idLink']})) as `temp`
+        JOIN `reason` on temp.reason_id = reason.id
+        GROUP BY `reason_id`");
+        //convert from stdclass object to arrayu
+        $results = json_decode(json_encode($temp), true);
+        return view('components/admin/partials/modal-report-info')->with(['reportsInfo'=>$results]);
     }
 
     function resetPassword(Request $request)

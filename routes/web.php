@@ -75,6 +75,7 @@ Route::post('user/login', 'UserController@login');
 Route::post('user/register', 'UserController@register');
 Route::get('user/logout', 'UserController@logout');
 Route::get('user/profile', 'ListPlatformController@profile')->middleware('sessionvalidator');
+Route::get('user/notifikasi', 'ListPlatformController@notifikasi')->middleware('sessionvalidator');
 Route::post('user/changePassword', 'UserController@changePassword');
 Route::post('user/changeUsername', 'UserController@changeUsername');
 
@@ -86,6 +87,7 @@ Route::get('partial/view-select', 'ListPlatformController@viewSelect');
 
 //AJAX TABLE
 Route::get('table/getAllLinks', 'TableController@getAllLinks')->name('table.all-links');
+Route::get('table/getAllNotifications', 'TableController@getAllNotifications')->name('table.all-notifications');
 Route::post('table/getLinksById', 'TableController@getLinksById')->name('table.get-link-by-id');
 Route::post('table/dummy', 'TableController@dummy')->name('table.dummy');
 Route::post('table/deleteLinkById', 'ListPlatformController@deleteLinkById')->name('table.delete-link');
@@ -131,6 +133,7 @@ Route::post('admin/deleteUser', 'AdminController@deleteUser')->name('admin.delet
 
 Route::get('admin/getAllUsers', 'AdminController@getAllUsers')->name('admin.all-users');
 Route::get('admin/getAllReports', 'AdminController@getAllReports')->name('admin.all-reports');
+Route::get('admin/getReportByLink', 'AdminController@getReportByLink')->name('admin.reports-by-link');
 Route::get('admin/getAllPlatforms', 'AdminController@getAllPlatforms')->name('admin.all-platforms');
 Route::post('admin/publishPlatform', 'AdminController@publishPlatform');
 Route::post('admin/hidePlatform', 'AdminController@hidePlatform');
@@ -146,6 +149,7 @@ Route::get('admin/modal/edit-platform', 'AdminController@editPlatformModal');
 Route::get('admin/modal/edit-text', 'AdminController@editTextModal');
 Route::get('admin/modal/delete-text', 'AdminController@deleteTextModal');
 Route::get('admin/modal/ban-link', 'AdminController@banLinkModal');
+Route::get('admin/modal/report-info', 'AdminController@reportInfoModal');
 Route::post('admin/deleteText', 'AdminController@deleteText');
 Route::post('admin/editPlatform', 'AdminController@editPlatform');
 Route::get('admin/editText', 'AdminController@editText');

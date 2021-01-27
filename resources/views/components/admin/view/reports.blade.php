@@ -36,8 +36,7 @@
                             <tr>
                                 <th>Link</th>
                                 <th>Status</th>
-                                <th>Jenis Alasan</th>
-                                <th>Alasan Lain</th>
+                                <th>Jenis Laporan</th>
                                 <th>Actions<img src="{{asset('images/icons/question-circle.svg')}}" style="margin-bottom: 10px;" data-toggle="tooltip" title="Melarng sebuah Link akan membuat link tersebut tidak dapat dilihat oleh pengunjung. Pastikan anda memiliki alasan yang benar ketika melarang sebuah Link. untuk mengembalikan Link ke semula dengan menekan tombol pulihkan"/></th>
                             </tr>
                         </thead>
@@ -49,7 +48,7 @@
     </section>
 
     <!-- modal delete -->
-    @include('components.admin.components.modals')
+    @include('components.admin.components.modal-master')
     <!-- modal delete end -->
 
 </div>
@@ -78,9 +77,9 @@
 
     $(document).ready(function() {
         counter = 0;
+        idLink='';
         //serverside
         var table = $('#example').DataTable({
-
             processing: true
             , serverSide: true
             , ajax: "{{ route('admin.all-reports') }}"
@@ -89,16 +88,14 @@
                     data: null
                     , render: function(data, type, row) {
                         if (row.link) {
-                            return `<a href="{{ url("admin") }}" target="__blank"> ${row.link} </a>`
+                            return `<a href="{{url('preview')}}/${row.shortLink}" target="__blank"> ${row.link} </a>`
                             {{-- return `<a href="{{ url("detail/` .`${row.link}`  .`") }}" target="__blank"> ${row.link} </a>` --}}
                         } else {
                             return "Not found"
                         }
                     }
                     , orderable: false
-
                 }
-
                 , {
                     data: null
                     , render: function(data, type, row) {
@@ -115,10 +112,6 @@
                     , name: 'reasons'
                 }
                 , {
-                    data: 'additional_reason'
-                    , name: 'additional_reason'
-                }
-                , {
                     data: 'action'
                     , name: 'action'
                     , orderable: false
@@ -126,7 +119,7 @@
                 }
             , ]
         });
-
+        
         $('#example tbody').on('click', '#pulihkanBtn', function() {
              var data = table.row($(this).parents('tr')).data();
             $.ajax({
@@ -161,18 +154,49 @@
 
         $('#example tbody').on('click', '#banBtn', function() {
              var data = table.row($(this).parents('tr')).data();
+             idLink = data.link
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
                 , url: '{{ url("admin/modal/ban-link") }}'
                 , data: {
-                    id: data.id
+                    id: data.id,
+                    idLink: idLink
                 }
                 , method: 'get'
                 , success: function(linksPlatform) {
                     $('#modals .dynamic-modal-container').html(linksPlatform)
                     $('#modals').modal('show');
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    let returnMessage = JSON.parse(xhr.responseText)
+                    Swal.fire({
+                        title: 'Oops! ' + ajaxOptions
+                        , text: returnMessage.error
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+                }
+            , })
+        })
+
+        $('#example tbody').on('click', '#reportInfoBtn ', function() {
+             var data = table.row($(this).parents('tr')).data();
+             idLink = data.link
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , url: '{{ url("admin/modal/report-info") }}'
+                , data: {
+                    idLink: idLink
+                }
+                , method: 'get'
+                , success: function(linksPlatform) {
+                    $('#modals .dynamic-modal-container').html(linksPlatform)
+                    $('#modals').modal('show');
+                    initDatatable(idLink);
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
                     let returnMessage = JSON.parse(xhr.responseText)
@@ -191,38 +215,73 @@
         $(document).on('submit', '#form-ban-link', function(event) {
             event.preventDefault();
             idReport = $('#id_ban_link').val();
-
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-                , url: '{{ route("admin.ban-link") }}'
-                , method: 'post'
-                , data: {
-                    idReport: idReport
-                }
-                , dataType: 'json'
-                , beforeSend: function() {
-                    toggleSpinner(true, "Performing Your request");
-                }
-                , success: function(data) {
-                    {
-                        toggleSpinner(false, "");
-                        $('#modals').modal('hide');
-                        $('#example').DataTable().ajax.reload();
+            banReason = $('#banReason').val();
+            Swal.fire({
+                icon: 'warning',
+                title: "Konfirmasi",
+                text: "Pesan yang sudah dikirim tidak dapat diubah atau dihapus. Lanjutkan?",
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Yes',
+                cancelButtonText: "Cancel",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }).then((result) => {
+                if (result['isConfirmed']){
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
-                }
-                , error: function(xhr, ajaxOptions, thrownError) {
-                    Swal.fire({
-                        title: 'Oops! ' + ajaxOptions
-                        , text: "error occured"
-                        , icon: 'error'
-                        , confirmButtonText: 'Confirm'
-                    })
+                    , url: '{{ route("admin.ban-link") }}'
+                    , method: 'post'
+                    , data: {
+                        idReport: idReport,
+                        banReason: banReason,
+                        idLink: idLink,
+                    }
+                    , dataType: 'json'
+                    , beforeSend: function() {
+                        toggleSpinner(true, "Performing Your request");
+                    }
+                    , success: function(data) {
+                        {
+                            toggleSpinner(false, "");
+                            $('#modals').modal('hide');
+                            $('#example').DataTable().ajax.reload();
+                        }
+                    }
+                    , error: function(xhr, ajaxOptions, thrownError) {
+                        toggleSpinner(false, "");
+                        Swal.fire({
+                            title: 'Oops! ' + ajaxOptions
+                            , text: "error occured"
+                            , icon: 'error'
+                            , confirmButtonText: 'Confirm'
+                        })
+                        }
+                    })   
                 }
             })
         });
 
+
+        function initDatatable(linkId){
+            var table2 = $('#example2').DataTable({
+            "dom": 'lf<"toolbar">rtip'
+            , processing: true
+            , serverSide: true
+            , ajax: {
+                "url" : "{{ route('admin.reports-by-link') }}"
+                , data: {linkId: linkId}
+                }
+            , columns: [{
+                    data: 'shortLink'
+                    , name: 'shortLink'
+                }
+               
+            , ]
+        });
+        }
     });
 
 </script>

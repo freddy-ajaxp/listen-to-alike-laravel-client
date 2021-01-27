@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Notifications\Notification;
 use PhpParser\Node\Expr\List_;
 use PhpParser\Node\Stmt\Catch_;
 use PhpParser\Node\Stmt\TryCatch;
@@ -459,6 +460,13 @@ class ListPlatformController extends Controller
         $id = $request->session()->get('id');
         $data = User::where('id', $id)->first(['id', 'name', 'email', 'admin', 'password'])->toArray();
         return view('components/user/view/profile')->with('data', $data);
+    }
+
+    function notifikasi(Request $request)
+    {
+        $id = $request->session()->get('id');
+        $data = User::where('id', $id)->first(['id', 'name', 'email', 'admin', 'password'])->toArray();
+        return view('components/user/view/notifikasi')->with('data', $data);
     }
 
     function viewCtr(Request $request)

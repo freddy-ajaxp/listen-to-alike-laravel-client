@@ -19,4 +19,9 @@ class Report extends Model
     {
         return $this->belongsToMany('App\Reason');
     } 
+    
+    public function links()
+    {
+        return $this->belongsTo('App\Link', 'link');
+    }
 }

@@ -11,13 +11,13 @@
                     Halaman Link yang di Ban/larang tidak dapat dilihat oleh pengguna sampai dipulihkan kembali<p name="confirm-delete-name"> </p>
                     <input type="hidden" id="id_ban_link" value={{$idReport}} />
                 <div class="form-group">
-                    <label for="exampleFormControlTextarea1">Alasan Ban</label>
-                    <textarea required class="form-control" id="exampleFormControlTextarea1" rows="3" style="resize: vertical;"></textarea>
+                    <label for="banReason">Alasan Ban</label>
+                    <textarea required class="form-control" id="banReason" rows="3" style="resize: vertical;">Link anda dengan kode "{{$dataLink->short_link}}"" dan judul "{{$dataLink->title}}"" terpaksa kami lakukan blokir karena:</textarea>
                 </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-danger">Lanjutkan</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> 
                 </div>
             </div>
         </div>

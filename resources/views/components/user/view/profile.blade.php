@@ -1,7 +1,7 @@
 @extends('components.user.layouts.default')
 
 
-@section('title', __('Detail Link'))
+@section('title', __('Profil'))
 
 
 @section('content')

@@ -32,6 +32,7 @@
                                                         <th>short_link</th>
                                                         <th>Image</th>
                                                         <th>Video Url</th>
+                                                        <th>Status</th>
                                                         <th>Visit Count</th>
                                                         <th>Action</th>
                                                     </tr>
@@ -112,6 +113,10 @@
                 , {
                     data: 'video_embed_url'
                     , name: 'video_embed_url'
+                }
+                                , {
+                    data: 'status'
+                    , name: 'status'
                 }
                 , {
                     data: 'count'
@@ -297,16 +302,6 @@
                 .map(function() {
                     return ' ' + $(this).val();
                 }).get();
-
-            console.log(id);
-            console.log(link_title);
-            console.log(files[0]); //only 1 image, the first index     
-            console.log(video_embed_url);
-            console.log(id_platforms);
-            console.log(data_platform);
-            console.log(data_url_platform);
-            console.log(data_text);
-            console.log(userErasingImage)
 
 
             //appending data to sent
