@@ -242,12 +242,16 @@
                     }
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
+                    let returnMessage = JSON.parse(xhr.responseText)
+                    toggleSpinner(false, "");
+                    $('#modals').modal('hide');
                     Swal.fire({
                         title: 'Oops! ' + ajaxOptions
-                        , text: "error occured"
+                        , text: returnMessage.error
                         , icon: 'error'
                         , confirmButtonText: 'Confirm'
                     })
+                    
                 }
             })
         });

@@ -67,6 +67,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         //custom middleware
         'sessionvalidator' => \App\Http\Middleware\SessionValidator::class,
+        'notificationchecker' => \App\Http\Middleware\NotificationChecker::class,
         'revalidate' => \App\Http\Middleware\RevalidateBackHistory::class,
 
         

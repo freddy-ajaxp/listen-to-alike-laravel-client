@@ -16,7 +16,6 @@ use Dotenv\Result\Result;
 use Illuminate\Http\Request;
 // use App\DynamicField;
 // use JD\Cloudder\Facades\Cloudinary;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use PhpParser\Node\Stmt\Catch_;
@@ -76,13 +75,15 @@ class TableController extends Controller
         $data['id_user'] = $id_user;
         // dd();
         if ($request->ajax()) {
-            // $data = Link::where('id_user', $data['id_user'])->get();
-           
             $data = DB::table('notifications')
+            ->select()
+            ->where('notifiable_id', $id_user) 
+            ->get();
+            $updateResult = DB::table('notifications')
              ->select()
-             ->where('notifiable_id', $id_user) 
-             ->get();
-            // dd($data);
+             ->where('notifiable_id', $id_user)
+             ->where('read_at', null) 
+            ->update(['read_at' => date("Y-m-d H:i:s")]);
             return Datatables::of($data)->make(true);
         }
     }
@@ -107,24 +108,28 @@ class TableController extends Controller
     {
 
         $data = $request->all();
-        $result = Link::where('short_link', $data['short_link'])->first();
-        
-        if($result->id_user != session()->get('id')){
-            return response()->json([
-                'error'  => 'Unauthorized Action'
-            ], 401);
-        }
+        $result = Link::withTrashed()->where('id', $data['id'])->first();
+        $alreadyExist = Link::withTrashed()->where('short_link', $data['short_link'])->first();
+
 
         if($result && ($result->short_link ==  $data['short_link'])){
             return response()->json([
                 'error'  => 'Harap masukkan short link yang baru'
             ], 400);
         }
-        if($result){
+
+        if($alreadyExist){
             return response()->json([
                 'error'  => 'Short Link sudah terpakai'
             ], 400);
         }
+
+        if($result->id_user != session()->get('id')){
+            return response()->json([
+                'error'  => 'Unauthorized Action'
+            ], 401);
+        }
+        
         if(strlen($data['short_link']) != 8){
             return response()->json([
                 'error'  => 'Short Link harus berjumlah 8 karakter'
@@ -138,8 +143,8 @@ class TableController extends Controller
         }
       
         try {
-            $result = Link::where('id', $data['id'])
-            ->update(['short_link' => $data['short_link']]);
+            // $result = Link::where('id', $data['id'])
+            $result->update(['short_link' => $data['short_link']]);
             return response()->json($result);
         } catch (\Throwable $th) {
             throw $th;

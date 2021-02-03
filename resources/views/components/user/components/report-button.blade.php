@@ -27,11 +27,7 @@
 				@endforeach
 	@endforeach --}}
 
-
-
-
-
-
+ 
                     @foreach($reasons as $key => $reason)
                     <div class="form-group">
                         <div class="form-check">

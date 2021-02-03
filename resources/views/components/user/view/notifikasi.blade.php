@@ -45,7 +45,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-8 col-md-6">
+                                    <div class="col-lg-9 col-md-6 col-md-4">
                                         <div class="card card-primary">
                                             <div class="card-header">
                                                 <h3 class="card-title">Notifikasi</h3>
@@ -116,7 +116,6 @@
             , columnDefs: [ { type: 'date', 'targets': [2] } ]
             , order: [[ 2, 'desc' ]]
             , columns: [{
-                    "width": "10%",
                     data: null
                     , render: function(data, type, row) {
                         if(row.read_at){
@@ -131,6 +130,7 @@
                 , {
                     data: 'data'
                     , name: 'data'
+                    , orderable: false
                 }
                 , {
                     data: 'created_at'

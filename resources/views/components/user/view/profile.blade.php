@@ -88,13 +88,13 @@
                                                     <div class="form-group row">
                                                         <label for="password" class="col-sm-3 col-form-label">New Password</label>
                                                         <div class="col-sm-9">
-                                                            <input type="password" required class="form-control" name="pwd" id="password" placeholder="Password minimal 8 characters" minlength="8" pattern=".{8,12}">
+                                                            <input type="password" required class="form-control" name="pwd" id="password" placeholder="Password minimal 8 characters" title="8 characters minimum" pattern=".{8,}">
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
                                                         <label for="password-confirmation" class="col-sm-3 col-form-label">Re-enter New Password</label>
                                                         <div class="col-sm-9">
-                                                            <input type="password" required class="form-control" name="pwd" id="password-confirmation" arplaceholder="Re-enter password" minlength="8" pattern=".{8,12}">
+                                                            <input type="password" required class="form-control" name="pwd" id="password-confirmation" placeholder="Re-enter password" pattern=".{8,}">
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">

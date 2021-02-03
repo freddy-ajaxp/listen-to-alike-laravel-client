@@ -348,7 +348,7 @@
         {{-- <a target="_blank" style='color:#ccc;text-decoration: none;font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px' href="https://li.sten.to/privacy">Privacy &amp; Cookies</a> --}}
     </div>
 </div>
-@include('components/admin/components/report-button')
+@include('components/user/components/report-button')
 @endsection
 
 
@@ -421,12 +421,12 @@
             , beforeSend: function(xhr) {
                 toggleSpinner(true, "Submitting your report");
             }
-            , success: function(html) {
+            , success: function(response) {
                 toggleSpinner(false, "");
                 $('#modals').modal('hide');
                 Swal.fire({
                     title: 'success'
-                    , text: "Thankyou for your feedback"
+                    , text: response.success ||  "laporan Anda sudah kami terima"
                     , icon: 'success'
                     , confirmButtonText: 'Confirm'
                 })

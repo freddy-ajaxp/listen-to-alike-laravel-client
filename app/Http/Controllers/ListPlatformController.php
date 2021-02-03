@@ -204,7 +204,7 @@ class ListPlatformController extends Controller
             //user id session != links user id. throw error
             // dd(session()->get('id'));
             // dd($link->id_user);
-            if ($link->id_user == session()->get('id')) {
+            if ($link->id_user != session()->get('id')) {
                 return response()->json([
                     'error'  => 'Unauthorized Action'
                 ], 401);
@@ -465,7 +465,8 @@ class ListPlatformController extends Controller
     function notifikasi(Request $request)
     {
         $id = $request->session()->get('id');
-        $data = User::where('id', $id)->first(['id', 'name', 'email', 'admin', 'password'])->toArray();
+        $data = User::where('id', $id)->first(['id', 'name', 'email', 'admin', 'password']);
+        session(['newNotification' => 0]);
         return view('components/user/view/notifikasi')->with('data', $data);
     }
 
@@ -538,6 +539,12 @@ class ListPlatformController extends Controller
     {
         $data = $request->all();
         $ip = $request->ip();
+        $ipReporterExist = Report::where('ip_reporter', $ip)->first();
+        if($ipReporterExist){
+            return response()->json([
+                'success'  => 'Laporan Anda sebelumnya telah kami terima dan telah menjadi bahan pertimbangan kami.'
+            ], 200);
+        }
         $new_data = new Report;
         $new_data->link = $data['idLink'];
         $new_data->ip_reporter = $ip;

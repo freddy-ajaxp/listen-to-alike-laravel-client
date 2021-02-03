@@ -49,7 +49,22 @@
                                                         <b>Visit count</b> <a class="float-right">{{$data['link'][0]['count']}}</a>
                                                         <img src="{{asset('images/icons/question-circle.svg')}}" style="margin-bottom: 10px;" data-toggle="tooltip" title="Jumlah kunjungan ke kedalam Link Anda" />
                                                     </li>
+                                                    <li class="list-group-item">
+                                                        <b>Status</b> <a class="float-right">
+                                                        @if($data['link'][0]['show_status'] == 2)
+                                                            Dibanned
+                                                        @else
+                                                            Normal
+                                                        @endif
+                                                        </a>
+                                                    </li>
                                                 </ul>
+
+
+                                                <div style="text-align:center">
+                                                <button id='reportInfoBtn' class='btn btn-info'>Lihat Laporan Pengunjung</button>
+                                                </div>
+                                                
                                             </div>
                                         </div>
 
@@ -192,6 +207,7 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/adminlte.min.css') }}">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/music-links.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/form-validation.css') }}">
 @endpush
@@ -207,6 +223,7 @@
     <script type="text/javascript" src="{{ asset('assets/js/spinner.js') }}">
 
 </script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="{{ asset('assets/js/alert.js') }}"></script>
 <script>
     $(function() {
@@ -327,7 +344,55 @@
                 , complete: function() {}
             })
         });
-    })
 
+
+        $(document).on('click', '#reportInfoBtn ', function() {
+             idLink = {!!$data['link'][0]['id']!!}
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                , url: '{{ url("admin/modal/report-info") }}'
+                , data: {
+                    idLink: idLink
+                }
+                , method: 'get'
+                , success: function(linksPlatform) {
+                    $('#modals .dynamic-modal-container').html(linksPlatform)
+                    $('#modals').modal('show');
+                    initDatatable(idLink);
+                }
+                , error: function(xhr, ajaxOptions, thrownError) {
+                    let returnMessage = JSON.parse(xhr.responseText)
+                    Swal.fire({
+                        title: 'Oops! ' + ajaxOptions
+                        , text: returnMessage.error
+                        , icon: 'error'
+                        , confirmButtonText: 'Confirm'
+                    })
+
+                }
+            , })
+        })
+
+        function initDatatable(linkId){
+            var table2 = $('#example2').DataTable({
+            "dom": 'lf<"toolbar">rtip'
+            , processing: true
+            , serverSide: true
+            , ajax: {
+                "url" : "{{ route('admin.reports-by-link') }}"
+                , data: {linkId: linkId}
+                }
+            , columns: [{
+                    data: 'shortLink'
+                    , name: 'shortLink'
+                }
+               
+            , ]
+        });
+        }
+
+    })
 </script>
 @endpush

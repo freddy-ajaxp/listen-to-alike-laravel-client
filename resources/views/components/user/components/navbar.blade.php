@@ -12,12 +12,19 @@
         <div class="dropdown show">
             <a class="btn btn-secondary btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <x-heroicon-o-cog style="height:20px" />
-                Menu &nbsp;<span class="badge badge-warning navbar-badge">13</span>
+                Menu &nbsp;
+                @if( Session::get('newNotification') !== 0)
+                <span class="badge badge-warning navbar-badge">{{Session::get('newNotification') }}</span>
+                @endif
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                 <a class="dropdown-item" href= "{{url('user/profile')}}">Profile </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href= "{{url('user/notifikasi')}}">Notifikasi <span class="badge badge-secondary">13</span></a>               
+                <a class="dropdown-item" href= "{{url('user/notifikasi')}}">Notifikasi 
+                    @if( Session::get('newNotification') !== 0)
+                        <span class="badge badge-warning navbar-badge">{{Session::get('newNotification') }}</span>
+                    @endif
+                </a>               
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{{url('/user/logout')}}">
                     Logout</span>
@@ -26,7 +33,7 @@
         </div>
         
         @elseif(session('admin')==1)
-        <a class="btn btn-default btn-sm " id="btn-dashboard" style='color:#fff' href="/logout">Logout</a>
+        <a class="btn btn-default btn-sm " id="btn-dashboard"  href="/logout">Logout</a>
         @endif
     </div>
 

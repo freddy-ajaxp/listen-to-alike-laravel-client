@@ -10,6 +10,7 @@ use App\Text;
 use App\Report;
 use App\Reason;
 use App\Notification;
+use Carbon\Carbon;
 use DataTables;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -49,9 +50,13 @@ class AdminController extends Controller
         return Datatables::of($result)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                $btn = '<button id="resetBtn" class="btn btn-secondary">Reset Password</button>
-                           <button id="deactivateBtn" class="btn btn-danger">Hapus User</button> '
-                    . "<a href='getUserDataById/$row->id'" . 'id="viewBtn"  class="btn btn-info">Lihat</button> </a> ' ;
+                $btn = "";
+                if($row->admin !=  2){
+                    $btn = '<button id="resetBtn" class="btn btn-secondary">Reset Password</button> ';
+                }
+                
+
+                    $btn = "<a href='getUserDataById/$row->id'" . 'id="viewBtn"  class="btn btn-info">Lihat</button> </a> ' ;
                 
                     if (Session::get('admin') == 2) {
                         $disabled= "";
@@ -71,6 +76,10 @@ class AdminController extends Controller
                       </div>';
                     }                    
                     ;
+                    if($row->admin !=  2){
+                        $btn .= '<button id="deactivateBtn" class="btn btn-danger">Hapus User</button> ';
+                    }
+
                 return $btn;
             })
             ->rawColumns(['action'])
@@ -79,35 +88,48 @@ class AdminController extends Controller
 
     public function getAllReports()
     {
-        $allReports = Report::select(DB::raw('*, count(`link`)'))->groupBy('link');
-        // Report::get();//yg lama, it works
+        // $allReports = Report::select(DB::raw('*, count(`link`)'))->groupBy('link');
+        // $allReports = Report::select(DB::raw('*, count(`link`)'));
+        $allReports  = Report::get();//yg lama, it works
         return Datatables::of($allReports)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $btn='';
                 if($row->links->show_status == 1){
-                    $btn = "<button href='admin/publishing' id='banBtn' class='btn btn-danger'>Larang</button>";
+                    $btn = "<button href='admin/publishing' id='banBtn' class='btn btn-danger' title='Menkonfirmasi laporan dan memblokir Link Terkait'>Larang</button>";
                 } 
                 else{
-                    $btn = "<button href='admin/publishing' id='pulihkanBtn' class='btn btn-success'>Pulihkan</button>";
+                    $btn = "<button href='admin/publishing' id='pulihkanBtn' class='btn btn-success' title='Menormalkan status Link sehingga dapat dikunjungi kembali' >Pulihkan</button>";
                 }          
-                $btn .= " <button id='reportInfoBtn' class='btn btn-info'>Lihat Laporan</button>";
+                // $btn .= " <button id='reportInfoBtn' class='btn btn-info'>Lihat Laporan</button>";
                 return $btn;    
             })
             ->addColumn('shortLink', function ($row) {
                 return $row->links->short_link;    
             })
+            ->addColumn('date', function ($row) {
+                return Carbon::parse($row->createdAt)->format('d-M-Y'); 
+            })
             ->addColumn('reasons', function ($row) {
+
                 //ini yg awal, works
                 if(!$row->reasons->toArray()){ 
                     return "Tidak ada laporan";
                 }
-                return $row->reasons->map(function($reason) {
-                    return $reason->reason;
-                });
-                // return $row->links;
+
+                $reasons = "";
+                foreach($row->reasons as $key => $value) {
+                    # code...
+                    $reasons .= 
+                    
+                    "<span class='badge badge-dark'>$value->reason</span> ";
+                }
+                
+                
+                return $reasons;
+                
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['action', 'reasons'])
             ->make(true);
     }
 
@@ -427,6 +449,13 @@ class AdminController extends Controller
     function deleteUser(Request $request)
     {
         $data = $request->all();
+
+        // jika ada record yang berkaitan, tidak boleh dihapus
+        $dataExist = Link::withTrashed()->where('id_user', $data['id'])->first();
+        if ($dataExist) {
+            return response()->json(['error' => 'User tersebut memiliki Link dan tidak dapat dihapus'], 400);
+        }
+
         $user = User::find($data['id']);
         $user->delete();
         return response()->json(['success' => 'Data is deleted'], 200);

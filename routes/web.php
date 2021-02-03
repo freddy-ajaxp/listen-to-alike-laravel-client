@@ -28,9 +28,10 @@ Route::group(['middleware' => 'revalidate'], function()
     })->name('view.login')->middleware('sessionvalidator');
 
 
-    Route::get('/dashboard', function () {
+    Route::get('/dashboard', function (Request $request) {
+        // dd($request->session()->get('newNotification'));
         return view('components/user/view/dashboard');
-    })->middleware('sessionvalidator');
+    })->middleware(['sessionvalidator', 'notificationchecker']);
 
     Route::get('/admin', function () {
         $data['main'] = 'links';
@@ -41,10 +42,11 @@ Route::group(['middleware' => 'revalidate'], function()
 Route::get('/', function () {
     return redirect("/landing");
 });
+
 Route::get('/landing', function (Request $request) {    
     // $view = (string)View::make('users.index',$data);
     return view('components/user/view/landing')->with(['userIsLoggedIn' => $request->session()->get('email')]);
-});
+})->middleware(['notificationchecker']);
 
 Route::get('/register', function () {
     return view('components/user/view/register');

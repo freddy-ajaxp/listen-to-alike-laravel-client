@@ -37,6 +37,8 @@
                                 <th>Link</th>
                                 <th>Status</th>
                                 <th>Jenis Laporan</th>
+                                <th>Alasan Lain</th>
+                                <th>Tanggal</th>
                                 <th>Actions<img src="{{asset('images/icons/question-circle.svg')}}" style="margin-bottom: 10px;" data-toggle="tooltip" title="Melarng sebuah Link akan membuat link tersebut tidak dapat dilihat oleh pengunjung. Pastikan anda memiliki alasan yang benar ketika melarang sebuah Link. untuk mengembalikan Link ke semula dengan menekan tombol pulihkan"/></th>
                             </tr>
                         </thead>
@@ -60,7 +62,7 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/adminlte.min.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.css') }}">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/datatables.min.css" />
+{{-- <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/datatables.min.css" /> --}}
 @endpush
 
 
@@ -83,13 +85,13 @@
             processing: true
             , serverSide: true
             , ajax: "{{ route('admin.all-reports') }}"
+            , "order": [[ 4, "desc" ]]
             , columns: [
                  {
                     data: null
                     , render: function(data, type, row) {
                         if (row.link) {
                             return `<a href="{{url('preview')}}/${row.shortLink}" target="__blank"> ${row.link} </a>`
-                            {{-- return `<a href="{{ url("detail/` .`${row.link}`  .`") }}" target="__blank"> ${row.link} </a>` --}}
                         } else {
                             return "Not found"
                         }
@@ -102,7 +104,7 @@
                         if (row.validated == 0) {
                             return `Normal`
                         } else {
-                            return "Banned/Dilarang"
+                            return "Banned"
                         }
                     }
                     , orderable: false
@@ -110,6 +112,14 @@
                 , {
                     data: 'reasons'
                     , name: 'reasons'
+                }
+                , {
+                    data: 'additional_reason'
+                    , name: 'additional_reason'
+                }
+                , {
+                    data: 'date'
+                    , name: 'date'
                 }
                 , {
                     data: 'action'

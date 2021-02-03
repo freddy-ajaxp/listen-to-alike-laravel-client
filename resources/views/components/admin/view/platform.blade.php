@@ -372,7 +372,12 @@
                 , success: function(data) {
                     {
                         toggleSpinner(false, "");
+                        $('#form-platform')[0].reset();
+                        $('#image-preview-container').attr('src', '');
+                        $('#svg').val('');
+                        $("#clear-image").attr("hidden", true);
                         $('#example').DataTable().ajax.reload();
+                        
                     }
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
@@ -420,6 +425,8 @@
                 }
                 , success: function(data) {
                     {
+                        $('#modals').modal('hide');
+                        toggleSpinner(false, "");
                         $('#example').DataTable().ajax.reload();
                     }
                 }

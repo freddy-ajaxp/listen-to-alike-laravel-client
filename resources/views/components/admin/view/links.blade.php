@@ -108,9 +108,12 @@
                     data: null
                     , render: function(data, type, row) {
                         if (row.deletedAt) {
-                            return 'Dihapus';
-                        } else {
-                            return 'Aktif';
+                            return 'Dihapus Sementara';
+                        } else if (row.show_status == 2){
+                            return 'Dibanned';
+                        }
+                        else {
+                            return "Normal";
                         }
                     },
                     orderable: false
