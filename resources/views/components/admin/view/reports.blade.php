@@ -35,11 +35,11 @@
                         <thead>
                             <tr>
                                 <th>Link</th>
-                                <th>Status</th>
+                                <th>Status<img src="{{asset('images/icons/question-circle.svg')}}" style="margin-bottom: 10px;" data-toggle="tooltip" title="Laporan disetujui membuat sebuah link tidak dapat diakses"/></th>
                                 <th>Jenis Laporan</th>
                                 <th>Alasan Lain</th>
                                 <th>Tanggal</th>
-                                <th>Actions<img src="{{asset('images/icons/question-circle.svg')}}" style="margin-bottom: 10px;" data-toggle="tooltip" title="Melarng sebuah Link akan membuat link tersebut tidak dapat dilihat oleh pengunjung. Pastikan anda memiliki alasan yang benar ketika melarang sebuah Link. untuk mengembalikan Link ke semula dengan menekan tombol pulihkan"/></th>
+                                <th>Actions<img src="{{asset('images/icons/question-circle.svg')}}" style="margin-bottom: 10px;" data-toggle="tooltip" title="Melarang sebuah Link akan membuat link tersebut tidak dapat dilihat oleh pengunjung. Pastikan anda memiliki alasan yang benar ketika melarang sebuah Link. untuk mengembalikan Link ke semula dengan menekan tombol pulihkan"/></th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -102,9 +102,9 @@
                     data: null
                     , render: function(data, type, row) {
                         if (row.validated == 0) {
-                            return `Normal`
+                            return `-`
                         } else {
-                            return "Banned"
+                            return "Disetujui"
                         }
                     }
                     , orderable: false

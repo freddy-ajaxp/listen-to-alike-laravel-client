@@ -45,11 +45,19 @@ class TableController extends Controller
             return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
-                           $btn = '<button id="editBtn" class="btn btn-primary">Edit</button> 
-                           <button id="deleteBtn" class="btn btn-danger"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Delete</button>
-                           <button id="customBtn" class="btn btn-info">Customize</button> '
-                           . "<a href='/preview/$row->short_link'" . ' target="_blank" class="btn btn-success ">Lihat</a> ' 
-                           . "<a href='/detail/$row->short_link'" . ' target="_blank" class="btn btn-default ">Detail</a>';
+                           $btn = '
+                            
+                           <button id="deleteBtn" class="btn btn-danger"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <i class="fas fa-trash-alt"></i> Hapus</button>'
+                           .'<div class="dropdown">
+                           <button  class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                           <i class="far fa-edit"></i> Edit </button>
+                           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                             <a class="dropdown-item" id="editBtn" name="set-privilige" data-privilige="user" ><i class="far fa-edit"></i>Link</a>
+                             <a class="dropdown-item" id="customBtn" name="set-privilige" data-privilige="admin"><i class="far fa-edit"></i>Custom Link </a>
+                           </div>
+                         </div>'
+                           . "<a href='/preview/$row->short_link'" . ' target="_blank" class="btn btn-success "><i class="fas fa-eye"></i> Lihat</a> ' 
+                           . "<a href='/detail/$row->short_link'" . ' target="_blank" class="btn btn-secondary"><i class="fas fa-info"></i> Detail</a>';
                         //    <button id="viewBtn" class="btn btn-success">Visit</button>
                            return $btn;
                     })

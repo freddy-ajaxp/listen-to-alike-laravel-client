@@ -418,6 +418,7 @@ class ListPlatformController extends Controller
         $month = $mth ?? date("m");
         $year = $yer ?? date("Y");
         $chart = [];
+        // DB::enableQueryLog();
         $allVisit = DB::table('visits')
             ->select('createdAt', DB::raw('count(*) as visit'))
             ->where('link_id', '=', $idLink)
@@ -425,7 +426,7 @@ class ListPlatformController extends Controller
             ->whereYear('createdAt', $year)
             ->groupBy('createdAt')
             ->get();
-
+        // dd(DB::getQueryLog());
         // dd($allVisit);
         
         $visitsInMonth = array_sum($allVisit->pluck('visit')->toArray());
@@ -433,8 +434,8 @@ class ListPlatformController extends Controller
         // echo $month ." " .$year;
         // exit();
         $daysCount = cal_days_in_month(CAL_GREGORIAN, $month, $year); //$bulanDiminta
-        $calendar = array_fill(1, $daysCount, 0);
-        $arrDaysInMth = array_fill(1, $daysCount, 0);
+        $calendar = array_fill(0, $daysCount, 0);
+        $arrDaysInMth = array_fill(0, $daysCount, 0);
         for ($i = 1; $i <= count($arrDaysInMth); $i++) {
             foreach ($allVisit as $key => $value) {
                 if ($i == Carbon::parse($value->createdAt)->format('d')) {

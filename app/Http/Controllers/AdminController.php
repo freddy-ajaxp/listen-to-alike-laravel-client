@@ -9,6 +9,7 @@ use App\User;
 use App\Text;
 use App\Report;
 use App\Reason;
+use App\Reason_report;
 use App\Notification;
 use Carbon\Carbon;
 use DataTables;
@@ -33,9 +34,9 @@ class AdminController extends Controller
         return Datatables::of($data)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                $btn = '<button id="deletetBtn" class="btn btn-danger" >Hapus</button> '
-                    . "<a href='/preview/$row->short_link'" . ' class="btn btn-info ">Lihat</a>'
-                    . "<a href='/detail/$row->short_link'" . ' class="btn btn-default ">Detail</a>'                    
+                $btn = '<button id="deletetBtn" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Hapus</button> '
+                    . "<a href='/preview/$row->short_link'" . ' class="btn btn-info"><i class="far fa-eye"></i> Lihat</a>'
+                    . "<a href='/detail/$row->short_link'" . ' class="btn btn-secondary"><i class="fas fa-info"></i> Detaill</a>'                    
                     ;
                 //    <button id="viewBtn">Detail</button>
                 return $btn;
@@ -56,7 +57,7 @@ class AdminController extends Controller
                 }
                 
 
-                    $btn = "<a href='getUserDataById/$row->id'" . 'id="viewBtn"  class="btn btn-info">Lihat</button> </a> ' ;
+                    $btn = "<a href='getUserDataById/$row->id'" . 'id="viewBtn"  class="btn btn-info"><i class="far fa-eye"></i> Lihat</button> </a> ' ;
                 
                     if (Session::get('admin') == 2) {
                         $disabled= "";
@@ -67,7 +68,7 @@ class AdminController extends Controller
                         $btn .= '
                         <div class="dropdown">
                         <button ' .$disabled .' class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Set Privilege
+                        <i class="far fa-edit"></i> Set Privilege
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                           <a class="dropdown-item" name="set-privilige" data-privilige="user" >User</a>
@@ -77,7 +78,7 @@ class AdminController extends Controller
                     }                    
                     ;
                     if($row->admin !=  2){
-                        $btn .= '<button id="deactivateBtn" class="btn btn-danger">Hapus User</button> ';
+                        $btn .= '<button id="deactivateBtn" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Hapus User</button> ';
                     }
 
                 return $btn;
@@ -88,18 +89,17 @@ class AdminController extends Controller
 
     public function getAllReports()
     {
-        // $allReports = Report::select(DB::raw('*, count(`link`)'))->groupBy('link');
-        // $allReports = Report::select(DB::raw('*, count(`link`)'));
-        $allReports  = Report::get();//yg lama, it works
+        // $allReports = Report::select(DB::raw('*, count(`link`)'))->groupBy('link'); //ini yg lama, report yg di gorup
+         $allReports  = Report::get();
         return Datatables::of($allReports)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $btn='';
                 if($row->links->show_status == 1){
-                    $btn = "<button href='admin/publishing' id='banBtn' class='btn btn-danger' title='Menkonfirmasi laporan dan memblokir Link Terkait'>Larang</button>";
+                    $btn = "<button href='admin/publishing' id='banBtn' class='btn btn-danger' title='Menkonfirmasi laporan dan memblokir Link Terkait'><i class='fas fa-ban'></i> Ban Link</button>";
                 } 
                 else{
-                    $btn = "<button href='admin/publishing' id='pulihkanBtn' class='btn btn-success' title='Menormalkan status Link sehingga dapat dikunjungi kembali' >Pulihkan</button>";
+                    $btn = "<button href='admin/publishing' id='pulihkanBtn' class='btn btn-success' title='Menormalkan status Link sehingga dapat dikunjungi kembali' ><i class='fas fa-undo'></i> Pulihkan Link</button>";
                 }          
                 // $btn .= " <button id='reportInfoBtn' class='btn btn-info'>Lihat Laporan</button>";
                 return $btn;    
@@ -121,7 +121,6 @@ class AdminController extends Controller
                 foreach($row->reasons as $key => $value) {
                     # code...
                     $reasons .= 
-                    
                     "<span class='badge badge-dark'>$value->reason</span> ";
                 }
                 
@@ -162,13 +161,27 @@ class AdminController extends Controller
         return Datatables::of($result)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                $btn = '<button id="deleteLogoBtn" class="btn btn-danger">Hapus</button> 
-                <button id="editLogoBtn" class="btn btn-info">Edit </button>
+                $btn = '<button id="deleteLogoBtn" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Hapus</button> 
+                <button id="editLogoBtn" class="btn btn-info"><i class="far fa-edit"></i> Edit </button>
                            ' . ($row->deletedAt ? 
-                           "<button href='admin/publishing' id='publishLogoBtn' class='btn btn-success'>Publish </button>"
+                           "<button href='admin/publishing' id='publishLogoBtn' class='btn btn-success'><i class='far fa-eye'></i> Publish </button>"
                            : 
-                           "<button href='admin/publishing' id='hideLogoBtn' class='btn btn-warning'>Hide</button>"
+                           "<button href='admin/publishing' id='hideLogoBtn' class='btn btn-warning'><i class='fas fa-eye-slash'></i> Hide</button>"
                             );
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+
+    public function getAllReasons()
+    {
+        $result = Reason::get();
+        return Datatables::of($result)
+            ->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                $btn = '<button id="deleteReasonBtn" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Hapus</button> 
+                <button id="editReasonBtn" class="btn btn-info"><i class="far fa-edit"></i> Edit</button>';
                 return $btn;
             })
             ->rawColumns(['action'])
@@ -181,7 +194,7 @@ class AdminController extends Controller
         return Datatables::of($listText)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                $btn = '<button id="deleteTextBtn" data-id=' ."'$row->id'" .'class="btn btn-danger">Hapus </button> 
+                $btn = '<button id="deleteTextBtn" data-id=' ."'$row->id'" .'class="btn btn-danger"><i class="fas fa-trash-alt"></i> Hapus </button> 
                 ';
                 // <button id="editTextBtn" class="btn btn-info">Edit</button>
                 return $btn;
@@ -278,6 +291,59 @@ class AdminController extends Controller
         }
     }
 
+    function addReason(Request $request)
+    {
+            $data = $request->all();
+            //validasi
+            // if array has different length, meaning some field at some [index] of array is null
+            // this a little prevention from user bypassing front end validation 
+            if (!isset($data['text']) || !isset($data['reason'])) {
+                return response()->json([
+                    'error'  => 'Please fill all field'
+                ], 400);
+            }
+            $dataExist = Reason::where('reason', $data['reason'])->first();
+            if($dataExist){
+                return response()->json([
+                    'error'  => 'Kategori yang anda masukkan sudah ada di database, silahkan menggunakan nama yang lain'
+                ], 400);
+            }
+
+            //create object dulu 
+            $reason = new Reason;
+            $reason->reason = $data['reason'];
+            $reason->text = $data['text'];
+            $reason->createdAt = date("Y-m-d H:i:s");
+            $reason->updatedAt = date("Y-m-d H:i:s");
+            $reason->save();
+            return response()->json([
+                'success'  => 'action success'
+            ], 200);
+    }
+    
+    function editReason(Request $request)
+    {
+            $data = $request->all();
+
+            if (!isset($data['text']) || !isset($data['reason'])) {
+                return response()->json([
+                    'error'  => 'Please fill all field'
+                ], 400);
+            }
+
+            $reason = Reason::find($data['id']);
+            $reason->reason = $data['reason'];
+            $reason->text = $data['text'];
+            $reason->updatedAt = date("Y-m-d H:i:s");
+            $reason->save();
+            return response()->json([
+                'success'  => 'data berhasil diubah'
+            ], 200);
+
+
+
+    }
+
     function addText(Request $request)
     {
         if ($request->ajax()) {
@@ -324,8 +390,23 @@ class AdminController extends Controller
         //delete file di server
         $deleteResult = \Cloudinary::destroy($logo_image_path);
         if (!$deleteResult) {
-            return response()->json(['error' => 'Error hen deleting on cloud'], 500);
+            return response()->json(['error' => 'Error when deleting image on cloud'], 500);
         }
+        return response()->json(['success' => 'Data is deleted'], 200);
+    }
+
+    function deleteReason(Request $request)
+    {
+
+        $data = $request->all();
+        $dataExist = Reason_report::where('reason_id',$data['id'])->first();
+        // jika ada record yang berkaitan, tidak boleh dihapus
+        if ($dataExist) {
+            return response()->json(['error' => 'Cannot delete Reason because it is already submitted in atleast 1 report '], 400);
+        }
+        $reason = Reason::withTrashed()->where('id',$data['id'])->first();
+        $reason->delete();
+    
         return response()->json(['success' => 'Data is deleted'], 200);
     }
 
@@ -487,6 +568,10 @@ class AdminController extends Controller
     {
         return view('components/admin/partials/modal-delete-platform');
     }
+    function deleteReasonModal(Request $request)
+    {
+        return view('components/admin/partials/modal-delete-reason');
+    }
     function deleteUserModal(Request $request)
     {
         return view('components/admin/partials/modal-delete-user');
@@ -518,6 +603,15 @@ class AdminController extends Controller
         // dd($platform);
         return view('components/admin/partials/modal-edit-platform')->with('data', $platform);
     }
+
+    function editReasonModal(Request $request)
+    {
+        $data = $request->all();
+        $reason = Reason::withTrashed()->where('id', $data['id'])->first()->toArray();
+        // dd($platform);
+        return view('components/admin/partials/modal-edit-reason')->with('data', $reason);
+    }
+
     function reportInfoModal(Request $request)
     {
         $data = $request->all();

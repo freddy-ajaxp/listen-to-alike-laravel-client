@@ -108,6 +108,10 @@ Route::get('/admin/reportList', function () {
     return view('components/admin/view/reports');
 })->middleware('sessionvalidator');
 
+Route::get('/admin/reportConfig', function () {
+    return view('components/admin/view/report-config');
+})->middleware('sessionvalidator');
+
 Route::get('/admin/setting', function () {
     return view('components/admin/view/setting');
 })->middleware('sessionvalidator');
@@ -123,7 +127,9 @@ Route::get('/admin/text', function () {
 
 Route::post('admin/addPlatform', 'AdminController@addPlatform')->name('admin.add-platform');
 Route::post('admin/addText', 'AdminController@addText')->name('admin.add-text');
+Route::post('admin/addReason', 'AdminController@addReason')->name('admin.add-reason');
 Route::post('admin/deletePlatform', 'AdminController@deletePlatform')->name('admin.delete-platform');
+Route::post('admin/deleteReason', 'AdminController@deleteReason')->name('admin.delete-reason');
 Route::get('admin/getAllLinks', 'AdminController@getAllLinks')->name('admin.all-links');
 Route::get('admin/getUserDataById/{id}', 'AdminController@getUserDataById')->name('admin.user-data');
 Route::get('admin/getUserLinkList/{id_user}', 'AdminController@getUserLinkList')->name('admin.user-datatable');
@@ -137,6 +143,7 @@ Route::get('admin/getAllUsers', 'AdminController@getAllUsers')->name('admin.all-
 Route::get('admin/getAllReports', 'AdminController@getAllReports')->name('admin.all-reports');
 Route::get('admin/getReportByLink', 'AdminController@getReportByLink')->name('admin.reports-by-link');
 Route::get('admin/getAllPlatforms', 'AdminController@getAllPlatforms')->name('admin.all-platforms');
+Route::get('admin/getAllReasons', 'AdminController@getAllReasons')->name('admin.all-reasons');
 Route::post('admin/publishPlatform', 'AdminController@publishPlatform');
 Route::post('admin/hidePlatform', 'AdminController@hidePlatform');
 
@@ -145,15 +152,18 @@ Route::post('admin/hidePlatform', 'AdminController@hidePlatform');
 Route::get('admin/getAllTexts', 'AdminController@getAllTexts')->name('admin.all-texts');
 Route::get('admin/modal/delete-link', 'AdminController@deleteLinkModal');
 Route::get('admin/modal/delete-platform', 'AdminController@deletePlatformModal');
+Route::get('admin/modal/delete-reason', 'AdminController@deleteReasonModal');
 Route::get('admin/modal/delete-user', 'AdminController@deleteUserModal');
 Route::get('admin/modal/reset-pwd', 'AdminController@resetPwdModal');
 Route::get('admin/modal/edit-platform', 'AdminController@editPlatformModal');
+Route::get('admin/modal/edit-reason', 'AdminController@editReasonModal');
 Route::get('admin/modal/edit-text', 'AdminController@editTextModal');
 Route::get('admin/modal/delete-text', 'AdminController@deleteTextModal');
 Route::get('admin/modal/ban-link', 'AdminController@banLinkModal');
 Route::get('admin/modal/report-info', 'AdminController@reportInfoModal');
 Route::post('admin/deleteText', 'AdminController@deleteText');
 Route::post('admin/editPlatform', 'AdminController@editPlatform');
+Route::post('admin/editReason', 'AdminController@editReason');
 Route::get('admin/editText', 'AdminController@editText');
 Route::post('admin/resetPassword', 'AdminController@resetPassword')->name('admin.reset-pwd');
 Route::post('admin/setPrivilege', 'AdminController@setPrivilege');
