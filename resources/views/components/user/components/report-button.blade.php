@@ -7,7 +7,7 @@
     </a>
 </div>
 
-<div class="modal fade" id="modals" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index:9999">
+<div class="modal fade" id="modals" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index:1059">
     <form id="form-report">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

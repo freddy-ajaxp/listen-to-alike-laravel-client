@@ -130,9 +130,6 @@
         <div class="col-sm-1">
             <div class="music-link__reposition">
             <div class="icon-inner"title="delete"><button type="button" name="remove" id="" class="btn btn-danger btn-sm remove">X</button></div>
-            {{-- <div class="music-link__reposition-up" title="Move up">x</div> --}}
-            {{-- <div class="music-link__reposition-up" title="Move up">&#8593</div>
-            <div class="music-link__reposition-down" title="Move down">&#8595</div> --}}
             </div>
         </div>
     </div>

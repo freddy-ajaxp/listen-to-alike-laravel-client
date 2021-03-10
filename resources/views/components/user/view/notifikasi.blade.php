@@ -119,10 +119,10 @@
                     data: null
                     , render: function(data, type, row) {
                         if(row.read_at){
-                            return `<x-heroicon-o-mail-open style="height:20px" />`;
+                            return `<i class="far fa-envelope-open"></i>`;
                         }
                         else{
-                            return `<x-heroicon-o-mail style="height:20px" />`;
+                            return `<i class="far fa-envelope"></i>`;
                         }
                     }
                     , orderable: false

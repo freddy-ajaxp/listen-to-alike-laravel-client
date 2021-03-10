@@ -47,17 +47,20 @@ class TableController extends Controller
                     ->addColumn('action', function($row){
                            $btn = '
                             
-                           <button id="deleteBtn" class="btn btn-danger"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <i class="fas fa-trash-alt"></i> Hapus</button>'
+                           <button id="deleteBtn" class="btn btn-danger"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <i class="fas fa-trash-alt"></i> </button>'
                            .'<div class="dropdown">
                            <button  class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                           <i class="far fa-edit"></i> Edit </button>
+                           <i class="far fa-edit"></i> </button>    
                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                              <a class="dropdown-item" id="editBtn" name="set-privilige" data-privilige="user" ><i class="far fa-edit"></i>Link</a>
                              <a class="dropdown-item" id="customBtn" name="set-privilige" data-privilige="admin"><i class="far fa-edit"></i>Custom Link </a>
                            </div>
                          </div>'
-                           . "<a href='/preview/$row->short_link'" . ' target="_blank" class="btn btn-success "><i class="fas fa-eye"></i> Lihat</a> ' 
-                           . "<a href='/detail/$row->short_link'" . ' target="_blank" class="btn btn-secondary"><i class="fas fa-info"></i> Detail</a>';
+                           . "<a href='/preview/$row->short_link'" . ' target="_blank" class="btn btn-success "><i class="fas fa-eye"></i> </a> ' 
+                           . "<a href='/detail/$row->short_link'" . ' target="_blank" class="btn btn-secondary"><i class="fas fa-info"></i></a>'
+                           . "<button id='shareBtn' data-url='" .config('constants.site_title')."/preview/$row->short_link" ."' class='btn btn-default'><i class='fas fa-copy'></i> </button>"
+                           ;
+                           {{}}
                         //    <button id="viewBtn" class="btn btn-success">Visit</button>
                            return $btn;
                     })

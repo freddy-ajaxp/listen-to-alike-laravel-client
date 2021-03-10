@@ -39,9 +39,26 @@ class ListPlatformController extends Controller
             $data = $request->all();
             //validasi
             if ($request->file('image')) {
-                $request->validate(['image' => 'image|mimes:svg,jpg,JPG|max:10240',]);
+                // $request->validate(['image' => 'image|mimes:svg,jpg,JPG,jpeg,JPEG|max:10240',]);
+                $validator = Validator::make($request->all(), [
+                    'image' => 'image|mimes:svg,jpg,JPG,jpeg,JPEG|max:10240',
+                ], $messages = [
+                    'image.mimes' => 'format keliru',
+                    'image.image' => 'harap upload gambar gambar .',
+                    'image.max' => 'Ukuran melebihi kapasitas.',
+                ]);
+        
+                if ($validator->fails()) {
+                    print_r($validator->errors());
+                    exit();
+                    // redirect()
+                    // ->back()
+                    // ->withErrors($validator->errors());
+                }
+    
             }
 
+           
 
             //BAGIAN insert link_platforms
             // $id_platforms = array_map('trim',array_filter(explode(",", $data['id_platforms'])));
@@ -540,7 +557,7 @@ class ListPlatformController extends Controller
     {
         $data = $request->all();
         $ip = $request->ip();
-        $ipReporterExist = Report::where('ip_reporter', $ip)->first();
+        $ipReporterExist = Report::where('ip_reporter', $ip)->where('link', $data['idLink'])->first();
         if($ipReporterExist){
             return response()->json([
                 'success'  => 'Laporan Anda sebelumnya telah kami terima dan telah menjadi bahan pertimbangan kami.'

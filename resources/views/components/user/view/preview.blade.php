@@ -7,6 +7,7 @@
 <!-- CSS -->
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/music-links.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/sweetalert2-overlay.css') }}">
 <link rel="stylesheet" href="https://cdn.plyr.io/3.6.3/plyr.css" />
 <style>
     * {
@@ -290,6 +291,7 @@
     .music-link__container--custom-text {
         background: #f8f8f8;
     }
+ 
 
 </style>
 @endpush
@@ -323,9 +325,17 @@
         <img id="user-artwork" src="https://res.cloudinary.com/dfpmdlf8l/image/upload/{{$data['image_path']}}.jpg" style="display:block;width:100%;">
         @endif
         <input type="hidden" name="id-link" value="{{$data['link'][0]['id']}}" />
+        <div>
         <h1 class="platforms-list__name">
             {{$data['link'][0]['title']}}
+        <button id='shareBtn' data-url="{{config('constants.site_title')}}/preview/{{$data['link'][0]['short_link']}}" class='btn btn-default'>
+            <span style="color: White;">
+                <i class='fas fa-copy'></i> 
+            </span>
+        </button>
         </h1>
+        
+        </div>
 
 
         <div class="platforms-list__container">
@@ -406,6 +416,14 @@
         var reportedReasons = $('input[name="reasons[]"]:checked').map(function() {
             return $(this).data('id');
         }).get();
+        if (!messageText && !reportedReasons.length){
+            Swal.fire({
+                position: 'top',
+                title: 'Harap isi paling sedikit kolom "More"',
+                showConfirmButton: false,
+                timer: 1000
+            })
+            return 0;}
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -446,6 +464,24 @@
 
     });
 
+
+        $('#shareBtn').on('click', function() {
+            copyText = $(this).data('url')
+            var textarea = document.createElement("textarea");
+            textarea.setAttribute("type", "hidden");
+            textarea.textContent = copyText;
+            textarea.style.position = "fixed"; // Prevent scrolling to bottom of page in MS Edge.
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");   
+            textarea.remove()
+            Swal.fire({
+            position: 'top',
+            title: 'URL link berhasil di copy',
+            showConfirmButton: false,
+            timer: 1000
+            })
+        })
 </script>
 
 @endpush

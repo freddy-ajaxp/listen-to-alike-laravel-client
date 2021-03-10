@@ -87,8 +87,7 @@
 
 <script type="text/javascript" src="{{ asset('assets/js/spinner.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/alert.js') }}"></script>
-{{-- <script type="text/javascript" src="{{ asset('assets/js/view/modal-add-link.js') }}"></script> --}}
-{{-- <script type="text/javascript" src="{{ asset('assets/js/view/modal-edit-link.js') }}"></script> --}}
+
 <script>
     //init datatable
     $(document).ready(function() {
@@ -217,6 +216,25 @@
                 }
             , })
         })
+        
+        
+        $('#example tbody').on('click', '#shareBtn', function() {
+            copyText = $(this).data('url')
+            var textarea = document.createElement("textarea");
+            textarea.setAttribute("type", "hidden");
+            textarea.textContent = copyText;
+            textarea.style.position = "fixed"; // Prevent scrolling to bottom of page in MS Edge.
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");   
+            Swal.fire({
+            position: 'top',
+            title: 'URL link berhasil di copy',
+            showConfirmButton: false,
+            timer: 1000
+            })
+        })
+
         $('#example tbody').on('click', '#viewBtn', function(e) {
             e.preventDefault();
         })
@@ -441,6 +459,7 @@
             $.get("{{ url('partial/view-select') }}", function(data, status) {
                 platformContainer = data;
             });
+            
         }
 
         function dynamic_field(counter, $idModal) {

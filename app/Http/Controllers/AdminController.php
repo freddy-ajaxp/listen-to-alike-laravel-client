@@ -64,17 +64,21 @@ class AdminController extends Controller
                         if($row->admin ==  2){
                             $disabled = ' disabled '; 
                         }
+
+                        if($row->admin !=  2){
+                            $btn .= '
+                            <div class="dropdown">
+                            <button ' .$disabled .' class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="far fa-edit"></i> Set Privilegee
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <a class="dropdown-item" name="set-privilige" data-privilige="user" >User</a>
+                              <a class="dropdown-item" name="set-privilige" data-privilige="admin">Admin </a>
+                            </div>
+                          </div>';
+                        }
                         
-                        $btn .= '
-                        <div class="dropdown">
-                        <button ' .$disabled .' class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="far fa-edit"></i> Set Privilege
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <a class="dropdown-item" name="set-privilige" data-privilige="user" >User</a>
-                          <a class="dropdown-item" name="set-privilige" data-privilige="admin">Admin </a>
-                        </div>
-                      </div>';
+
                     }                    
                     ;
                     if($row->admin !=  2){

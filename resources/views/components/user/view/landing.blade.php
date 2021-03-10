@@ -94,7 +94,6 @@
         </form>
         <div style='padding:0.5em;text-align:center'>
             <p style='font-size:0.8em;color:#a5a5a5'>By using this service, you agree to
-                ListenTo's
                 <a href="#" style='color:#a5a5a5'>Terms of Service</a> and <a href="#" style='color:#a5a5a5'>Privacy Policy.</a></p>
         </div>
     </div>
@@ -135,6 +134,7 @@
 <script type="text/javascript" src="{{ asset('assets/js/bootstrap-select.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/spinner.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/alert.js') }}"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 <script>
 
 
@@ -150,6 +150,7 @@
             $.get("{{ url('partial/view-select') }}", function(data, status) {
                 platformContainer = data;
                 $('#modal-dynamic-form').append(platformContainer);
+                console.log(platformContainer)
             });
         }
         count++;

@@ -11,7 +11,7 @@
         @if(session('admin')==0)
         <div class="dropdown show">
             <a class="btn btn-secondary btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <x-heroicon-o-cog style="height:20px" />
+                <i class="fas fa-cog"></i>
                 Menu &nbsp;
                 @if( Session::get('newNotification') !== 0)
                 <span class="badge badge-warning navbar-badge">{{Session::get('newNotification') }}</span>
