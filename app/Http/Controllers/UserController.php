@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Link;
 use App\Link_platform;
 use App\List_platform;
+use App\List_text;
 use App\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -22,6 +23,17 @@ use Validator;
 
 class UserController extends Controller
 {
+        
+
+
+    function landing(Request $request)
+    {
+        $platforms = List_platform::where('published', 1)->get(['id', 'platform_name', 'logo_image_path', 'platform_regex', 'published'])->toArray();
+        $text = List_text::get(['id', 'text'])->toArray();
+    return view('components/user/view/landing')->with(['userIsLoggedIn' => $request->session()->get('email'), 
+    'platforms' => $platforms,
+    'text' => $text]);
+    }
 
     function login(Request $request)
     {

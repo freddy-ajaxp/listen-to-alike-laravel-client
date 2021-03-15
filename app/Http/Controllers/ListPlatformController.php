@@ -528,6 +528,13 @@ class ListPlatformController extends Controller
         return view('components/user/partials/select-platform')->with(['platforms' => $platforms, 'texts' => $text, 'emptyLayout' => true]);
     }
 
+    function buttonViewSelect(Request $request)
+    {
+        $platforms = List_platform::where('published', 1)->get(['id', 'platform_name', 'logo_image_path', 'platform_regex', 'published'])->toArray();
+        $text = List_text::get(['id', 'text'])->toArray();
+        return view('components/user/partials/button-select-platform')->with(['platforms' => $platforms, 'texts' => $text, 'emptyLayout' => true]);
+    }
+
     function addModal(Request $request)
     {
         $data = $request->all();

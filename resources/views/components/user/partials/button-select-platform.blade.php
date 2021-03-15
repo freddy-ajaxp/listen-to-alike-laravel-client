@@ -1,4 +1,3 @@
-
 @if(isset($emptyLayout) && $emptyLayout)
 <div class="form-group">
     <input type="hidden" name="id_platforms[]" value='0'/>
@@ -53,6 +52,23 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @else
 @foreach ($result as $index =>$dt)
 <div class="form-group">
@@ -64,8 +80,11 @@
     <div class="form-row">
 
         <div class="col-sm-2">
-            <div class="platform-div">
-                <label for="form-control form-control"> Platform</label>
+            <div class="">
+                <label for="form-control form-control"> Platform
+                    @php
+                    @endphp
+                </label>
                 <select name="data_platform[]" class="custom-select">
                     @foreach($platforms as $key => $platform)
                     <option 
@@ -80,7 +99,7 @@
 
         <div class="col-sm-7">
             <div class="form-group">
-                <div class="platform-div">
+                <div class="">
                     <div>
                         <label>URL</label>
                     </div>

@@ -45,10 +45,8 @@ Route::get('/', function () {
     return redirect("/landing");
 });
 
-Route::get('/landing', function (Request $request) {    
-    // $view = (string)View::make('users.index',$data);
-    return view('components/user/view/landing')->with(['userIsLoggedIn' => $request->session()->get('email')]);
-})->middleware(['notificationchecker']);
+Route::get('/landing', 'UserController@landing')->middleware(['notificationchecker']);;
+ 
 
 Route::get('/register', function () {
     return view('components/user/view/register');
@@ -88,6 +86,7 @@ Route::get('table/delete-confirmation', 'ListPlatformController@deleteModal')->n
 Route::get('table/custom-confirmation', 'ListPlatformController@customModal')->name('table.modal-custom');
 Route::get('table/add-modal', 'ListPlatformController@addModal')->name('table.modal-add');
 Route::get('partial/view-select', 'ListPlatformController@viewSelect');
+Route::get('partial/button-view-select', 'ListPlatformController@buttonViewSelect');
 
 //AJAX TABLE
 Route::get('table/getAllLinks', 'TableController@getAllLinks')->name('table.all-links');

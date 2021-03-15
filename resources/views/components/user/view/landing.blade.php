@@ -80,17 +80,17 @@
 
                 <button type="button" name="add" id="add" class="btn btn-outline-secondary">Add New Row</button>
 
-                <div class="btn-group mr-2">
-                    <button type="button" class="music-link__add-link btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="btn-group mr-2" id="BtnAddPlatformContainer">   
+                    <button id="BtnAddPlatform" type="button" class="music-link__add-link btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Add a platform
                     </button>
-                    <div class="dropdown-menu music-link__add-link__dropdown">
+                    <div id="selectAddPlatform" class="dropdown-menu music-link__add-link__dropdown">
                         <h6 class="dropdown-header">Platforms</h6>
-                        <a class="dropdown-item" data-dd-platform="spotify" href="javascript:void(0);">Spotify</a>
-                        <a class="dropdown-item" data-dd-platform="apple-music" href="javascript:void(0);">Apple Music</a>
+                        @foreach($platforms as $key => $platform)
+                        <a class="dropdown-item" data-platform="{{$platform['id']}}" data-img="{{$platform['logo_image_path']}}">{{$platform['platform_name']}}</a>
+                        @endforeach
                         </div> 
                 </div>
-                <span id="result"></span>
 
                 <div id="modal-dynamic-form"></div>
             </div>
@@ -153,13 +153,12 @@
         var count = 0;
         var platformContainer;
         dynamic_field(count);
-        createTempLink();
+        createTempLink(); //membuat daftar link yang sudah dibuat. berdasarkan localstorage
 
         function dynamic_field() {
             $.get("{{ url('partial/view-select') }}", function(data, status) {
                 platformContainer = data;
                 $('#modal-dynamic-form').append(platformContainer);
-                console.log(platformContainer)
             });
         }
         count++;
@@ -182,6 +181,18 @@
             $('#image-preview-container').attr('src', '');
             $("#clear-image").attr("hidden", true);
             $("#upload-text").attr("hidden", false);
+        });
+        
+        
+         $('#selectAddPlatform a').click(function(e) {
+            e.preventDefault();
+            console.log(platformContainer)
+            {{-- console.log($(this).get()) --}}
+            {{-- console.log(platformContainer); --}}
+            platformContainer = $(platformContainer).find('select[name="data_platform[]"]').html('asdas')
+            console.log(platformContainer)
+            $('#modal-dynamic-form').append(platformContainer);
+            {{-- $(this).hide(); --}}
         });
 
         //delete temp link when entering dashboard
