@@ -29,4 +29,9 @@ class Link_platform extends Model
     {
         return $this->belongsTo(List_text::class,'text');
     }
+
+    public function list_link()
+    {
+        return $this->belongsTo(Link::class,'id_link');
+    }
 }

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\List_platform;
 use App\Http\Middleware;
 use Illuminate\Support\Facades\View;
 /*
@@ -35,6 +36,7 @@ Route::group(['middleware' => 'revalidate'], function()
 
     Route::get('/admin', function () {
         $data['main'] = 'links';
+        $data['platforms'] = List_platform::get();
         return view('components/admin/view/links')->with('components', $data);
     })->middleware('sessionvalidator');
 });

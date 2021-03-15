@@ -18,4 +18,9 @@ class Link extends Model
     const DELETED_AT = 'deletedAt';
 
 
+    public function link_platform()
+    {
+        return $this->hasMany(Link_platform::class, 'id_link');
+    }
+
 }

@@ -340,6 +340,12 @@
             formData.append('data_text', data_text);
             formData.append('userErasingImage', userErasingImage);
 
+            console.log('video_embed_url', video_embed_url);
+            console.log('id_platforms', id_platforms);
+            console.log('data_platform', data_platform);
+            console.log('data_url_platform', data_url_platform);
+            console.log('data_text', data_text);
+            console.log('userErasingImage', userErasingImage);            
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

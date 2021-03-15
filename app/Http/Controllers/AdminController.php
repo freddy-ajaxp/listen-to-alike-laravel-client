@@ -28,9 +28,16 @@ use Validator;
 
 class AdminController extends Controller
 {
-    public function getAllLinks()
+    public function getAllLinks(Request $request)
     {
-        $data = Link::withTrashed()->get();
+        // DB::enableQueryLog(); 
+        $data = $request->all();
+        $data = Link::withTrashed()->with('Link_platform')
+        // ->when($data['filter'], function ($query) use ($data) {
+        //     return $query->where('role_id', $data);
+        // })
+        ->get();
+        // dd(DB::getQueryLog());
         return Datatables::of($data)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
@@ -41,13 +48,33 @@ class AdminController extends Controller
                 //    <button id="viewBtn">Detail</button>
                 return $btn;
             })
-            ->rawColumns(['action'])
+            ->addColumn('platforms', function ($row) {
+                $toReturn = '';
+                $data = [];
+                // $first_names = array_column($row->link_platform, 'first_name');
+                // print_r($row->link_platform[0]->list_platform->get(['platform_name'])->toArray());
+                // print_r($row->link_platform->list_platform);
+                foreach ($row->link_platform as $object)
+                {
+                  $toReturn .= $object->list_platform->platform_name;
+                  array_push($data, $object->list_platform->platform_name);
+                  
+                }
+                // exit();
+                return (join(', ', $data));
+                return $row->link_platform;
+
+            })
+            ->rawColumns(['action', 'platforms'])
             ->make(true);
     }
+
+    
 
     public function getAllUsers()
     {
         $result = User::all();
+        
         return Datatables::of($result)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {

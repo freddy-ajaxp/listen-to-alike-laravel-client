@@ -261,11 +261,17 @@ class ListPlatformController extends Controller
             $listOldPlatformsId = Link_platform::where('id_link', $data['id'])->pluck('id')->toArray();
 
             // filtered out new platform which has id value of 0
-            $idsToDeleted = array_diff($id_platforms, $listOldPlatformsId);
+            // $idsToDeleted = array_diff($id_platforms, $listOldPlatformsId); // yg lama, data yg dihapus tidak masuk
+            $idsToDeleted = array_diff($listOldPlatformsId, $id_platforms);
+            // print_r($id_platforms);
+            // print_r($listOldPlatformsId);
+            // print_r($idsToDeleted);
+            // exit();
             Link_platform::findMany($idsToDeleted)->each(function ($each) {
                 $each->delete();
             });
 
+            //data di front yg dihapus, di back tidak dibuang?
             for ($i = 0; $i < count($data_platform); $i++) {
                 //kalau menggunakan id di form =0
                 if ($id_platforms[$i] != 0) {

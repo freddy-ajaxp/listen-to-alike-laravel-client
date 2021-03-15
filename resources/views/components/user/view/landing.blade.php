@@ -1,7 +1,7 @@
 @extends('components.user.layouts.default')
 
 
-@section('title', __('Daftar Link'))
+@section('title', __('Selamat Datang'))
 
 
 @section('content')
@@ -80,7 +80,16 @@
 
                 <button type="button" name="add" id="add" class="btn btn-outline-secondary">Add New Row</button>
 
-
+                <div class="btn-group mr-2">
+                    <button type="button" class="music-link__add-link btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Add a platform
+                    </button>
+                    <div class="dropdown-menu music-link__add-link__dropdown">
+                        <h6 class="dropdown-header">Platforms</h6>
+                        <a class="dropdown-item" data-dd-platform="spotify" href="javascript:void(0);">Spotify</a>
+                        <a class="dropdown-item" data-dd-platform="apple-music" href="javascript:void(0);">Apple Music</a>
+                        </div> 
+                </div>
                 <span id="result"></span>
 
                 <div id="modal-dynamic-form"></div>
