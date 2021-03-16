@@ -9,11 +9,13 @@
                     @php
                     @endphp
                 </label>
+                <div id="logoContainer">
                 <select name="data_platform[]" class="custom-select ">
                     @foreach($platforms as $key => $platform)
                     <option value="{{$platform['id']}}">{{$platform['platform_name']}}</option>
                     @endforeach
                 </select>
+               </div>
             </div>
         </div>
 
@@ -66,6 +68,7 @@
         <div class="col-sm-2">
             <div class="platform-div">
                 <label for="form-control form-control"> Platform</label>
+                <div id="logoContainer">
                 <select name="data_platform[]" class="custom-select">
                     @foreach($platforms as $key => $platform)
                     <option 
@@ -75,6 +78,7 @@
                     value="{{$platform['id']}}">{{$platform['platform_name']}}</option>
                     @endforeach
                 </select>
+                </div>
             </div>
         </div>
 

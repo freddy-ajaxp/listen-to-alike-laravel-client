@@ -75,10 +75,10 @@
                     </div>
                 </div>
             </div>
-            <label class='d-block' style='color:#444'>Your platforms:</label>
+            {{-- <label class='d-block' style='color:#444'>Your platforms:</label> --}}
             <div class="music-link__platforms" id="dynamic_platform">
 
-                <button type="button" name="add" id="add" class="btn btn-outline-secondary">Add New Row</button>
+                {{-- <button type="button" name="add" id="add" class="btn btn-outline-secondary">Add New Row</button> --}}
 
                 <div class="btn-group mr-2" id="BtnAddPlatformContainer">   
                     <button id="BtnAddPlatform" type="button" class="music-link__add-link btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -87,10 +87,11 @@
                     <div id="selectAddPlatform" class="dropdown-menu music-link__add-link__dropdown">
                         <h6 class="dropdown-header">Platforms</h6>
                         @foreach($platforms as $key => $platform)
-                        <a class="dropdown-item" data-platform="{{$platform['id']}}" data-img="{{$platform['logo_image_path']}}">{{$platform['platform_name']}}</a>
+                        <a class="dropdown-item" data-platform="{{$platform['id']}}" data-id-platform="{{$platform['id']}}" data-img="{{$platform['logo_image_path']}}">{{$platform['platform_name']}}</a>
                         @endforeach
                         </div> 
                 </div>
+                <hr/>
 
                 <div id="modal-dynamic-form"></div>
             </div>
@@ -158,7 +159,7 @@
         function dynamic_field() {
             $.get("{{ url('partial/view-select') }}", function(data, status) {
                 platformContainer = data;
-                $('#modal-dynamic-form').append(platformContainer);
+                {{-- $('#modal-dynamic-form').append(platformContainer); --}}
             });
         }
         count++;
@@ -186,13 +187,12 @@
         
          $('#selectAddPlatform a').click(function(e) {
             e.preventDefault();
-            console.log(platformContainer)
-            {{-- console.log($(this).get()) --}}
-            {{-- console.log(platformContainer); --}}
-            platformContainer = $(platformContainer).find('select[name="data_platform[]"]').html('asdas')
-            console.log(platformContainer)
-            $('#modal-dynamic-form').append(platformContainer);
-            {{-- $(this).hide(); --}}
+            var temp = $(platformContainer);
+            $(temp).find('#logoContainer').html('<img src="https://res.cloudinary.com/dfpmdlf8l/image/upload/' 
+            +$(this).attr('data-img')  +'" name="data_platform[]" data-id-platform="0' +'" name="data_platform[]" data-platform="' 
+            +$(this).attr('data-id-platform') +'" style="max-width: 100%;max-height: 100%;height: 41px;">')
+            $('#modal-dynamic-form').append(temp);
+            $(this).hide();
         });
 
         //delete temp link when entering dashboard
@@ -236,12 +236,13 @@
 
         $(document).on('click', '#add', function() {
             count++;
-            $(platformContainer).appendTo("#modal-dynamic-form");
         });
 
         $(document).on('click', '.remove', function() {
             count--;
             $(this).closest('.form-group').remove();
+            let idPlatform = ($(this).parents('div[class="form-row"]').find('#logoContainer').find('img').attr('data-platform'));
+            $(`[data-id-platform="${idPlatform}"]`).show();
         });
 
         $('#checkbox').click(function() {
@@ -261,14 +262,27 @@
             embed_url_video = $('input[name="embed_url_video"]').val()
 
             // getting data
-            var id_platforms = $("select[name='id_platforms[]']")
+            //  ini g laa, id_platform untuk menandai platform baru/edit
+            // di komen karena berubah dari select ke gambar
+            var id_platforms = $("input[name='id_platforms[]']")
                 .map(function() {
                     return ' ' + $(this).val();
                 }).get();
 
-            var data_platform = $("select[name='data_platform[]']")
+            {{-- var id_platforms = $("select[name='id_platforms[]']") //select / input?
+                .map(function() {
+                    return ' ' + $(this).attr('data-id-platform');
+                }).get(); --}}
+
+            //ini yg lama ketika masih menggunakan select
+            {{-- var data_platform = $("select[name='data_platform[]']")
                 .map(function() {
                     return ' ' + $(this).val();
+                }).get(); --}}
+
+            var data_platform = $("img[name='data_platform[]']")
+                .map(function() {
+                    return ' ' + $(this).attr('data-platform');
                 }).get();
 
             var data_url_platform = $("input[name='data_url_platform[]']")

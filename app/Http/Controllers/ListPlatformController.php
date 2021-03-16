@@ -66,7 +66,7 @@ class ListPlatformController extends Controller
             $data_platform = array_map('trim', array_filter(explode(",", $data['data_platform'])));
             $data_url_platform = array_map('trim', array_filter(explode(",", $data['data_url_platform'])));
             $data_text = array_map('trim', array_filter(explode(",", $data['data_text'])));
-
+            // dd($data);
             //kalau data platform ==0, return error, karena minimal 1
             if ($data['data_platform'] === null) {
                 return response()->json([
@@ -78,12 +78,37 @@ class ListPlatformController extends Controller
             // this a little prevention from user bypassing front end validation 
             if (
                 !array_key_exists('link_title', $data)
-                || (count($data_platform) !== count($data_url_platform))
-                || (count($data_url_platform) !== count($data_text))
-                || (count($data_url_platform) !== count($id_platforms))
+                
             ) {
                 return response()->json([
-                    'error'  => 'Harap lengkapi form'
+                    'error'  => 'Harap lengkzapi form'
+                ], 400);
+            }
+            if (
+                (count($data_platform) !== count($data_url_platform))
+               
+            ) {
+                return response()->json([
+                    'error'  => 'Harap lengkapi form 2'
+                ], 400);
+            }
+            if (
+               
+                (count($data_url_platform) !== count($data_text))
+            ) {
+                
+                return response()->json([
+                    'error'  => 'Harap lengkapi form 3'
+                ], 400);
+            }
+            if (
+               (count($data_url_platform) !== count($id_platforms))
+            ) {
+                // print_r($data_url_platform);
+                // print_r($id_platforms);
+                // exit(); 
+                return response()->json([
+                    'error'  => count($data_url_platform) .'Harap lengkapi form 4 '  .count($id_platforms) 
                 ], 400);
             }
 
@@ -92,7 +117,12 @@ class ListPlatformController extends Controller
             $platformDiDB = List_platform::whereIn('id', $data_platform)->pluck('id')->toArray();
             $textDiDB = Text::whereIn('id', $data_text)->pluck('id')->toArray();
             // print_r($textDiDB);
+            
             $bedaPltDBdanInput = array_diff($data_platform, $platformDiDB); //array diff yg baru (percobaan mungkin kebalik)
+            // print_r($data_platform);
+            // print_r($platformDiDB);
+            // print_r($bedaPltDBdanInput);
+            // exit();
             $bedaTextDBdanInput = array_diff($data_text, $textDiDB);
 
             //jika beda, berarti data input user tidak sesuai dgn yg ada di DB
