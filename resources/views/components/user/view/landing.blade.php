@@ -87,7 +87,7 @@
                     <div id="selectAddPlatform" class="dropdown-menu music-link__add-link__dropdown">
                         <h6 class="dropdown-header">Platforms</h6>
                         @foreach($platforms as $key => $platform)
-                        <a class="dropdown-item" data-platform="{{$platform['id']}}" data-id-platform="{{$platform['id']}}" data-img="{{$platform['logo_image_path']}}">{{$platform['platform_name']}}</a>
+                            <a class="dropdown-item" data-platform="{{$platform['id']}}" data-id-platform="{{$platform['id']}}" data-img="{{$platform['logo_image_path']}}">{{$platform['platform_name']}}</a>
                         @endforeach
                         </div> 
                 </div>

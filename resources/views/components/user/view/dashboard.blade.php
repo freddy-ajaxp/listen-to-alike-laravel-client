@@ -185,7 +185,6 @@
                         , icon: 'error'
                         , confirmButtonText: 'Confirm'
                     })
-
                 }
             , })
         })
@@ -212,11 +211,9 @@
                         , icon: 'error'
                         , confirmButtonText: 'Confirm'
                     })
-
                 }
             , })
         })
-        
         
         $('#example tbody').on('click', '#shareBtn', function() {
             copyText = $(this).data('url')
@@ -268,12 +265,8 @@
                         , icon: 'error'
                         , confirmButtonText: 'Confirm'
                     })
-
                 }
             , })
-
-
-
         })
 
 
@@ -509,6 +502,7 @@
             dynamic_field(counter, '#modal-dynamic-form-add');
             counter++;
         });
+        
         $(document).on('click', '.remove', function() {
             $(this).closest('.form-group').remove();
         });

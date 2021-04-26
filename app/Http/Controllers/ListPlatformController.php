@@ -89,7 +89,7 @@ class ListPlatformController extends Controller
                
             ) {
                 return response()->json([
-                    'error'  => 'Harap lengkapi form 2'
+                    'error'  => 'Harap lengkapi form'
                 ], 400);
             }
             if (
@@ -98,7 +98,7 @@ class ListPlatformController extends Controller
             ) {
                 
                 return response()->json([
-                    'error'  => 'Harap lengkapi form 3'
+                    'error'  => 'Harap lengkapi form'
                 ], 400);
             }
             if (
@@ -119,10 +119,6 @@ class ListPlatformController extends Controller
             // print_r($textDiDB);
             
             $bedaPltDBdanInput = array_diff($data_platform, $platformDiDB); //array diff yg baru (percobaan mungkin kebalik)
-            // print_r($data_platform);
-            // print_r($platformDiDB);
-            // print_r($bedaPltDBdanInput);
-            // exit();
             $bedaTextDBdanInput = array_diff($data_text, $textDiDB);
 
             //jika beda, berarti data input user tidak sesuai dgn yg ada di DB
