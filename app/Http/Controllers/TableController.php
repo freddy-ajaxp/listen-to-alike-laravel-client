@@ -39,14 +39,45 @@ class TableController extends Controller
              ->where('id_user', '=', $id_user) 
             //  ->where('show_status', '=', 1) //ini lama, ketika menggunakan show_status untuk menandakan bahwa ia telah dihapus 
              ->whereNull('deletedAt')
-             ->get();
+            //  ->orderBy('createdAt', 'desc')
+            ;
 
-            // dd($data);
+            // dd($data->get()->toArray());
             return Datatables::of($data)
                     ->addIndexColumn()
-                    ->addColumn('action', function($row){
+                    
+                    ->editColumn('createdAt', function ($dt) {
+                            return [
+                                'display' => 
+                                //  $dt->createdAt,
+                                e(Date('Y-m-d', strtotime( $dt->createdAt))),
+                                // 'timestamp' => Date('Y-m-d h:m:s', strtotime$dt->createdAt))
+                                'timestamp' => $dt->id
+                            ];
+                        })
+                        // ->filterColumn('createdAt', function ($query, $keyword) {
+
+                        //     $query->whereRaw("DATE_FORMAT(createdAt,'%Y-%m-%d') LIKE ?", ["%$keyword%"]);
+     
+                        //  })
+                        
+                        ->addColumn('video_embed_url', function($row){
+                            $video_embed_url='';
+
+
+                            $yt_url = str_replace("embed/", "watch?v=", $row->video_embed_url);    
+                            //cek apakah link valid, jika tidak valid maka akan dianggap route oleh laravel
+                            if (substr($yt_url, 0, 4) == 'http'){
+                                $video_embed_url = "<a href='$yt_url'" . ' target="_blank" >' ."$yt_url" .'</a> ' ;
+                            }
+                            else {
+                                $video_embed_url = "<a href='//$yt_url'" . ' target="_blank" >' ."$yt_url" .'</a> ' ;
+                            }
+                            return $video_embed_url;
+                     })
+                        ->addColumn('action', function($row){
                            $btn = '
-                            
+                           <div class="btn-group" role="group" aria-label="Basic example">
                            <button id="deleteBtn" class="btn btn-danger"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <i class="fas fa-trash-alt"></i> </button>'
                            .'<div class="dropdown">
                            <button  class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -56,12 +87,11 @@ class TableController extends Controller
                              <a class="dropdown-item" id="customBtn" name="set-privilige" data-privilige="admin"><i class="far fa-edit"></i>Custom Link </a>
                            </div>
                          </div>'
-                           . "<a href='/preview/$row->short_link'" . ' target="_blank" class="btn btn-success "><i class="fas fa-eye"></i> </a> ' 
+                           . "<a href='/m/$row->short_link'" . ' target="_blank" class="btn btn-success "><i class="fas fa-eye"></i> </a> ' 
                            . "<a href='/detail/$row->short_link'" . ' target="_blank" class="btn btn-secondary"><i class="fas fa-info"></i></a>'
-                           . "<button id='shareBtn' data-url='" .config('constants.site_title')."/preview/$row->short_link" ."' class='btn btn-default'><i class='fas fa-copy'></i> </button>"
+                           . "<button id='shareBtn' data-url='" .config('constants.site_title')."/m/$row->short_link" ."' class='btn btn-default'><i class='fas fa-copy'></i> </button>
+                           </div>"
                            ;
-                           {{}}
-                        //    <button id="viewBtn" class="btn btn-success">Visit</button>
                            return $btn;
                     })
                     ->addColumn('status', function($row){
@@ -74,7 +104,18 @@ class TableController extends Controller
                         }
                         return $btn;
                  })
-                    ->rawColumns(['action'])
+                //  ->order(function ($query) {
+                //     if (request()->has('create_at')) {
+                //         dd('asdasd');
+                //         $query->orderBy('createdAt', 'desc');
+                //     } 
+                //     // else {
+                //     //     dd(request());
+                //     //     $query->orderBy('createdAt', 'desc');
+                //     // } 
+                // })
+                    ->rawColumns(['action', 'video_embed_url'])
+                    
                     ->make(true);
         }
     }

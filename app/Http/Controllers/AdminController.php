@@ -42,7 +42,7 @@ class AdminController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $btn = '<button id="deletetBtn" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Hapus</button> '
-                    . "<a href='/preview/$row->short_link'" . ' class="btn btn-info"><i class="far fa-eye"></i> Lihat</a>'
+                    . "<a href='/m/$row->short_link'" . ' class="btn btn-info"><i class="far fa-eye"></i> Lihat</a>'
                     . "<a href='/detail/$row->short_link'" . ' class="btn btn-secondary"><i class="fas fa-info"></i> Detaill</a>'                    
                     ;
                 //    <button id="viewBtn">Detail</button>
@@ -584,7 +584,7 @@ class AdminController extends Controller
                 ->addColumn('action', function ($row) {
                     $btn =
                         //    '<button id="viewBtn" class="btn btn-info">Visit</button>'
-                        "<a href='/preview/$row->short_link'" . ' class="btn btn-info ">Lihat</a>';
+                        "<a href='/m/$row->short_link'" . ' class="btn btn-info ">Lihat</a>';
                     return $btn;
                 })
                 ->rawColumns(['action'])
@@ -603,10 +603,12 @@ class AdminController extends Controller
     {
         return view('components/admin/partials/modal-delete-reason');
     }
+
     function deleteUserModal(Request $request)
     {
         return view('components/admin/partials/modal-delete-user');
     }
+
     function deleteTextModal(Request $request)
     {
         $data = $request->all();
@@ -621,6 +623,7 @@ class AdminController extends Controller
         $data = Report::find($data['id']);
         return view('components/admin/partials/modal-ban-link')->with(['idReport' => $data['id'], 'dataLink' => $link]);
     }
+    
     function resetPwdModal(Request $request)
     {
         $data = $request->all();

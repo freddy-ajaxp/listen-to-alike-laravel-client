@@ -11,7 +11,7 @@
                     <div class="signup-cta my-4">
                         <span class="text-dark">You can visit your link at:</span>
                         <div>
-                            <p class="modal-link-created__url"><a class="modal-link-created__link" href="/preview/{{$data['link']}}" target="_blank"> {{config('constants.site_url')}}{{$data['link']}}</a></p>
+                            <p class="modal-link-created__url"><a class="modal-link-created__link" href="/m/{{$data['link']}}" target="_blank"> {{config('constants.site_url')}}{{$data['link']}}</a></p>
                             <span class="badge badge-sm badge-success copied-text"></span>
                         </div>
                         <div>
@@ -57,13 +57,13 @@
                                 a.forEach(function(data) {
                                     $('#dynamic-temp-link').append(`
                 <div class="presignup-link" style="overflow:hidden" id="dynamic-temp-link">
-                <a class="mr-2" target="_blank" style="display:inline-block;font-weight:bold;color:#1a436d" href="preview/${data.link}">
+                <a class="mr-2" target="_blank" style="display:inline-block;font-weight:bold;color:#1a436d" href="m/${data.link}">
                     {{config('constants.site_title')}}/${data.link}
                 </a>
                 <span style="color:#888;font-size:0.85em">${data.title}</span>
                 <div class="presignup-link__buttons" style="float:right">
 
-                <a href="/dashboard" class="btn btn-sm btn-secondary mr-1">Edit</a><a target="_blank" href="preview/${data.link}" class="btn btn-sm btn-secondary ">View
+                <a href="/dashboard" class="btn btn-sm btn-secondary mr-1">Edit</a><a target="_blank" href="m/${data.link}" class="btn btn-sm btn-secondary ">View
                     </a></div>
             </div>
                 `);

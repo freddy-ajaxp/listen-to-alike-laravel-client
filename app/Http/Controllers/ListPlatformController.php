@@ -12,7 +12,9 @@ use App\User;
 use App\Clickthrough;
 use App\Text;
 use App\Visit;
+use App\Shortened_url;
 use Carbon\Carbon;
+use Cloudinary\Transformation\Parameter\Dimensions\Width;
 use Illuminate\Support\Facades\Hash;
 use Dotenv\Result\Result;
 use Illuminate\Http\Request;
@@ -51,14 +53,9 @@ class ListPlatformController extends Controller
                 if ($validator->fails()) {
                     print_r($validator->errors());
                     exit();
-                    // redirect()
-                    // ->back()
-                    // ->withErrors($validator->errors());
                 }
     
             }
-
-           
 
             //BAGIAN insert link_platforms
             // $id_platforms = array_map('trim',array_filter(explode(",", $data['id_platforms'])));
@@ -66,7 +63,7 @@ class ListPlatformController extends Controller
             $data_platform = array_map('trim', array_filter(explode(",", $data['data_platform'])));
             $data_url_platform = array_map('trim', array_filter(explode(",", $data['data_url_platform'])));
             $data_text = array_map('trim', array_filter(explode(",", $data['data_text'])));
-
+            // dd($data);
             //kalau data platform ==0, return error, karena minimal 1
             if ($data['data_platform'] === null) {
                 return response()->json([
@@ -74,16 +71,57 @@ class ListPlatformController extends Controller
                 ], 400);
             }
 
+            //jika urlurl ada yang bukan url valid, maka kirim pesan error. kalau bukan url, ketika pas preview di klik, akan dianggap akses ke route
+            foreach ($data_url_platform as $key => $url) {
+                if (!filter_var($url, FILTER_VALIDATE_URL)) {
+                    return response()->json([
+                        'error'  => 'harap masukkan URL yang lengkap & valid. contoh: https://www.google.com/'
+                    ], 400);
+                    exit();
+                }
+            }
+            
+
+            //jika id platform yg dimasukkan lebih dari 1 (ada yg sama)
+            if(count($data_platform) != 
+            count(array_unique($data_platform))){
+            return response()->json([
+                'error'  => 'Harap tidak memasukkan platform yang sama lebih dari 1'
+            ], 400);
+            }
+
             // if array has different length, meaning some field at some [index] of array is null
             // this a little prevention from user bypassing front end validation 
             if (
                 !array_key_exists('link_title', $data)
-                || (count($data_platform) !== count($data_url_platform))
-                || (count($data_url_platform) !== count($data_text))
-                || (count($data_url_platform) !== count($id_platforms))
+                
             ) {
                 return response()->json([
-                    'error'  => 'Harap lengkapi form'
+                    'error'  => 'Harap lengkapi form title'
+                ], 400);
+            }
+            if (
+                (count($data_platform) !== count($data_url_platform))
+               
+            ) {
+                return response()->json([
+                    'error'  => 'Harap lengkapi form 1'
+                ], 400);
+            }
+            if (
+               
+                (count($data_url_platform) !== count($data_text))
+            ) {
+                
+                return response()->json([
+                    'error'  => 'Harap lengkapi form 2'
+                ], 400);
+            }
+            if (
+               (count($data_url_platform) !== count($id_platforms))
+            ) {
+                return response()->json([
+                    'error'  => count($data_url_platform) .'Harap lengkapi form anda'  .count($id_platforms) 
                 ], 400);
             }
 
@@ -92,6 +130,7 @@ class ListPlatformController extends Controller
             $platformDiDB = List_platform::whereIn('id', $data_platform)->pluck('id')->toArray();
             $textDiDB = Text::whereIn('id', $data_text)->pluck('id')->toArray();
             // print_r($textDiDB);
+            
             $bedaPltDBdanInput = array_diff($data_platform, $platformDiDB); //array diff yg baru (percobaan mungkin kebalik)
             $bedaTextDBdanInput = array_diff($data_text, $textDiDB);
 
@@ -113,6 +152,30 @@ class ListPlatformController extends Controller
             //create object dulu 
             $link = new Link;
 
+
+            //cek dimensi dari gambar
+            // list($width, $height, $type, $attr) = getimagesize($_FILES["gallery_image"]['tmp_name']);
+            // With Intervention :
+            if ($request->file('image')) {
+            $upload_file = $request->file('image');
+            $height = \Image::make($upload_file)->height();
+            $width = \Image::make($upload_file)->width();
+            $size = \Image::make($upload_file)->filesize();
+            if($size > 300000){
+                return response()->json([
+                    'error'  => 'Ukuran gambar maksimal 300KB'
+                ], 400 );
+            }
+            if ($height > $width) {
+                return response()->json([
+                    'error'  => 'Mohon masukkan gambar berorientasi horizontal (lebar lebih dari tinggi)'
+                ], 400 );
+            }
+            
+            }
+            
+
+            dd("break");
             //BAGIAN upload to cloud
             if ($request->file('image')) {
                 $uploadedFileUrl = \Cloudinary::upload($request->file('image')->getRealPath());
@@ -157,7 +220,7 @@ class ListPlatformController extends Controller
     function upsert(Request $request)
     {
 
-        if ($request->ajax()) {
+         if ($request->ajax()) {
             $data = $request->all();
 
             //START VALIDATION
@@ -178,9 +241,28 @@ class ListPlatformController extends Controller
                     'error'  => 'Harap isi minimal 1 platform'
                 ], 400);
             }
+
+            //jika id platform yg dimasukkan lebih dari 1 (ada yg sama)
+            if(count($data_platform) != 
+            count(array_unique($data_platform))){
+            return response()->json([
+                'error'  => 'Harap tidak memasukkan platform yang sama lebih dari 1'
+            ], 400);
+            }
+
+            //jika urlurl ada yang bukan url valid, maka kirim pesan error. kalau bukan url, ketika pas preview di klik, akan dianggap akses ke route
+            foreach ($data_url_platform as $key => $url) {
+                if (!filter_var($url, FILTER_VALIDATE_URL)) {
+                    return response()->json([
+                        'error'  => 'harap masukkan URL yang lengkap & valid. contoh: https://www.google.com/'
+                    ], 400);
+                    exit();
+                }
+            }
+             
+             
             // if array has different length, meaning some field at some [index] of array is null
             // this a little prevention from user bypassing front end validation 
-
             if (
                 !array_key_exists('link_title', $data)
                 || (count($data_url_platform) !==  count($data_platform))
@@ -240,8 +322,6 @@ class ListPlatformController extends Controller
 
 
             // END  VALIDATION 
-
-
             // upload to cloud kalau ada gambar baru
             if ($request->file('image')) {
                 $uploadedFileUrl = \Cloudinary::upload($request->file('image')->getRealPath());
@@ -256,21 +336,20 @@ class ListPlatformController extends Controller
             $link->save();
             //END LINK
 
-
             //get old ids from DB
             $listOldPlatformsId = Link_platform::where('id_link', $data['id'])->pluck('id')->toArray();
 
             // filtered out new platform which has id value of 0
             // $idsToDeleted = array_diff($id_platforms, $listOldPlatformsId); // yg lama, data yg dihapus tidak masuk
             $idsToDeleted = array_diff($listOldPlatformsId, $id_platforms);
-            // print_r($id_platforms);
             // print_r($listOldPlatformsId);
+            // print_r($id_platforms);
             // print_r($idsToDeleted);
-            // exit();
+            
             Link_platform::findMany($idsToDeleted)->each(function ($each) {
                 $each->delete();
             });
-
+            // exit();
             //data di front yg dihapus, di back tidak dibuang?
             for ($i = 0; $i < count($data_platform); $i++) {
                 //kalau menggunakan id di form =0
@@ -367,7 +446,7 @@ class ListPlatformController extends Controller
             $visit->save();
         }
 
-        $link['platforms'] = Link_platform::withTrashed()->where('id_link', $link['link'][0]['id'])->get(['id', 'jenis_platform', 'url_platform', 'text']);
+        $link['platforms'] = Link_platform::where('id_link', $link['link'][0]['id'])->get(['id', 'jenis_platform', 'url_platform', 'text']);
         $link['video_id'] = substr($link['link'][0]['video_embed_url'], strrpos($link['link'][0]['video_embed_url'], '/') + 1);
         $link['image_path'] = $link['link'][0]['image_path'];
 
@@ -403,6 +482,7 @@ class ListPlatformController extends Controller
             abort(404);
         }
 
+        
         $data['platform'] = DB::table('link_platforms')
             ->select(DB::raw('*, (SELECT count(*) FROM `clickthroughs` WHERE `clickthroughs`.`link_platform_id` = `link_platforms`.`id`) AS `count`'))
             ->where('id_link', '=', $data['link'][0]['id'])
@@ -528,6 +608,13 @@ class ListPlatformController extends Controller
         return view('components/user/partials/select-platform')->with(['platforms' => $platforms, 'texts' => $text, 'emptyLayout' => true]);
     }
 
+    function buttonViewSelect(Request $request)
+    {
+        $platforms = List_platform::where('published', 1)->get(['id', 'platform_name', 'logo_image_path', 'platform_regex', 'published'])->toArray();
+        $text = List_text::get(['id', 'text'])->toArray();
+        return view('components/user/partials/button-select-platform')->with(['platforms' => $platforms, 'texts' => $text, 'emptyLayout' => true]);
+    }
+
     function addModal(Request $request)
     {
         $data = $request->all();
@@ -605,5 +692,48 @@ class ListPlatformController extends Controller
     function dummy()
     {
                 
+    }
+    function shorten(Request $request){
+        $data = $request->all();
+        $domainName = env("APP_SHORT_NAME");
+        if (!filter_var($data['fullURL'], FILTER_VALIDATE_URL)) {
+            return response()->json([
+                'error'  => 'Harap Masukkan URL Valid'
+            ], 400);
+        } 
+
+        if (strpos($data['fullURL'], $domainName.'/s/') !== false) {
+            return response()->json([
+                'error'  => 'Link Sudah Dalam Bentuk Dipersingkat'
+            ], 400);
+        }
+
+        //create object dulu 
+        $short = new Shortened_url;
+        $slug = $this->generateId(Str::random(9));
+
+         //BAGIAN CREATE DATA LINK
+         $short->full_url = $data['fullURL'];
+         $short->slug = $slug;
+         $short->short_url  = "https://${domainName}/s/${slug}";
+         $short->save();
+         if($short->id){
+            return response()->json([
+                'success'  => 'Berhasil Mempersingkat URL',
+                'url' => "https://${domainName}/s/${slug}"
+            ], 200);
+         }
+         else {
+            return response()->json([
+                'error'  => 'Gagal Dalam Mempersingkat URL'
+            ], 400);
+         }
+    }
+
+    function getURL($slug){
+        $data = Shortened_url::where('slug', $slug)->first();
+        // dd($data->full_url);
+        return \Redirect::to($data->full_url);
+
     }
 }

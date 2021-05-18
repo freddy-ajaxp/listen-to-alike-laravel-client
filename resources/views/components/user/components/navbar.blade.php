@@ -9,14 +9,17 @@
         <a class="btn btn-danger btn-sm " id="btn-dashboard" style='color:#fff' href="/dashboard">Dashboard</a>
         &nbsp;
         @if(session('admin')==0)
-        <div class="dropdown show">
-            <a class="btn btn-secondary btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="dropdown show btn-group">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    menu
+  </button>
+            {{-- <a class="btn btn-secondary btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-cog"></i>
                 Menu &nbsp;
                 @if( Session::get('newNotification') !== 0)
                 <span class="badge badge-warning navbar-badge">{{Session::get('newNotification') }}</span>
                 @endif
-            </a>
+            </a> --}}
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                 <a class="dropdown-item" href= "{{url('user/profile')}}">Profile </a>
                 <div class="dropdown-divider"></div>

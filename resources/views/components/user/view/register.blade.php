@@ -1,9 +1,9 @@
-@extends('components.user.layouts.default')
+@extends('components.user.layouts.login')
 @section('title', __('Register'))
 @push('stylesheets')
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/adminlte.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/fontawesome-free/css/all.min.css') }}">
+{{-- <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/fontawesome-free/css/all.min.css') }}"> --}}
 @endpush
 
 
@@ -59,11 +59,11 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-8">
-                            <a href="/login" class="text-center">already have account</a>
+                        <div class="col-6">
+                            <a href="/login" class="text-center">Login</a>
                         </div>
                         <!-- /.col -->
-                        <div class="col-4">
+                        <div class="col-6">
                             <button type="submit" class="btn btn-primary btn-block">Register</button>
                         </div>
                         <!-- /.col -->

@@ -45,10 +45,8 @@ Route::get('/', function () {
     return redirect("/landing");
 });
 
-Route::get('/landing', function (Request $request) {    
-    // $view = (string)View::make('users.index',$data);
-    return view('components/user/view/landing')->with(['userIsLoggedIn' => $request->session()->get('email')]);
-})->middleware(['notificationchecker']);
+Route::get('/landing', 'UserController@landing')->middleware(['notificationchecker']);;
+ 
 
 Route::get('/register', function () {
     return view('components/user/view/register');
@@ -61,7 +59,7 @@ Route::get('/logout', function (Request $request) {
         return redirect('/landing');
 });
 
-Route::get('/preview/{short_link}', 'ListPlatformController@preview');
+Route::get('/m/{short_link}', 'ListPlatformController@preview');
 Route::get('/detail/{short_link}', 'ListPlatformController@detail')->middleware('sessionvalidator');
 Route::get('/getCountLinkChart', 'ListPlatformController@getCountLinkChart')->middleware('sessionvalidator');
 Route::post('/click', 'ListPlatformController@viewCtr');
@@ -70,11 +68,11 @@ Route::post('/report', 'ListPlatformController@report');
 
 
 // Route::get('dynamic-field', 'ListPlatformController@index');
-
 Route::post('dynamic-field/insert', 'ListPlatformController@insert')->name('dynamic-field.insert');
 Route::post('dynamic-field/upsert', 'ListPlatformController@upsert')->name('dynamic-field.upsert');
-
 Route::get('links/platforms', 'ListPlatformController@getAllPlatforms');
+Route::post('shorten', 'ListPlatformController@shorten');
+Route::get('/a/{slug}', 'ListPlatformController@getURL');
 Route::post('user/login', 'UserController@login');
 Route::post('user/register', 'UserController@register');
 Route::get('user/logout', 'UserController@logout');
@@ -88,6 +86,7 @@ Route::get('table/delete-confirmation', 'ListPlatformController@deleteModal')->n
 Route::get('table/custom-confirmation', 'ListPlatformController@customModal')->name('table.modal-custom');
 Route::get('table/add-modal', 'ListPlatformController@addModal')->name('table.modal-add');
 Route::get('partial/view-select', 'ListPlatformController@viewSelect');
+Route::get('partial/button-view-select', 'ListPlatformController@buttonViewSelect');
 
 //AJAX TABLE
 Route::get('table/getAllLinks', 'TableController@getAllLinks')->name('table.all-links');

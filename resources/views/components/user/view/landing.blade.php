@@ -13,7 +13,19 @@
         <div class="presignup-links__list" id="dynamic-temp-link">
         </div>
     </div>
-
+    <div class="presignup-links p-3 mb-3">
+        <span style='font-family:"Rubik";font-size:1.4em;margin-right:0.5em;display:inline-block;color:#444;'>Dapatkan Short-Link Mu</span>
+        <div class="presignup-links__list" id="dynamic-temp-link">
+            <form id='f-short-link'>
+            <div class="input-group mb-3">
+                <input id="shorten-full-url" type="text" class="form-control" placeholder="Masukkan Link Mu" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Shorten</button>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
 
     <div class="music-link__inputs-container" style='border-radius:1px;padding:4.5em 1em 1em 1em;'>
         <form method="post" id="dynamic_form" enctype="multipart/form-data">
@@ -75,22 +87,21 @@
                     </div>
                 </div>
             </div>
-            <label class='d-block' style='color:#444'>Your platforms:</label>
+            {{-- <label class='d-block' style='color:#444'>Your platforms:</label> --}}
             <div class="music-link__platforms" id="dynamic_platform">
-
-                <button type="button" name="add" id="add" class="btn btn-outline-secondary">Add New Row</button>
-
-                <div class="btn-group mr-2">
-                    <button type="button" class="music-link__add-link btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Add a platform
+                {{-- <button type="button" name="add" id="add" class="btn btn-outline-secondary">Add New Row</button> --}}
+                <div class="btn-group mr-2" id="BtnAddPlatformContainer">
+                    <button id="BtnAddPlatform" type="button" class="music-link__add-link btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Add a platform
                     </button>
-                    <div class="dropdown-menu music-link__add-link__dropdown">
+                    <div id="selectAddPlatform" class="dropdown-menu music-link__add-link__dropdown">
                         <h6 class="dropdown-header">Platforms</h6>
-                        <a class="dropdown-item" data-dd-platform="spotify" href="javascript:void(0);">Spotify</a>
-                        <a class="dropdown-item" data-dd-platform="apple-music" href="javascript:void(0);">Apple Music</a>
-                        </div> 
+                        @foreach($platforms as $key => $platform)
+                        <a class="dropdown-item" data-platform="{{$platform['id']}}" data-id-platform="{{$platform['id']}}" data-img="{{$platform['logo_image_path']}}">{{$platform['platform_name']}}</a>
+                        @endforeach
+                    </div>
                 </div>
-                <span id="result"></span>
+                <hr />
 
                 <div id="modal-dynamic-form"></div>
             </div>
@@ -153,13 +164,12 @@
         var count = 0;
         var platformContainer;
         dynamic_field(count);
-        createTempLink();
+        createTempLink(); //membuat daftar link yang sudah dibuat. berdasarkan localstorage
 
         function dynamic_field() {
             $.get("{{ url('partial/view-select') }}", function(data, status) {
-                platformContainer = data;
-                $('#modal-dynamic-form').append(platformContainer);
-                console.log(platformContainer)
+                platformContainer = data; 
+                {{--$('#modal-dynamic-form').append(platformContainer);--}}
             });
         }
         count++;
@@ -182,6 +192,17 @@
             $('#image-preview-container').attr('src', '');
             $("#clear-image").attr("hidden", true);
             $("#upload-text").attr("hidden", false);
+        });
+
+
+        $('#selectAddPlatform a').click(function(e) {
+            e.preventDefault();
+            var temp = $(platformContainer);
+            $(temp).find('#logoContainer').html('<img src="https://res.cloudinary.com/dfpmdlf8l/image/upload/' +
+                $(this).attr('data-img') + '" name="data_platform[]" data-id-platform="0' + '" name="data_platform[]" data-platform="' +
+                $(this).attr('data-id-platform') + '" style="max-width: 100%;max-height: 100%;height: 41px;">')
+            $('#modal-dynamic-form').append(temp);
+            $(this).hide();
         });
 
         //delete temp link when entering dashboard
@@ -208,13 +229,13 @@
             dataLink.forEach(function(data) {
                 $('#dynamic-temp-link').append(`
                 <div class="presignup-link" style="overflow:hidden" id="dynamic-temp-link">
-                <a class="mr-2" target="_blank" style="display:inline-block;font-weight:bold;color:#1a436d" href="preview/${data.link}">
+                <a class="mr-2" target="_blank" style="display:inline-block;font-weight:bold;color:#1a436d" href="m/${data.link}">
                     {{config('constants.site_title')}}/${data.link}
                 </a>
                 <span style="color:#888;font-size:0.85em">${data.title}</span>
                 <div class="presignup-link__buttons" style="float:right">
 
-                <a href="/dashboard" class="btn btn-sm btn-secondary mr-1">Edit</a><a target="_blank" href="preview/${data.link}" class="btn btn-sm btn-secondary ">View
+                <a href="/dashboard" class="btn btn-sm btn-secondary mr-1">Edit</a><a target="_blank" href="m/${data.link}" class="btn btn-sm btn-secondary ">View
                     </a></div>
             </div>
                 `);
@@ -225,12 +246,13 @@
 
         $(document).on('click', '#add', function() {
             count++;
-            $(platformContainer).appendTo("#modal-dynamic-form");
         });
 
         $(document).on('click', '.remove', function() {
             count--;
             $(this).closest('.form-group').remove();
+            let idPlatform = ($(this).parents('div[class="form-row"]').find('#logoContainer').find('img').attr('data-platform'));
+            $(`[data-id-platform="${idPlatform}"]`).show();
         });
 
         $('#checkbox').click(function() {
@@ -250,14 +272,16 @@
             embed_url_video = $('input[name="embed_url_video"]').val()
 
             // getting data
-            var id_platforms = $("select[name='id_platforms[]']")
+            //  ini g laa, id_platform untuk menandai platform baru/edit
+            // di komen karena berubah dari select ke gambar
+            var id_platforms = $("input[name='id_platforms[]']")
                 .map(function() {
                     return ' ' + $(this).val();
                 }).get();
 
-            var data_platform = $("select[name='data_platform[]']")
+            var data_platform = $("img[name='data_platform[]']")
                 .map(function() {
-                    return ' ' + $(this).val();
+                    return ' ' + $(this).attr('data-platform');
                 }).get();
 
             var data_url_platform = $("input[name='data_url_platform[]']")
@@ -271,11 +295,12 @@
                 }).get();
 
             //log for debug purpose
-            console.log('id_platforms', id_platforms)
-            console.log('data_platform', data_platform)
-            console.log('data_url_platform', data_url_platform)
-            console.log('data_text', data_text)
-            console.log('files[0]', files[0])
+            {{-- console.log('id_platforms', id_platforms)
+                    console.log('data_platform', data_platform)
+                    console.log('data_url_platform', data_url_platform)
+                    console.log('data_text', data_text)
+                    console.log('files[0]', files[0]) --}}
+        
 
             //appending data to sent
             formData.append('link_title', link_title);
@@ -383,7 +408,7 @@
 
 </script>
 
-{{-- <script type="text/javascript" src="{{ asset('assets/js/form-validation.js') }}"></script> --}}
+<script type="text/javascript" src="{{ asset('assets/js/shorten.js') }}"></script>
 
 {{-- @yield('js') --}}
 @endpush
