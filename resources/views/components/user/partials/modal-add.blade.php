@@ -51,9 +51,25 @@
                     </div>
                     
                 </div>
-                <div>
+                {{-- <div>
                     <button type="button" name="add" id="add" class="btn btn-info btn-sm">Add New Row</button>
                 </div>
+                 --}}
+
+                <div class="music-link__platforms" id="dynamic_platform">
+                {{-- <button type="button" name="add" id="add" class="btn btn-outline-secondary">Add New Row</button> --}}
+                <div class="btn-group mr-2" id="BtnAddPlatformContainer">   
+                    <button id="BtnAddPlatform" type="button" class="music-link__add-link btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Add a platform
+                    </button>
+                    <div id="selectAddPlatform" class="dropdown-menu music-link__add-link__dropdown">
+                        <h6 class="dropdown-header">Platforms</h6>
+                        @foreach($platforms as $key => $platform)
+                            <a class="dropdown-item" data-platform="{{$platform['id']}}" data-id-platform="{{$platform['id']}}" data-img="{{$platform['logo_image_path']}}">{{$platform['platform_name']}}</a>
+                        @endforeach
+                        </div> 
+                </div>
+                <hr/>
                 <div id="modal-dynamic-form">
                     @include('components/user/partials/select-platform')
                 </div>

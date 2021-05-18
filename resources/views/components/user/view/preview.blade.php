@@ -7,7 +7,7 @@
 <!-- CSS -->
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/music-links.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/sweetalert2-overlay.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/sweetalert2-overlay.css') }}">
 <link rel="stylesheet" href="https://cdn.plyr.io/3.6.3/plyr.css" />
 <style>
     * {
@@ -67,6 +67,16 @@
         margin-bottom: 1em;
     }
 
+    #content,
+    #youtube_video {
+        max-width: 600px;
+    }
+
+    .music-link__logo {
+        float: left;
+        width: 7em;
+    }
+
     @media(max-width:1100px) {
         .platforms-list__name {
             font-size: 1.1em;
@@ -77,7 +87,32 @@
         .platforms-list__name {
             font-size: 1em;
         }
+
+        #content,
+        #youtube_video {
+            max-width: 400px;
+        }
+
+        .music-link__logo {
+            float: left;
+            max-width: 60px;
+        }
+
+        .music-link__button {
+            float: right;
+            padding: 0.5em 1em;
+            background: #fff;
+            color: rgb(97 97 97);
+            border: 1px solid rgb(218 218 218);
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: small;
+            max-width: 70px;
+        }
     }
+
+
 
     .music-link__container {
         display: flex;
@@ -101,10 +136,7 @@
         font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
     }
 
-    .music-link__logo {
-        float: left;
-        width: 7em;
-    }
+
 
     .music-link__custom-platform {
         float: left;
@@ -196,14 +228,7 @@
         height: 100%;
     }
 
-    #youtube_video {
-        max-width: 400px;
-    }
 
-    #content,
-    #youtube_video {
-        max-width: 600px;
-    }
 
 
     /* Themes */
@@ -291,7 +316,6 @@
     .music-link__container--custom-text {
         background: #f8f8f8;
     }
- 
 
 </style>
 @endpush
@@ -308,7 +332,7 @@
         @elseif($data['link'][0]['video_embed_url'])
         <img id="bg_img" src="https://img.youtube.com/vi/{{$data['video_id']}}/1.jpg">
         @else
-        <img id="bg_img" src="">
+        <img id="bg_img" src="https://images.pexels.com/photos/144429/pexels-photo-144429.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260">
         @endif
     </div>
 
@@ -326,15 +350,15 @@
         @endif
         <input type="hidden" name="id-link" value="{{$data['link'][0]['id']}}" />
         <div>
-        <h1 class="platforms-list__name">
-            {{$data['link'][0]['title']}}
-        <button id='shareBtn' data-url="{{config('constants.site_title')}}/preview/{{$data['link'][0]['short_link']}}" class='btn btn-default'>
-            <span style="color: White;">
-                <i class='fas fa-copy'></i> 
-            </span>
-        </button>
-        </h1>
-        
+            <h1 class="platforms-list__name">
+                {{$data['link'][0]['title']}}
+                <button id='shareBtn' data-url="{{config('constants.site_title')}}/m/{{$data['link'][0]['short_link']}}" class='btn btn-default'>
+                    <span style="color: White;">
+                        <i class='fas fa-copy'></i>
+                    </span>
+                </button>
+            </h1>
+
         </div>
 
 
@@ -416,14 +440,15 @@
         var reportedReasons = $('input[name="reasons[]"]:checked').map(function() {
             return $(this).data('id');
         }).get();
-        if (!messageText && !reportedReasons.length){
+        if (!messageText && !reportedReasons.length) {
             Swal.fire({
-                position: 'top',
-                title: 'Harap isi paling sedikit kolom "More"',
-                showConfirmButton: false,
-                timer: 1000
+                position: 'top'
+                , title: 'Harap isi paling sedikit kolom "More"'
+                , showConfirmButton: false
+                , timer: 1000
             })
-            return 0;}
+            return 0;
+        }
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -444,7 +469,7 @@
                 $('#modals').modal('hide');
                 Swal.fire({
                     title: 'success'
-                    , text: response.success ||  "laporan Anda sudah kami terima"
+                    , text: response.success || "laporan Anda sudah kami terima"
                     , icon: 'success'
                     , confirmButtonText: 'Confirm'
                 })
@@ -465,23 +490,24 @@
     });
 
 
-        $('#shareBtn').on('click', function() {
-            copyText = $(this).data('url')
-            var textarea = document.createElement("textarea");
-            textarea.setAttribute("type", "hidden");
-            textarea.textContent = copyText;
-            textarea.style.position = "fixed"; // Prevent scrolling to bottom of page in MS Edge.
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand("copy");   
-            textarea.remove()
-            Swal.fire({
-            position: 'top',
-            title: 'URL link berhasil di copy',
-            showConfirmButton: false,
-            timer: 1000
-            })
+    $('#shareBtn').on('click', function() {
+        copyText = $(this).data('url')
+        var textarea = document.createElement("textarea");
+        textarea.setAttribute("type", "hidden");
+        textarea.textContent = copyText;
+        textarea.style.position = "fixed"; // Prevent scrolling to bottom of page in MS Edge.
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove()
+        Swal.fire({
+            position: 'top'
+            , title: 'URL link berhasil di copy'
+            , showConfirmButton: false
+            , timer: 1000
         })
+    })
+
 </script>
 
 @endpush

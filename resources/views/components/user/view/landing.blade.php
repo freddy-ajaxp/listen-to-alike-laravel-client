@@ -13,7 +13,19 @@
         <div class="presignup-links__list" id="dynamic-temp-link">
         </div>
     </div>
-
+    <div class="presignup-links p-3 mb-3">
+        <span style='font-family:"Rubik";font-size:1.4em;margin-right:0.5em;display:inline-block;color:#444;'>Dapatkan Short-Link Mu</span>
+        <div class="presignup-links__list" id="dynamic-temp-link">
+            <form id='f-short-link'>
+            <div class="input-group mb-3">
+                <input id="shorten-full-url" type="text" class="form-control" placeholder="Masukkan Link Mu" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Shorten</button>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
 
     <div class="music-link__inputs-container" style='border-radius:1px;padding:4.5em 1em 1em 1em;'>
         <form method="post" id="dynamic_form" enctype="multipart/form-data">
@@ -77,21 +89,19 @@
             </div>
             {{-- <label class='d-block' style='color:#444'>Your platforms:</label> --}}
             <div class="music-link__platforms" id="dynamic_platform">
-
                 {{-- <button type="button" name="add" id="add" class="btn btn-outline-secondary">Add New Row</button> --}}
-
-                <div class="btn-group mr-2" id="BtnAddPlatformContainer">   
+                <div class="btn-group mr-2" id="BtnAddPlatformContainer">
                     <button id="BtnAddPlatform" type="button" class="music-link__add-link btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Add a platform
+                        Add a platform
                     </button>
                     <div id="selectAddPlatform" class="dropdown-menu music-link__add-link__dropdown">
                         <h6 class="dropdown-header">Platforms</h6>
                         @foreach($platforms as $key => $platform)
-                            <a class="dropdown-item" data-platform="{{$platform['id']}}" data-id-platform="{{$platform['id']}}" data-img="{{$platform['logo_image_path']}}">{{$platform['platform_name']}}</a>
+                        <a class="dropdown-item" data-platform="{{$platform['id']}}" data-id-platform="{{$platform['id']}}" data-img="{{$platform['logo_image_path']}}">{{$platform['platform_name']}}</a>
                         @endforeach
-                        </div> 
+                    </div>
                 </div>
-                <hr/>
+                <hr />
 
                 <div id="modal-dynamic-form"></div>
             </div>
@@ -158,8 +168,8 @@
 
         function dynamic_field() {
             $.get("{{ url('partial/view-select') }}", function(data, status) {
-                platformContainer = data;
-                {{-- $('#modal-dynamic-form').append(platformContainer); --}}
+                platformContainer = data; 
+                {{--$('#modal-dynamic-form').append(platformContainer);--}}
             });
         }
         count++;
@@ -183,14 +193,14 @@
             $("#clear-image").attr("hidden", true);
             $("#upload-text").attr("hidden", false);
         });
-        
-        
-         $('#selectAddPlatform a').click(function(e) {
+
+
+        $('#selectAddPlatform a').click(function(e) {
             e.preventDefault();
             var temp = $(platformContainer);
-            $(temp).find('#logoContainer').html('<img src="https://res.cloudinary.com/dfpmdlf8l/image/upload/' 
-            +$(this).attr('data-img')  +'" name="data_platform[]" data-id-platform="0' +'" name="data_platform[]" data-platform="' 
-            +$(this).attr('data-id-platform') +'" style="max-width: 100%;max-height: 100%;height: 41px;">')
+            $(temp).find('#logoContainer').html('<img src="https://res.cloudinary.com/dfpmdlf8l/image/upload/' +
+                $(this).attr('data-img') + '" name="data_platform[]" data-id-platform="0' + '" name="data_platform[]" data-platform="' +
+                $(this).attr('data-id-platform') + '" style="max-width: 100%;max-height: 100%;height: 41px;">')
             $('#modal-dynamic-form').append(temp);
             $(this).hide();
         });
@@ -219,13 +229,13 @@
             dataLink.forEach(function(data) {
                 $('#dynamic-temp-link').append(`
                 <div class="presignup-link" style="overflow:hidden" id="dynamic-temp-link">
-                <a class="mr-2" target="_blank" style="display:inline-block;font-weight:bold;color:#1a436d" href="preview/${data.link}">
+                <a class="mr-2" target="_blank" style="display:inline-block;font-weight:bold;color:#1a436d" href="m/${data.link}">
                     {{config('constants.site_title')}}/${data.link}
                 </a>
                 <span style="color:#888;font-size:0.85em">${data.title}</span>
                 <div class="presignup-link__buttons" style="float:right">
 
-                <a href="/dashboard" class="btn btn-sm btn-secondary mr-1">Edit</a><a target="_blank" href="preview/${data.link}" class="btn btn-sm btn-secondary ">View
+                <a href="/dashboard" class="btn btn-sm btn-secondary mr-1">Edit</a><a target="_blank" href="m/${data.link}" class="btn btn-sm btn-secondary ">View
                     </a></div>
             </div>
                 `);
@@ -269,17 +279,6 @@
                     return ' ' + $(this).val();
                 }).get();
 
-            {{-- var id_platforms = $("select[name='id_platforms[]']") //select / input?
-                .map(function() {
-                    return ' ' + $(this).attr('data-id-platform');
-                }).get(); --}}
-
-            //ini yg lama ketika masih menggunakan select
-            {{-- var data_platform = $("select[name='data_platform[]']")
-                .map(function() {
-                    return ' ' + $(this).val();
-                }).get(); --}}
-
             var data_platform = $("img[name='data_platform[]']")
                 .map(function() {
                     return ' ' + $(this).attr('data-platform');
@@ -296,11 +295,12 @@
                 }).get();
 
             //log for debug purpose
-            console.log('id_platforms', id_platforms)
-            console.log('data_platform', data_platform)
-            console.log('data_url_platform', data_url_platform)
-            console.log('data_text', data_text)
-            console.log('files[0]', files[0])
+            {{-- console.log('id_platforms', id_platforms)
+                    console.log('data_platform', data_platform)
+                    console.log('data_url_platform', data_url_platform)
+                    console.log('data_text', data_text)
+                    console.log('files[0]', files[0]) --}}
+        
 
             //appending data to sent
             formData.append('link_title', link_title);
@@ -408,7 +408,7 @@
 
 </script>
 
-{{-- <script type="text/javascript" src="{{ asset('assets/js/form-validation.js') }}"></script> --}}
+<script type="text/javascript" src="{{ asset('assets/js/shorten.js') }}"></script>
 
 {{-- @yield('js') --}}
 @endpush

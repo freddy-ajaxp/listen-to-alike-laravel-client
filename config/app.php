@@ -119,7 +119,8 @@ return [
     |
     */
 
-    'key' => env('APP_KEY'),
+    'key' => env('APP_KEY', base64_decode('NfPsORMdH/gvTQ+5GvKLdfl739VVLR3JXyajPPRE3es=')),
+
 
     'cipher' => 'AES-256-CBC',
 
@@ -163,6 +164,8 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         CloudinaryLabs\CloudinaryLaravel\CloudinaryServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
+
         /*
          * Package Service Providers...
          */
@@ -229,6 +232,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+        'Image' => Intervention\Image\Facades\Image::class,
 
     ],
 

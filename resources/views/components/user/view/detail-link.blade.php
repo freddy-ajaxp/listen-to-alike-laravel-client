@@ -20,7 +20,7 @@
                             <div class="container-fluid">
                                 <div class="row ">
                                     <div class="col-sm-6">
-                                        <h3>Detail Link <a href="{{ url('preview/' .$data['link'][0]['short_link']) }}" target="__blank">{{$data['link'][0]['short_link']}}</a></h3>
+                                        <h3>Detail Link <a href="{{ url('m/' .$data['link'][0]['short_link']) }}" target="__blank">{{$data['link'][0]['short_link']}}</a></h3>
                                         @if(session()->has('admin'))
                                         <a href="{{url('/admin')}}">
                                             < kembali</a>
@@ -77,9 +77,6 @@
                                                 </h3>
                                                 <div class="card-tools">
                                                     <a href="#" class="btn btn-tool btn-sm">
-                                                        <i class="fas fa-download"></i>
-                                                    </a>
-                                                    <a href="#" class="btn btn-tool btn-sm">
                                                         <i class="fas fa-bars"></i>
                                                     </a>
                                                 </div>
@@ -117,9 +114,6 @@
                                                     <img src="{{asset('images/icons/question-circle.svg')}}" style="margin-bottom: 10px;" data-toggle="tooltip" title="Asal domain seseorang yang mengunjungi Link Anda" />
                                                 </h3>
                                                 <div class="card-tools">
-                                                    <a href="#" class="btn btn-tool btn-sm">
-                                                        <i class="fas fa-download"></i>
-                                                    </a>
                                                     <a href="#" class="btn btn-tool btn-sm">
                                                         <i class="fas fa-bars"></i>
                                                     </a>

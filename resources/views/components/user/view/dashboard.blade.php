@@ -34,6 +34,7 @@
                                                         <th>Video Url</th>
                                                         <th>Status</th>
                                                         <th>Visit Count</th>
+                                                        <th>Dibuat</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -96,7 +97,6 @@
         var platformContainer;
         //serverside
         var table = $('#example').DataTable({
-
             "dom": 'lf<"toolbar">rtip'
             , processing: true
             , serverSide: true
@@ -117,7 +117,7 @@
                     data: 'video_embed_url'
                     , name: 'video_embed_url'
                 }
-                                , {
+                 , {
                     data: 'status'
                     , name: 'status'
                 }
@@ -125,13 +125,23 @@
                     data: 'count'
                     , name: 'count'
                 }
+
+                ,{
+                    data: 'createdAt',
+                    type: 'num',
+                    render: {
+                        _: 'display',
+                        sort: 'timestamp'
+                    }
+                }
                 , {
                     data: 'action'
                     , name: 'action'
                     , orderable: false
                     , searchable: false
                 }
-            , ]
+            , ],
+            order: [[6, "DESC"]] 
         });
         $("div.toolbar").html('&nbsp <button style type="button" id="addNewLink" class="btn btn-info btn-sm remove"><i class="fas fa-plus"></i> Create Link</button>');
 
@@ -148,6 +158,7 @@
                 , method: 'get'
                 , success: function(linksPlatform) {
                     $('#modals .dynamic-modal-container').html(linksPlatform)
+                    $('#modal-dynamic-form').find('div[class="form-group"]').remove();
                     $('#modals').modal('show');
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
@@ -255,6 +266,17 @@
                     $('#link_title').val(data.title);
                     $('#short_link').val(data.short_link);
                     $('#video_embed_url').val(data.video_embed_url);
+
+                    //hide disini
+                  
+                    {{-- console.log(select) --}}
+                    var data_platform = $("img[name='data_platform[]']")
+                        .map(function() {
+                            return `[data-id-platform='${$(this).attr('data-value')}']`;
+                        }).get();
+                    data_platform = data_platform.join(", ");
+                    optionsToHide = $("#selectAddPlatform").find(data_platform)
+                    $(optionsToHide).hide();
                     $('#modals').modal('show');
                 }
                 , error: function(xhr, ajaxOptions, thrownError) {
@@ -284,10 +306,11 @@
             } else {
                 $("#video_embed_url").attr("disabled", true);
                 $('#video_embed_url').val('')
-            }
+            }   
         });
 
         $(document).on('submit', '#form-platform', function(event) {
+            //FORM EDIT
             event.preventDefault();
             var files = $('#image').get(0).files;
             formData = new FormData();
@@ -298,9 +321,9 @@
             userErasingImage = $('#userErasingImage').val()
 
             // getting data
-            var data_platform = $("select[name='data_platform[]']")
+            var data_platform = $("img[name='data_platform[]']")
                 .map(function() {
-                    return ' ' + $(this).val();
+                    return ' ' + $(this).attr('data-value');
                 }).get();
 
             var data_url_platform = $("input[name='data_url_platform[]']")
@@ -502,9 +525,11 @@
             dynamic_field(counter, '#modal-dynamic-form-add');
             counter++;
         });
-        
+
         $(document).on('click', '.remove', function() {
             $(this).closest('.form-group').remove();
+            let idPlatform = ($(this).parents('div[class="form-row"]').find('#logoContainer').find('img').attr('data-platform'));
+            $(`[data-id-platform="${idPlatform}"]`).show();
         });
 
 
@@ -516,9 +541,9 @@
             video_embed_url = $('input[name="video_embed_url"]').val()
 
             // getting data
-            var data_platform = $("select[name='data_platform[]']")
+            var data_platform = $("img[name='data_platform[]']")
                 .map(function() {
-                    return ' ' + $(this).val();
+                    return ' ' + $(this).attr('data-value');
                 }).get();
 
             var data_url_platform = $("input[name='data_url_platform[]']")
@@ -610,14 +635,30 @@
             counter = 0;
         });
 
-        //add and remove platform edit
+        //add platform edit
+        // remove nya di onclick .remove
         $(document).on("click", "#add", function() {
             dynamic_field(counter, "#modal-dynamic-form");
             counter++;
         });
-        $(document).on("click", ".remove", function() {
-            $(this).closest(".form-group").remove();
+
+        $(document).on("click", "#selectAddPlatform a", function(e) {
+            //ketika pilih platform di select
+            e.preventDefault();
+            var temp = $(platformContainer);
+            $(temp).find('#logoContainer').html(
+                '<img src="https://res.cloudinary.com/dfpmdlf8l/image/upload/'+$(this).attr('data-img')  
+                +'" name="data_platform[]"'
+                +'data-id-platform="0' 
+                +'" name="data_platform[]"'
+                +'data-platform="'+$(this).attr('data-id-platform')+'"'
+                + 'data-value="' +$(this).attr('data-id-platform')+'"'
+                +'style="max-width: 100%;max-height: 100%;height: 41px;">')
+            $('#modal-dynamic-form').append(temp);
+            $(this).hide();
         });
+
+      
     });
 
 </script>

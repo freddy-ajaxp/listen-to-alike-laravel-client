@@ -59,7 +59,7 @@ Route::get('/logout', function (Request $request) {
         return redirect('/landing');
 });
 
-Route::get('/preview/{short_link}', 'ListPlatformController@preview');
+Route::get('/m/{short_link}', 'ListPlatformController@preview');
 Route::get('/detail/{short_link}', 'ListPlatformController@detail')->middleware('sessionvalidator');
 Route::get('/getCountLinkChart', 'ListPlatformController@getCountLinkChart')->middleware('sessionvalidator');
 Route::post('/click', 'ListPlatformController@viewCtr');
@@ -68,11 +68,11 @@ Route::post('/report', 'ListPlatformController@report');
 
 
 // Route::get('dynamic-field', 'ListPlatformController@index');
-
 Route::post('dynamic-field/insert', 'ListPlatformController@insert')->name('dynamic-field.insert');
 Route::post('dynamic-field/upsert', 'ListPlatformController@upsert')->name('dynamic-field.upsert');
-
 Route::get('links/platforms', 'ListPlatformController@getAllPlatforms');
+Route::post('shorten', 'ListPlatformController@shorten');
+Route::get('/a/{slug}', 'ListPlatformController@getURL');
 Route::post('user/login', 'UserController@login');
 Route::post('user/register', 'UserController@register');
 Route::get('user/logout', 'UserController@logout');

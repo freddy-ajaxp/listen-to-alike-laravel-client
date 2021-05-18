@@ -1,4 +1,4 @@
-@extends('components.user.layouts.default')
+@extends('components.user.layouts.login')
 @section('title', __('Login'))
 @push('stylesheets')
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/adminlte.css') }}">
@@ -41,13 +41,13 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-8">
+                        <div class="col-6">
                             <div class="icheck-primary">
                                 <a href="/register" class="text-center">Register</a>
                             </div>
                         </div>
                         <!-- /.col -->
-                        <div class="col-4">
+                        <div class="col-6">
                             <button type="submit" class="btn btn-primary btn-block">Sign In</button>
                         </div>
                         <!-- /.col -->
