@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 05, 2021 at 03:30 AM
--- Server version: 10.4.14-MariaDB
--- PHP Version: 7.2.34
+-- Waktu pembuatan: 27 Bulan Mei 2021 pada 06.14
+-- Versi server: 10.4.14-MariaDB
+-- Versi PHP: 7.2.34
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `action_list_latforms`
+-- Struktur dari tabel `action_list_latforms`
 --
 
 CREATE TABLE `action_list_latforms` (
@@ -37,7 +37,7 @@ CREATE TABLE `action_list_latforms` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `clickthroughs`
+-- Struktur dari tabel `clickthroughs`
 --
 
 CREATE TABLE `clickthroughs` (
@@ -50,17 +50,26 @@ CREATE TABLE `clickthroughs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `clickthroughs`
+-- Dumping data untuk tabel `clickthroughs`
 --
 
 INSERT INTO `clickthroughs` (`id`, `link_id`, `link_platform_id`, `ip`, `createdAt`, `updatedAt`) VALUES
 (2, 439, 533, '127.0.0.1', '2021-01-13 17:00:00', '2021-01-13 17:00:00'),
-(3, 439, 534, '127.0.0.1', '2021-01-13 17:00:00', '2021-01-13 17:00:00');
+(3, 439, 534, '127.0.0.1', '2021-01-13 17:00:00', '2021-01-13 17:00:00'),
+(4, 461, 561, '127.0.0.1', '2021-03-08 17:00:00', '2021-03-08 17:00:00'),
+(5, 463, 563, '127.0.0.1', '2021-03-08 17:00:00', '2021-03-08 17:00:00'),
+(6, 458, 558, '127.0.0.1', '2021-03-08 17:00:00', '2021-03-08 17:00:00'),
+(7, 464, 564, '127.0.0.1', '2021-03-08 17:00:00', '2021-03-08 17:00:00'),
+(8, 464, 566, '127.0.0.1', '2021-03-08 17:00:00', '2021-03-08 17:00:00'),
+(9, 465, 584, '127.0.0.1', '2021-04-27 17:00:00', '2021-04-27 17:00:00'),
+(10, 466, 589, '127.0.0.1', '2021-04-27 17:00:00', '2021-04-27 17:00:00'),
+(11, 461, 570, '127.0.0.1', '2021-04-27 17:00:00', '2021-04-27 17:00:00'),
+(12, 475, 601, '127.0.0.1', '2021-05-03 17:00:00', '2021-05-03 17:00:00');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `links`
+-- Struktur dari tabel `links`
 --
 
 CREATE TABLE `links` (
@@ -77,7 +86,7 @@ CREATE TABLE `links` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `links`
+-- Dumping data untuk tabel `links`
 --
 
 INSERT INTO `links` (`id`, `image_path`, `video_embed_url`, `id_user`, `short_link`, `createdAt`, `updatedAt`, `deletedAt`, `title`, `show_status`) VALUES
@@ -95,17 +104,32 @@ INSERT INTO `links` (`id`, `image_path`, `video_embed_url`, `id_user`, `short_li
 (375, NULL, 'adadadasdasd', 4, 'Uyw5eznY0', '2021-01-06 00:00:00', '2021-01-06 00:00:00', '2021-01-15 08:10:48', 'aaaa baru nih', 1),
 (439, 'cdhcu8yqip6bflxugfob', 'https://www.youtube.com/embed/_Hu446ApWaY', 4, 'XdgcNWcgg', '2021-01-11 00:00:00', '2021-01-11 00:00:00', NULL, 'tes', 1),
 (453, NULL, 'baru', 4, 'FhNSXGb5I', '2021-01-15 00:00:00', '2021-01-15 00:00:00', NULL, 'sebuah', 1),
-(454, 'cdntqgpbqgl9vfzs6n0v', 'Bumi Biru', 4, '3NUtTUWM', '2021-01-15 00:00:00', '2021-01-15 00:00:00', NULL, 'Bumi Biruu', 1),
 (455, NULL, '', 4, 'Sf0bdMRkk', '2021-01-15 00:00:00', '2021-01-15 00:00:00', NULL, 'sad', 1),
 (456, NULL, '', 4, 'Gpt1SoJnJ', '2021-01-18 00:00:00', '2021-01-18 00:00:00', NULL, 'senin', 1),
 (457, 'c2mcpbhpkbhnkl6gldbp', 'aksdaksd', 4, 'xxxxxxax', '2021-02-03 00:00:00', '2021-02-03 00:00:00', '2021-02-03 00:43:28', 'final', 1),
 (458, NULL, 'https://www.youtube.com/embed/_Hu446ApWaY', 4, 'Vt09kLCSs', '2021-02-03 00:00:00', '2021-02-03 00:00:00', NULL, 'hapus aja', 1),
-(459, NULL, 'https://www.youtube.com/embed/_Hu446ApWaY', 12, 'y33PVxgLa', '2021-02-05 00:00:00', '2021-02-05 00:00:00', NULL, 'xx tes 1', 1);
+(459, NULL, 'https://www.youtube.com/embed/_Hu446ApWaY', 12, 'y33PVxgLa', '2021-02-05 00:00:00', '2021-02-05 00:00:00', NULL, 'xx tes 1', 1),
+(460, 'p7olvovbmpktdenwduyx', 'https://www.youtube.com/embed/Nj2U6rhnucI', 12, '07Op4Q6qe', '2021-02-05 00:00:00', '2021-02-05 00:00:00', NULL, 'Dua Lipa - Song Title', 1),
+(461, NULL, '', 4, 'ktoZyMaDw', '2021-02-05 00:00:00', '2021-02-05 00:00:00', NULL, 'awawa', 1),
+(462, 'jh9p6zqll7wfisjrbovr', '', NULL, 'B4e9yxKb1', '2021-02-14 00:00:00', '2021-02-14 00:00:00', NULL, 'sad', 1),
+(463, NULL, 'https://www.youtube.com/embed/NqM032dnPtk', 4, 'rlxY5eEZa', '2021-03-09 00:00:00', '2021-03-09 00:00:00', NULL, 'baru cihuy', 1),
+(464, NULL, 'https://www.youtube.com/embed/qxvALeOiSdU', 13, 'tI52I5neB', '2021-03-09 00:00:00', '2021-03-09 00:00:00', NULL, 'seharusnya aku', 1),
+(465, 'ycsoxg78tx8g7wupivkm', 'https://www.youtube.com/embed/W4Qc9VRtxVQ', 4, 'Yzs9nMc8z', '2021-03-16 00:00:00', '2021-03-16 00:00:00', NULL, 'baru nich', 1),
+(466, 'bslfp1d5i9jscrfza9p7', 'https://www.youtube.com/embed/gUmsF-PE0Pg', 4, '7RLt7mJI9', '2021-03-16 00:00:00', '2021-03-16 00:00:00', NULL, 'kucing', 1),
+(467, NULL, '', 14, 'Lr84mDkz1', '2021-04-26 00:00:00', '2021-04-26 00:00:00', '2021-04-27 05:49:43', 'tes', 1),
+(468, NULL, '', 14, 'G0pgrobsn', '2021-04-27 00:00:00', '2021-04-27 00:00:00', '2021-04-27 05:49:38', 'asdas', 1),
+(469, NULL, '', 14, 'cdDgCMhfW', '2021-04-27 00:00:00', '2021-04-27 00:00:00', '2021-04-27 05:49:40', 'nahh', 1),
+(470, 'kqxl74zgz9hjgqunklb5', 'https://www.youtube.com/embed/YoHqu8A4s8g', 4, '8W1PpOoyy', '2021-04-30 00:00:00', '2021-04-30 00:00:00', NULL, 'jessica jane diborgol', 1),
+(471, 'zryewqibzgomcpdldoga', '', NULL, 'T3a8p7eoP', '2021-04-30 00:00:00', '2021-04-30 00:00:00', NULL, 'kucing komplotan', 1),
+(472, 'iykdlmd8cttvsafxducp', '', NULL, 'd8QXi0rVD', '2021-04-30 00:00:00', '2021-04-30 00:00:00', NULL, 'vidoe kucing lucu', 1),
+(473, NULL, '', NULL, 'VmKnaJTzC', '2021-04-30 00:00:00', '2021-04-30 00:00:00', NULL, 'tanpa gambar', 1),
+(474, NULL, 'https://www.youtube.com/embed/3oCJbCdy55s', 4, '8XqRL8Eyd', '2021-04-30 00:00:00', '2021-04-30 00:00:00', NULL, 'DONNA JELLO ft MADUWANGI MUSIC | ISO TANPO KOWE | WAHANA MUSIK LIVE CONCERT', 1),
+(475, NULL, 'https://www.youtube.com/embed/DbJpWaKsrJ8', 4, 'KP1Tj7c2C', '2021-05-04 00:00:00', '2021-05-04 00:00:00', NULL, 'Safira Inema - Ditinggal Pas Sayang Sayange (Official Music Video)', 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `link_platforms`
+-- Struktur dari tabel `link_platforms`
 --
 
 CREATE TABLE `link_platforms` (
@@ -120,7 +144,7 @@ CREATE TABLE `link_platforms` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `link_platforms`
+-- Dumping data untuk tabel `link_platforms`
 --
 
 INSERT INTO `link_platforms` (`id`, `url_platform`, `jenis_platform`, `text`, `id_link`, `createdAt`, `updatedAt`, `deletedAt`) VALUES
@@ -142,16 +166,56 @@ INSERT INTO `link_platforms` (`id`, `url_platform`, `jenis_platform`, `text`, `i
 (538, 'pengganti INI NIH EDITED SELASA', 11, 11, 375, '2021-01-11 00:00:00', '2021-01-12 00:00:00', '2021-01-12 06:28:25'),
 (541, 'coklat kue', 11, 1, 375, '2021-01-12 00:00:00', '2021-01-12 00:00:00', NULL),
 (553, 'asdasd', 11, 1, 453, '2021-01-15 00:00:00', '2021-01-15 00:00:00', NULL),
-(554, 'Bumi Biruu', 11, 1, 454, '2021-01-15 00:00:00', '2021-02-03 00:00:00', NULL),
 (555, 'asd', 11, 1, 455, '2021-01-15 00:00:00', '2021-01-15 00:00:00', NULL),
 (557, 'cek', 11, 1, 457, '2021-02-03 00:00:00', '2021-02-03 00:00:00', NULL),
 (558, 'https://www.youtube.com/watch?v=_Hu446ApWaY', 11, 1, 458, '2021-02-03 00:00:00', '2021-02-03 00:00:00', NULL),
-(559, 'edited', 11, 1, 459, '2021-02-05 00:00:00', '2021-02-05 00:00:00', NULL);
+(559, 'edited', 11, 1, 459, '2021-02-05 00:00:00', '2021-02-05 00:00:00', NULL),
+(560, 'https://www.youtube.com/watch?v=Nj2U6rhnucI', 22, 10, 460, '2021-02-05 00:00:00', '2021-02-05 00:00:00', NULL),
+(561, 'http://fb.com', 11, 1, 461, '2021-02-05 00:00:00', '2021-04-28 00:00:00', NULL),
+(562, 'sad', 11, 1, 462, '2021-02-14 00:00:00', '2021-02-14 00:00:00', NULL),
+(563, 'https://www.youtube.com/watch?v=NqM032dnPtk', 19, 1, 463, '2021-03-09 00:00:00', '2021-03-09 00:00:00', NULL),
+(564, 'https://www.youtube.com/watch?v=qxvALeOiSdU', 22, 10, 464, '2021-03-09 00:00:00', '2021-03-09 00:00:00', NULL),
+(565, 'https://www.youtube.com/watch?v=qxvALeOiSdU', 11, 3, 464, '2021-03-09 00:00:00', '2021-03-09 00:00:00', NULL),
+(566, 'https://www.youtube.com/watch?v=9X_ViIPA-Gc', 11, 10, 464, '2021-03-09 00:00:00', '2021-03-09 00:00:00', NULL),
+(567, 'tes.com', 19, 13, 464, '2021-03-09 00:00:00', '2021-03-09 00:00:00', NULL),
+(568, 'apaaa', 19, 1, 461, '2021-03-15 00:00:00', '2021-03-15 00:00:00', '2021-03-15 05:41:13'),
+(569, 'zz', 11, 1, 461, '2021-03-15 00:00:00', '2021-03-15 00:00:00', '2021-03-15 05:41:29'),
+(570, 'baru', 11, 1, 461, '2021-03-15 00:00:00', '2021-03-15 00:00:00', '2021-04-28 06:36:48'),
+(572, 'asd', 11, 1, 466, '2021-03-16 00:00:00', '2021-04-01 00:00:00', '2021-04-01 06:32:47'),
+(573, 'z', 19, 1, 466, '2021-03-16 00:00:00', '2021-03-16 00:00:00', '2021-04-01 06:32:37'),
+(574, 'zzz', 11, 1, 466, '2021-04-01 00:00:00', '2021-04-01 00:00:00', '2021-04-28 05:23:29'),
+(575, 'https://www.youtube.com/watch?v=gUmsF-PE0Pg', 11, 1, 466, '2021-04-01 00:00:00', '2021-04-28 00:00:00', '2021-04-28 05:26:18'),
+(576, 'asd', 11, 1, 467, '2021-04-26 00:00:00', '2021-04-26 00:00:00', '2021-04-26 09:39:47'),
+(577, 'cc', 11, 1, 467, '2021-04-26 00:00:00', '2021-04-26 00:00:00', NULL),
+(578, 'ccc', 11, 1, 467, '2021-04-26 00:00:00', '2021-04-26 00:00:00', NULL),
+(579, 'asdasd', 22, 1, 467, '2021-04-26 00:00:00', '2021-04-26 00:00:00', NULL),
+(580, 'aa', 22, 1, 468, '2021-04-27 00:00:00', '2021-04-27 00:00:00', NULL),
+(581, 'asdasd', 11, 1, 468, '2021-04-27 00:00:00', '2021-04-27 00:00:00', NULL),
+(582, 'nahh', 22, 1, 469, '2021-04-27 00:00:00', '2021-04-27 00:00:00', NULL),
+(583, 'asdasd', 19, 1, 469, '2021-04-27 00:00:00', '2021-04-27 00:00:00', NULL),
+(584, 'https://www.youtube.com/watch?v=W4Qc9VRtxVQ', 11, 1, 465, '2021-04-28 00:00:00', '2021-04-28 00:00:00', NULL),
+(585, 'https://www.youtube.com/watch?v=W4Qc9VRtxVQ', 22, 1, 465, '2021-04-28 00:00:00', '2021-04-28 00:00:00', NULL),
+(586, 'https://www.youtube.com/watch?v=W4Qc9VRtxVQ', 19, 1, 465, '2021-04-28 00:00:00', '2021-04-28 00:00:00', NULL),
+(587, 'https://www.youtube.com/watch?v=gUmsF-PE0Pg', 19, 1, 466, '2021-04-28 00:00:00', '2021-04-28 00:00:00', '2021-04-28 05:26:18'),
+(588, 'zzz', 11, 1, 466, '2021-04-28 00:00:00', '2021-04-28 00:00:00', '2021-04-28 05:26:45'),
+(589, 'vvv', 22, 1, 466, '2021-04-28 00:00:00', '2021-04-28 00:00:00', '2021-04-28 05:57:54'),
+(590, 'kucing baru', 11, 1, 466, '2021-04-28 00:00:00', '2021-04-28 00:00:00', NULL),
+(591, 'https://www.youtube.com/watch?v=YoHqu8A4s8g', 11, 1, 470, '2021-04-30 00:00:00', '2021-04-30 00:00:00', NULL),
+(592, 'https://www.youtube.com/watch?v=YoHqu8A4s8g', 22, 10, 470, '2021-04-30 00:00:00', '2021-04-30 00:00:00', NULL),
+(593, 'https://www.youtube.com/watch?v=YoHqu8A4s8g', 19, 1, 470, '2021-04-30 00:00:00', '2021-04-30 00:00:00', NULL),
+(594, 'https://www.youtube.com/watch?v=-YKuxZgDamM', 11, 1, 471, '2021-04-30 00:00:00', '2021-04-30 00:00:00', NULL),
+(595, 'https://www.youtube.com/watch?v=-YKuxZgDamM', 11, 1, 472, '2021-04-30 00:00:00', '2021-04-30 00:00:00', NULL),
+(596, 'https://www.youtube.com/watch?v=-YKuxZgDamM', 11, 1, 473, '2021-04-30 00:00:00', '2021-04-30 00:00:00', NULL),
+(597, 'https://www.youtube.com/watch?v=-YKuxZgDamM', 22, 1, 473, '2021-04-30 00:00:00', '2021-04-30 00:00:00', NULL),
+(598, 'https://www.youtube.com/watch?v=3oCJbCdy55s', 22, 10, 474, '2021-04-30 00:00:00', '2021-04-30 00:00:00', NULL),
+(599, 'https://www.youtube.com/watch?v=3oCJbCdy55s', 11, 1, 474, '2021-04-30 00:00:00', '2021-04-30 00:00:00', NULL),
+(600, 'https://www.youtube.com/watch?v=3oCJbCdy55s', 19, 1, 474, '2021-04-30 00:00:00', '2021-04-30 00:00:00', NULL),
+(601, 'https://www.youtube.com/watch?v=DbJpWaKsrJ8', 22, 10, 475, '2021-05-04 00:00:00', '2021-05-04 00:00:00', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `list_platforms`
+-- Struktur dari tabel `list_platforms`
 --
 
 CREATE TABLE `list_platforms` (
@@ -166,18 +230,18 @@ CREATE TABLE `list_platforms` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `list_platforms`
+-- Dumping data untuk tabel `list_platforms`
 --
 
 INSERT INTO `list_platforms` (`id`, `platform_name`, `logo_image_path`, `platform_regex`, `published`, `createdAt`, `updatedAt`, `deletedAt`) VALUES
-(11, 'spotify', 'assets/logo/iztr9ahj2dv2svasuxxb', 'www.spotify.com', 1, '0000-00-00 00:00:00', '2021-02-03 00:00:00', NULL),
-(19, 'dummy', 'assets/logo/kyfdz1dtmhvmdjsxahxt', 'dummy.com', 1, '2021-01-04 00:00:00', '2021-02-03 00:00:00', NULL),
+(11, 'spotify', 'assets/logo/gt9kgcijbd6bjtksmarf', 'www.spotify.com', 1, '0000-00-00 00:00:00', '2021-03-15 00:00:00', NULL),
+(19, 'apple music', 'assets/logo/kyfdz1dtmhvmdjsxahxt', 'apple music', 1, '2021-01-04 00:00:00', '2021-02-03 00:00:00', NULL),
 (22, 'youtube', 'assets/logo/preud4qgvghzhcrqssif', 'https://www.youtube.com', 1, '2021-01-11 00:00:00', '2021-01-11 00:00:00', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `list_text`
+-- Struktur dari tabel `list_text`
 --
 
 CREATE TABLE `list_text` (
@@ -188,7 +252,7 @@ CREATE TABLE `list_text` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `list_text`
+-- Dumping data untuk tabel `list_text`
 --
 
 INSERT INTO `list_text` (`id`, `text`, `createdAt`, `updatedAt`) VALUES
@@ -214,7 +278,7 @@ INSERT INTO `list_text` (`id`, `text`, `createdAt`, `updatedAt`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `migrations`
+-- Struktur dari tabel `migrations`
 --
 
 CREATE TABLE `migrations` (
@@ -224,7 +288,7 @@ CREATE TABLE `migrations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `migrations`
+-- Dumping data untuk tabel `migrations`
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
@@ -235,7 +299,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `notifications`
+-- Struktur dari tabel `notifications`
 --
 
 CREATE TABLE `notifications` (
@@ -250,7 +314,7 @@ CREATE TABLE `notifications` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `notifications`
+-- Dumping data untuk tabel `notifications`
 --
 
 INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `data`, `read_at`, `created_at`, `updated_at`) VALUES
@@ -278,12 +342,13 @@ INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `
 (22, '', 'Pemberitahuan', 4, 'Link anda dengan kode \"HXs4yfGD9xxx\"\" dan judul \"\"\" terpaksa kami lakukan blokir karena:', '2021-02-03 02:24:41', '2021-02-02 22:35:40', '2021-02-02 22:35:40'),
 (23, '', 'Pemberitahuan', 4, 'Link anda dengan kode \"HXs4yfGD9xxx\"\" dan judul \"\"\" terpaksa kami lakukan blokir karena:', '2021-02-03 02:24:41', '2021-02-02 22:35:50', '2021-02-02 22:35:50'),
 (24, '', 'Pemberitahuan', 4, 'Link anda dengan kode \"HXs4yfGD9xxx\"\" dan judul \"\"\" terpaksa kami lakukan blokir karena:', '2021-02-03 02:24:41', '2021-02-02 22:35:57', '2021-02-02 22:35:57'),
-(25, '', 'Pemberitahuan', 4, 'Link anda dengan kode \"HXs4yfGD9xxx\"\" dan judul \"\"\" terpaksa kami lakukan blokir karena:', '2021-02-03 02:24:41', '2021-02-02 22:39:44', '2021-02-02 22:39:44');
+(25, '', 'Pemberitahuan', 4, 'Link anda dengan kode \"HXs4yfGD9xxx\"\" dan judul \"\"\" terpaksa kami lakukan blokir karena:', '2021-02-03 02:24:41', '2021-02-02 22:39:44', '2021-02-02 22:39:44'),
+(26, '', 'Pemberitahuan', 4, 'saya iseng', '2021-03-09 01:39:28', '2021-03-09 01:37:54', '2021-03-09 01:37:54');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `reason`
+-- Struktur dari tabel `reason`
 --
 
 CREATE TABLE `reason` (
@@ -296,7 +361,7 @@ CREATE TABLE `reason` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `reason`
+-- Dumping data untuk tabel `reason`
 --
 
 INSERT INTO `reason` (`id`, `reason`, `text`, `createdAt`, `updatedAt`, `deletedAt`) VALUES
@@ -309,7 +374,7 @@ INSERT INTO `reason` (`id`, `reason`, `text`, `createdAt`, `updatedAt`, `deleted
 -- --------------------------------------------------------
 
 --
--- Table structure for table `reason_report`
+-- Struktur dari tabel `reason_report`
 --
 
 CREATE TABLE `reason_report` (
@@ -319,12 +384,10 @@ CREATE TABLE `reason_report` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `reason_report`
+-- Dumping data untuk tabel `reason_report`
 --
 
 INSERT INTO `reason_report` (`id`, `report_id`, `reason_id`) VALUES
-(1, 1, 1),
-(2, 1, 2),
 (10, 9, 1),
 (11, 9, 2),
 (12, 10, 1),
@@ -335,12 +398,12 @@ INSERT INTO `reason_report` (`id`, `report_id`, `reason_id`) VALUES
 (17, 11, 2),
 (18, 11, 3),
 (19, 11, 4),
-(20, 12, 4);
+(21, 13, 2);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `report`
+-- Struktur dari tabel `report`
 --
 
 CREATE TABLE `report` (
@@ -354,20 +417,20 @@ CREATE TABLE `report` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `report`
+-- Dumping data untuk tabel `report`
 --
 
 INSERT INTO `report` (`id`, `link`, `ip_reporter`, `additional_reason`, `validated`, `createdAt`, `updatedAt`) VALUES
-(1, 454, '127.0.0.1', 'saya gasuka', 1, '2021-01-15 00:00:00', '2021-01-15 00:00:00'),
 (9, 338, '127.0.0.1', 'Tcakep', 0, '2021-01-22 00:00:00', '2021-01-22 00:00:00'),
 (10, 338, '127.0.0.1', 'kedua nih, isinya 4 reasons', 1, '2021-01-22 00:00:00', '2021-01-22 00:00:00'),
 (11, 338, '127.0.0.1', 'kedua nih, isinya 4 reasons', 0, '2021-01-22 00:00:00', '2021-01-22 00:00:00'),
-(12, 454, '127.0.0.1', 'jelek banget, benci saya', 0, '2021-01-26 00:00:00', '2021-01-26 00:00:00');
+(13, 458, '127.0.0.1', 'tes', 0, '2021-03-09 00:00:00', '2021-03-09 00:00:00'),
+(15, 464, '127.0.0.1', NULL, 0, '2021-03-09 00:00:00', '2021-03-09 00:00:00');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sequelizemeta`
+-- Struktur dari tabel `sequelizemeta`
 --
 
 CREATE TABLE `sequelizemeta` (
@@ -375,7 +438,7 @@ CREATE TABLE `sequelizemeta` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `sequelizemeta`
+-- Dumping data untuk tabel `sequelizemeta`
 --
 
 INSERT INTO `sequelizemeta` (`name`) VALUES
@@ -388,7 +451,40 @@ INSERT INTO `sequelizemeta` (`name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Struktur dari tabel `shortened_urls`
+--
+
+CREATE TABLE `shortened_urls` (
+  `id` int(11) NOT NULL,
+  `full_url` text NOT NULL,
+  `short_url` varchar(64) NOT NULL,
+  `slug` varchar(64) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  `deleted_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `shortened_urls`
+--
+
+INSERT INTO `shortened_urls` (`id`, `full_url`, `short_url`, `slug`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(4, 'https://laravel.com/docs/8.x/routing#route-group-prefixes', 'https://shortn.to/s/V3VHW08fz', 'V3VHW08fz', '2021-04-30 10:22:51', '2021-04-30 10:22:51', '0000-00-00 00:00:00'),
+(5, 'https://laravel.com/docs/8.x/routing#route-group-prefixes', 'https://shortn.to/s/Jby5AltXN', 'Jby5AltXN', '2021-04-30 10:23:42', '2021-04-30 10:23:42', '0000-00-00 00:00:00'),
+(6, 'adasdasdasd', 'https://shortn.to/s/xoiWbpVV2', 'xoiWbpVV2', '2021-04-30 10:27:43', '2021-04-30 10:27:43', '0000-00-00 00:00:00'),
+(7, 'https://laravel.com/docs/8.x/routing#route-group-prefixes', 'https://shortn.to/s/EDNGRwBCx', 'EDNGRwBCx', '2021-04-30 10:28:28', '2021-04-30 10:28:28', '0000-00-00 00:00:00'),
+(8, 'https://laravel.com/docs/8.x/routing#route-group-prefixes', 'https://shortn.to/s/HqH743s3j', 'HqH743s3j', '2021-04-30 10:29:32', '2021-04-30 10:29:32', '0000-00-00 00:00:00'),
+(9, 'https://laravel.com/docs/8.x/routing#route-group-prefixes', 'https://shortn.to/s/oY1gfHvaF', 'oY1gfHvaF', '2021-04-30 10:30:22', '2021-04-30 10:30:22', '0000-00-00 00:00:00'),
+(10, 'https://laravel.com/docs/8.x/routing#route-group-prefixes', 'https://shortn.to/s/OOEMAFtWp', 'OOEMAFtWp', '2021-04-30 10:32:21', '2021-04-30 10:32:21', '0000-00-00 00:00:00'),
+(11, 'https://laravel.com/docs/8.x/routing#route-group-prefixes', 'https://shortn.to/s/G0vEaX7s0', 'G0vEaX7s0', '2021-04-30 10:33:29', '2021-04-30 10:33:29', '0000-00-00 00:00:00'),
+(12, 'https://www.youtube.com/watch?v=RcvH2hvvGh4&t=328s', 'https://shortn.to/s/61SlQQ6Tl', '61SlQQ6Tl', '2021-04-30 12:39:33', '2021-04-30 12:39:33', '0000-00-00 00:00:00'),
+(13, 'https://www.youtube.com/watch?v=DbJpWaKsrJ8', 'https://shortn.to/s/txo9vU13I', 'txo9vU13I', '2021-05-04 03:14:42', '2021-05-04 03:14:42', '0000-00-00 00:00:00'),
+(14, 'https://www.kompas.com/global/read/2021/05/04/184728670/warga-china-berhasil-lolos-ke-taiwan-modal-perahu-karet', 'https://shortn.to/s/fVrMqCpRd', 'fVrMqCpRd', '2021-05-04 12:13:29', '2021-05-04 12:13:29', '0000-00-00 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `users`
 --
 
 CREATE TABLE `users` (
@@ -403,19 +499,21 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `users`
+-- Dumping data untuk tabel `users`
 --
 
 INSERT INTO `users` (`id`, `email`, `name`, `password`, `admin`, `active`, `createdAt`, `updatedAt`) VALUES
 (3, 'test@test.com', NULL, '$2b$10$GJOC1oP3SziiaaUlJ8M.HuzTZ7lXq2Z4eCNtGpU0rfB9qI3sGB1RS', 1, 1, '2020-11-10 05:05:51', '2020-11-10 05:05:51'),
 (4, 'test2@test.com', 'usernamenew', '$2y$12$GhyS97AVmvatINuHKGddauhy.CeBjpyJvrXGiaqvLamBSQbBjpDda', 0, 1, '2020-11-18 02:08:05', '2021-02-03 01:11:10'),
 (10, 'SA@SA.com', 'SA', '$2y$12$YNanVa4s34ecKLlHJyM.tOLPVSWmmuHsmomMogBqvW03I6syOQhJK', 2, 1, '2020-11-10 05:05:51', '2021-01-15 01:22:50'),
-(12, 'xxx@xxx.com', 'xxxxxxxx', '$2y$12$rD2icaH6af76NevFkLExXe9jabOvQfhDai55VeIu5uK.YQ7XBwY0a', 0, 1, '2021-02-05 00:00:00', '2021-02-05 00:00:00');
+(12, 'xxx@xxx.com', 'xxxxxxxx', '$2y$12$rD2icaH6af76NevFkLExXe9jabOvQfhDai55VeIu5uK.YQ7XBwY0a', 0, 1, '2021-02-05 00:00:00', '2021-02-05 00:00:00'),
+(13, 'admin@admin.com', 'adminadmin', '$2y$12$nEllUQWV9f7uXYOAz2W9/OCfdjY3J.Rj/ycfVC9xzgt4bSlTpAVNa', 0, 1, '2021-03-09 00:00:00', '2021-03-09 00:00:00'),
+(14, 'test2642021@test2642021.com', 'test2642022', '$2y$12$zsy9nMVCNVZeaKOXdVrIzOCBYuGmAAOxufv/wsG6AXlkDShx1eZlK', 0, 1, '2021-04-26 00:00:00', '2021-04-27 03:45:12');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `visits`
+-- Struktur dari tabel `visits`
 --
 
 CREATE TABLE `visits` (
@@ -428,7 +526,7 @@ CREATE TABLE `visits` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `visits`
+-- Dumping data untuk tabel `visits`
 --
 
 INSERT INTO `visits` (`id`, `link_id`, `ip`, `referer`, `createdAt`, `updatedAt`) VALUES
@@ -438,24 +536,31 @@ INSERT INTO `visits` (`id`, `link_id`, `ip`, `referer`, `createdAt`, `updatedAt`
 (17, 350, '127.0.0.1', 'localhost', '2021-01-04 17:00:00', '2021-01-04 17:00:00'),
 (22, 439, '127.0.0.1', 'localhost', '2021-01-10 17:00:00', '2021-01-10 17:00:00'),
 (23, 372, '127.0.0.1', 'localhost', '2021-01-14 17:00:00', '2021-01-14 17:00:00'),
-(24, 454, '127.0.0.1', 'localhost', '2021-01-14 17:00:00', '2021-01-14 17:00:00'),
 (25, 338, '312.123.13.1', 'Youtube', '2020-12-27 17:00:00', '2020-12-25 17:00:00'),
 (26, 338, '127.0.0.1', 'Localhost', '2020-11-26 05:55:25', '2020-12-25 17:00:00'),
 (27, 338, '127.0.0.1', 'Localhost', '2021-01-01 05:55:25', '2020-12-25 17:00:00'),
-(28, 374, '127.0.0.1', 'localhost', '2021-02-03 17:00:00', '2021-02-03 17:00:00');
+(28, 374, '127.0.0.1', 'localhost', '2021-02-03 17:00:00', '2021-02-03 17:00:00'),
+(29, 463, '127.0.0.1', 'localhost', '2021-03-08 17:00:00', '2021-03-08 17:00:00'),
+(30, 458, '127.0.0.1', 'localhost', '2021-03-08 17:00:00', '2021-03-08 17:00:00'),
+(31, 460, '127.0.0.1', 'localhost', '2021-03-08 17:00:00', '2021-03-08 17:00:00'),
+(32, 464, '127.0.0.1', 'localhost', '2021-03-08 17:00:00', '2021-03-08 17:00:00'),
+(33, 459, '127.0.0.1', 'localhost', '2021-03-09 17:00:00', '2021-03-09 17:00:00'),
+(34, 461, '127.0.0.1', 'localhost', '2021-03-14 17:00:00', '2021-03-14 17:00:00'),
+(35, 470, '127.0.0.1', 'localhost', '2021-04-29 17:00:00', '2021-04-29 17:00:00'),
+(36, 475, '127.0.0.1', 'localhost', '2021-05-03 17:00:00', '2021-05-03 17:00:00');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `action_list_latforms`
+-- Indeks untuk tabel `action_list_latforms`
 --
 ALTER TABLE `action_list_latforms`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `clickthroughs`
+-- Indeks untuk tabel `clickthroughs`
 --
 ALTER TABLE `clickthroughs`
   ADD PRIMARY KEY (`id`),
@@ -463,7 +568,7 @@ ALTER TABLE `clickthroughs`
   ADD KEY `link_platform_id` (`link_platform_id`);
 
 --
--- Indexes for table `links`
+-- Indeks untuk tabel `links`
 --
 ALTER TABLE `links`
   ADD PRIMARY KEY (`id`),
@@ -471,7 +576,7 @@ ALTER TABLE `links`
   ADD KEY `id_user` (`id_user`);
 
 --
--- Indexes for table `link_platforms`
+-- Indeks untuk tabel `link_platforms`
 --
 ALTER TABLE `link_platforms`
   ADD PRIMARY KEY (`id`),
@@ -481,38 +586,38 @@ ALTER TABLE `link_platforms`
   ADD KEY `text` (`text`);
 
 --
--- Indexes for table `list_platforms`
+-- Indeks untuk tabel `list_platforms`
 --
 ALTER TABLE `list_platforms`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `list_text`
+-- Indeks untuk tabel `list_text`
 --
 ALTER TABLE `list_text`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `migrations`
+-- Indeks untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `notifications`
+-- Indeks untuk tabel `notifications`
 --
 ALTER TABLE `notifications`
   ADD PRIMARY KEY (`id`),
   ADD KEY `notifications_notifiable_type_notifiable_id_index` (`notifiable_type`,`notifiable_id`);
 
 --
--- Indexes for table `reason`
+-- Indeks untuk tabel `reason`
 --
 ALTER TABLE `reason`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `reason_report`
+-- Indeks untuk tabel `reason_report`
 --
 ALTER TABLE `reason_report`
   ADD PRIMARY KEY (`id`),
@@ -520,133 +625,145 @@ ALTER TABLE `reason_report`
   ADD KEY `reason_id` (`reason_id`);
 
 --
--- Indexes for table `report`
+-- Indeks untuk tabel `report`
 --
 ALTER TABLE `report`
   ADD PRIMARY KEY (`id`),
   ADD KEY `link` (`link`);
 
 --
--- Indexes for table `sequelizemeta`
+-- Indeks untuk tabel `sequelizemeta`
 --
 ALTER TABLE `sequelizemeta`
   ADD PRIMARY KEY (`name`),
   ADD UNIQUE KEY `name` (`name`);
 
 --
--- Indexes for table `users`
+-- Indeks untuk tabel `shortened_urls`
+--
+ALTER TABLE `shortened_urls`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id` (`id`);
 
 --
--- Indexes for table `visits`
+-- Indeks untuk tabel `visits`
 --
 ALTER TABLE `visits`
   ADD PRIMARY KEY (`id`),
   ADD KEY `link_id` (`link_id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `action_list_latforms`
+-- AUTO_INCREMENT untuk tabel `action_list_latforms`
 --
 ALTER TABLE `action_list_latforms`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `clickthroughs`
+-- AUTO_INCREMENT untuk tabel `clickthroughs`
 --
 ALTER TABLE `clickthroughs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT for table `links`
+-- AUTO_INCREMENT untuk tabel `links`
 --
 ALTER TABLE `links`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=460;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=476;
 
 --
--- AUTO_INCREMENT for table `link_platforms`
+-- AUTO_INCREMENT untuk tabel `link_platforms`
 --
 ALTER TABLE `link_platforms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=560;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=602;
 
 --
--- AUTO_INCREMENT for table `list_platforms`
+-- AUTO_INCREMENT untuk tabel `list_platforms`
 --
 ALTER TABLE `list_platforms`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
--- AUTO_INCREMENT for table `list_text`
+-- AUTO_INCREMENT untuk tabel `list_text`
 --
 ALTER TABLE `list_text`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
--- AUTO_INCREMENT for table `migrations`
+-- AUTO_INCREMENT untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `notifications`
+-- AUTO_INCREMENT untuk tabel `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
--- AUTO_INCREMENT for table `reason`
+-- AUTO_INCREMENT untuk tabel `reason`
 --
 ALTER TABLE `reason`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `reason_report`
+-- AUTO_INCREMENT untuk tabel `reason_report`
 --
 ALTER TABLE `reason_report`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
--- AUTO_INCREMENT for table `report`
+-- AUTO_INCREMENT untuk tabel `report`
 --
 ALTER TABLE `report`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT untuk tabel `shortened_urls`
+--
+ALTER TABLE `shortened_urls`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT for table `visits`
+-- AUTO_INCREMENT untuk tabel `visits`
 --
 ALTER TABLE `visits`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
--- Constraints for dumped tables
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
 --
 
 --
--- Constraints for table `clickthroughs`
+-- Ketidakleluasaan untuk tabel `clickthroughs`
 --
 ALTER TABLE `clickthroughs`
   ADD CONSTRAINT `clickthroughs_ibfk_1` FOREIGN KEY (`link_platform_id`) REFERENCES `link_platforms` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `links`
+-- Ketidakleluasaan untuk tabel `links`
 --
 ALTER TABLE `links`
   ADD CONSTRAINT `links_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `link_platforms`
+-- Ketidakleluasaan untuk tabel `link_platforms`
 --
 ALTER TABLE `link_platforms`
   ADD CONSTRAINT `link_platforms_ibfk_1` FOREIGN KEY (`id_link`) REFERENCES `links` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -654,20 +771,20 @@ ALTER TABLE `link_platforms`
   ADD CONSTRAINT `link_platforms_ibfk_3` FOREIGN KEY (`text`) REFERENCES `list_text` (`id`) ON UPDATE CASCADE;
 
 --
--- Constraints for table `reason_report`
+-- Ketidakleluasaan untuk tabel `reason_report`
 --
 ALTER TABLE `reason_report`
   ADD CONSTRAINT `reason_report_ibfk_1` FOREIGN KEY (`reason_id`) REFERENCES `reason` (`id`),
   ADD CONSTRAINT `reason_report_ibfk_2` FOREIGN KEY (`report_id`) REFERENCES `report` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `report`
+-- Ketidakleluasaan untuk tabel `report`
 --
 ALTER TABLE `report`
-  ADD CONSTRAINT `report_ibfk_2` FOREIGN KEY (`link`) REFERENCES `links` (`id`);
+  ADD CONSTRAINT `report_ibfk_2` FOREIGN KEY (`link`) REFERENCES `links` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `visits`
+-- Ketidakleluasaan untuk tabel `visits`
 --
 ALTER TABLE `visits`
   ADD CONSTRAINT `visits_ibfk_1` FOREIGN KEY (`link_id`) REFERENCES `links` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
