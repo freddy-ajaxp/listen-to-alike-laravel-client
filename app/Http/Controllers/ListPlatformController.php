@@ -174,8 +174,6 @@ class ListPlatformController extends Controller
             
             }
             
-
-            dd("break");
             //BAGIAN upload to cloud
             if ($request->file('image')) {
                 $uploadedFileUrl = \Cloudinary::upload($request->file('image')->getRealPath());
