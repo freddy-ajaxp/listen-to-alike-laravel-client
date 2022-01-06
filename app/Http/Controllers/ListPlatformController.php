@@ -49,12 +49,11 @@ class ListPlatformController extends Controller
                     'image.image' => 'harap upload gambar gambar .',
                     'image.max' => 'Ukuran melebihi kapasitas.',
                 ]);
-        
+
                 if ($validator->fails()) {
                     print_r($validator->errors());
                     exit();
                 }
-    
             }
 
             //BAGIAN insert link_platforms
@@ -80,21 +79,23 @@ class ListPlatformController extends Controller
                     exit();
                 }
             }
-            
+
 
             //jika id platform yg dimasukkan lebih dari 1 (ada yg sama)
-            if(count($data_platform) != 
-            count(array_unique($data_platform))){
-            return response()->json([
-                'error'  => 'Harap tidak memasukkan platform yang sama lebih dari 1'
-            ], 400);
+            if (
+                count($data_platform) !=
+                count(array_unique($data_platform))
+            ) {
+                return response()->json([
+                    'error'  => 'Harap tidak memasukkan platform yang sama lebih dari 1'
+                ], 400);
             }
 
             // if array has different length, meaning some field at some [index] of array is null
             // this a little prevention from user bypassing front end validation 
             if (
                 !array_key_exists('link_title', $data)
-                
+
             ) {
                 return response()->json([
                     'error'  => 'Harap lengkapi form title'
@@ -102,26 +103,26 @@ class ListPlatformController extends Controller
             }
             if (
                 (count($data_platform) !== count($data_url_platform))
-               
+
             ) {
                 return response()->json([
                     'error'  => 'Harap lengkapi form 1'
                 ], 400);
             }
             if (
-               
+
                 (count($data_url_platform) !== count($data_text))
             ) {
-                
+
                 return response()->json([
                     'error'  => 'Harap lengkapi form 2'
                 ], 400);
             }
             if (
-               (count($data_url_platform) !== count($id_platforms))
+                (count($data_url_platform) !== count($id_platforms))
             ) {
                 return response()->json([
-                    'error'  => count($data_url_platform) .'Harap lengkapi form anda'  .count($id_platforms) 
+                    'error'  => count($data_url_platform) . 'Harap lengkapi form anda'  . count($id_platforms)
                 ], 400);
             }
 
@@ -130,7 +131,7 @@ class ListPlatformController extends Controller
             $platformDiDB = List_platform::whereIn('id', $data_platform)->pluck('id')->toArray();
             $textDiDB = Text::whereIn('id', $data_text)->pluck('id')->toArray();
             // print_r($textDiDB);
-            
+
             $bedaPltDBdanInput = array_diff($data_platform, $platformDiDB); //array diff yg baru (percobaan mungkin kebalik)
             $bedaTextDBdanInput = array_diff($data_text, $textDiDB);
 
@@ -157,25 +158,23 @@ class ListPlatformController extends Controller
             // list($width, $height, $type, $attr) = getimagesize($_FILES["gallery_image"]['tmp_name']);
             // With Intervention :
             if ($request->file('image')) {
-            $upload_file = $request->file('image');
-            $height = \Image::make($upload_file)->height();
-            $width = \Image::make($upload_file)->width();
-            $size = \Image::make($upload_file)->filesize();
-            if($size > 300000){
-                return response()->json([
-                    'error'  => 'Ukuran gambar maksimal 300KB'
-                ], 400 );
+                $upload_file = $request->file('image');
+                $height = \Image::make($upload_file)->height();
+                $width = \Image::make($upload_file)->width();
+                $size = \Image::make($upload_file)->filesize();
+                if ($size > 300000) {
+                    return response()->json([
+                        'error'  => 'Ukuran gambar maksimal 300KB'
+                    ], 400);
+                }
+                if ($height > $width) {
+                    return response()->json([
+                        'error'  => 'Mohon masukkan gambar berorientasi horizontal (lebar lebih dari tinggi)'
+                    ], 400);
+                }
             }
-            if ($height > $width) {
-                return response()->json([
-                    'error'  => 'Mohon masukkan gambar berorientasi horizontal (lebar lebih dari tinggi)'
-                ], 400 );
-            }
-            
-            }
-            
 
-            dd("break");
+
             //BAGIAN upload to cloud
             if ($request->file('image')) {
                 $uploadedFileUrl = \Cloudinary::upload($request->file('image')->getRealPath());
@@ -220,7 +219,7 @@ class ListPlatformController extends Controller
     function upsert(Request $request)
     {
 
-         if ($request->ajax()) {
+        if ($request->ajax()) {
             $data = $request->all();
 
             //START VALIDATION
@@ -243,11 +242,13 @@ class ListPlatformController extends Controller
             }
 
             //jika id platform yg dimasukkan lebih dari 1 (ada yg sama)
-            if(count($data_platform) != 
-            count(array_unique($data_platform))){
-            return response()->json([
-                'error'  => 'Harap tidak memasukkan platform yang sama lebih dari 1'
-            ], 400);
+            if (
+                count($data_platform) !=
+                count(array_unique($data_platform))
+            ) {
+                return response()->json([
+                    'error'  => 'Harap tidak memasukkan platform yang sama lebih dari 1'
+                ], 400);
             }
 
             //jika urlurl ada yang bukan url valid, maka kirim pesan error. kalau bukan url, ketika pas preview di klik, akan dianggap akses ke route
@@ -259,8 +260,8 @@ class ListPlatformController extends Controller
                     exit();
                 }
             }
-             
-             
+
+
             // if array has different length, meaning some field at some [index] of array is null
             // this a little prevention from user bypassing front end validation 
             if (
@@ -345,7 +346,7 @@ class ListPlatformController extends Controller
             // print_r($listOldPlatformsId);
             // print_r($id_platforms);
             // print_r($idsToDeleted);
-            
+
             Link_platform::findMany($idsToDeleted)->each(function ($each) {
                 $each->delete();
             });
@@ -385,7 +386,7 @@ class ListPlatformController extends Controller
 
     function generateId($slug)
     {
-        $result = Link::where('short_link', $slug)->first()['short_link'];
+        $result = Link::where('short_link', $slug)->first();
         if ($result === NULL) {
             return $slug;
         } else {
@@ -459,30 +460,36 @@ class ListPlatformController extends Controller
             $link['link'][0]['video_embed_url'] = "";
         }
 
-        $reasons = Reason::get();        
+        $reasons = Reason::get();
         return view('components/user/view/preview')->with(['data' =>  $link, 'reasons' => $reasons]);
     }
 
     function detail(Request $request, $short_link)
     {
         $ip = $request->ip();
+        $link = Link::where('short_link', $short_link)->first();
         $id_user = $request->session()->get('id');
+
+        // $data['a'] =  Link::with('visits')
+        //     ->join('visits', 'links.id', '=', 'visits.link_id')
+        //     ->select(DB::raw("*, count(*) AS `count` "))
+        //     ->where('short_link', '=', $short_link)
+        //     ->get();
         $data['link'] =
             DB::table('links')
-            ->select(DB::raw('*, (SELECT count(*) FROM `visits` WHERE `visits`.`link_id` = `links`.`id` AND MONTH(createdAt) = MONTH(CURRENT_DATE()) AND YEAR(createdAt) = YEAR(CURRENT_DATE()))  AS `count` '))
+            ->select(DB::raw("*, (SELECT count(*) FROM `visits` WHERE `visits`.`link_id` = $link->id AND MONTH(createdAt) = MONTH(CURRENT_DATE()) AND YEAR(createdAt) = YEAR(CURRENT_DATE()))  AS `count` "))
             ->where('short_link', '=', $short_link)
             ->get();
 
         $data['link']->transform(function ($i) {
             return (array)$i;
         });
-        
+
         //jumlah link 0? berarti link tersebut tidak ada, throw 404
         if ($data['link']->count() === 0) {
             abort(404);
         }
 
-        
         $data['platform'] = DB::table('link_platforms')
             ->select(DB::raw('*, (SELECT count(*) FROM `clickthroughs` WHERE `clickthroughs`.`link_platform_id` = `link_platforms`.`id`) AS `count`'))
             ->where('id_link', '=', $data['link'][0]['id'])
@@ -495,10 +502,9 @@ class ListPlatformController extends Controller
             ->where('link_id', '=', $data['link'][0]['id'])
             ->get()->toArray();
 
- 
+
         //START getting months and years for SELECT
-        $yearList = Visit::
-                select(DB::raw("DATE_FORMAT(createdAt, '%Y') AS year"))
+        $yearList = Visit::select(DB::raw("DATE_FORMAT(createdAt, '%Y') AS year"))
             ->where('link_id', '=', $data['link'][0]['id'])
             ->groupBy('year')
             ->get()->pluck('year')
@@ -510,14 +516,15 @@ class ListPlatformController extends Controller
 
         $curMonth = idate("m");
         $curYear =  idate("Y");
-        $chartData = self::countLinkChart($curMonth,$curYear,$data['link'][0]['id']);
+        $chartData = self::countLinkChart($curMonth, $curYear, $data['link'][0]['id']);
         // dd($chartData);
-        ['arrDaysInMth' => $arrDaysInMth , 'calendar' => $calendar, 'maxVisit' => $maxVisit] = $chartData;
-        return view('components/user/view/detail-link')->with(['data' => $data, 'visits' => $arrDaysInMth, 'calendar' => $calendar, 'maxVisit' => $maxVisit, 'yearList' => $yearList, 'monthList'=> $monthList]);
+        ['arrDaysInMth' => $arrDaysInMth, 'calendar' => $calendar, 'maxVisit' => $maxVisit] = $chartData;
+        return view('components/user/view/detail-link')->with(['data' => $data, 'visits' => $arrDaysInMth, 'calendar' => $calendar, 'maxVisit' => $maxVisit, 'yearList' => $yearList, 'monthList' => $monthList]);
     }
 
     //untuk grafik visit Link per date yg diminta
-    function countLinkChart($mth, $yer, $idLink){
+    function countLinkChart($mth, $yer, $idLink)
+    {
         $month = $mth ?? date("m");
         $year = $yer ?? date("Y");
         $chart = [];
@@ -531,7 +538,7 @@ class ListPlatformController extends Controller
             ->get();
         // dd(DB::getQueryLog());
         // dd($allVisit);
-        
+
         $visitsInMonth = array_sum($allVisit->pluck('visit')->toArray());
         // dd($allVisit->toArray());
         // echo $month ." " .$year;
@@ -554,9 +561,10 @@ class ListPlatformController extends Controller
         return $chart;
     }
 
-    function getCountLinkChart(Request $request){
+    function getCountLinkChart(Request $request)
+    {
         $data = $request->all();
-        $chartData = self::countLinkChart($data['month'],$data['year'],$data['linkId']);
+        $chartData = self::countLinkChart($data['month'], $data['year'], $data['linkId']);
         return response()->json($chartData);
     }
     function profile(Request $request)
@@ -651,7 +659,7 @@ class ListPlatformController extends Controller
         $data = $request->all();
         $ip = $request->ip();
         $ipReporterExist = Report::where('ip_reporter', $ip)->where('link', $data['idLink'])->first();
-        if($ipReporterExist){
+        if ($ipReporterExist) {
             return response()->json([
                 'success'  => 'Laporan Anda sebelumnya telah kami terima dan telah menjadi bahan pertimbangan kami.'
             ], 200);
@@ -670,39 +678,39 @@ class ListPlatformController extends Controller
             'success'  => 'Laporan Anda telah kami terima'
         ], 200);
     }
-    function getListOfMonths(){
+    function getListOfMonths()
+    {
 
-        $data = array (
-            array('urutan'=>1, 'bulan' => "Januari"),
-            array('urutan'=>2, 'bulan' => "Februari"),
-            array('urutan'=>3, 'bulan' => "Maret"),
-            array('urutan'=>4, 'bulan' => "April"),
-            array('urutan'=>5, 'bulan' => "Mei"),
-            array('urutan'=>6, 'bulan' => "Juni"),
-            array('urutan'=>7, 'bulan' => "Juli"),
-            array('urutan'=>8, 'bulan' => "Agustus"),
-            array('urutan'=>9, 'bulan' => "September"),
-            array('urutan'=>10, 'bulan' => "Oktober"),
-            array('urutan'=>11, 'bulan' => "November"),
-            array('urutan'=>12, 'bulan' => "Desember")
+        $data = array(
+            array('urutan' => 1, 'bulan' => "Januari"),
+            array('urutan' => 2, 'bulan' => "Februari"),
+            array('urutan' => 3, 'bulan' => "Maret"),
+            array('urutan' => 4, 'bulan' => "April"),
+            array('urutan' => 5, 'bulan' => "Mei"),
+            array('urutan' => 6, 'bulan' => "Juni"),
+            array('urutan' => 7, 'bulan' => "Juli"),
+            array('urutan' => 8, 'bulan' => "Agustus"),
+            array('urutan' => 9, 'bulan' => "September"),
+            array('urutan' => 10, 'bulan' => "Oktober"),
+            array('urutan' => 11, 'bulan' => "November"),
+            array('urutan' => 12, 'bulan' => "Desember")
         );
         return $data;
-
     }
     function dummy()
     {
-                
     }
-    function shorten(Request $request){
+    function shorten(Request $request)
+    {
         $data = $request->all();
         $domainName = env("APP_SHORT_NAME");
         if (!filter_var($data['fullURL'], FILTER_VALIDATE_URL)) {
             return response()->json([
                 'error'  => 'Harap Masukkan URL Valid'
             ], 400);
-        } 
+        }
 
-        if (strpos($data['fullURL'], $domainName.'/s/') !== false) {
+        if (strpos($data['fullURL'], $domainName . '/s/') !== false) {
             return response()->json([
                 'error'  => 'Link Sudah Dalam Bentuk Dipersingkat'
             ], 400);
@@ -710,30 +718,31 @@ class ListPlatformController extends Controller
 
         //create object dulu 
         $short = new Shortened_url;
+        // print(Str::random(9));
+        // exit();
         $slug = $this->generateId(Str::random(9));
 
-         //BAGIAN CREATE DATA LINK
-         $short->full_url = $data['fullURL'];
-         $short->slug = $slug;
-         $short->short_url  = "https://${domainName}/s/${slug}";
-         $short->save();
-         if($short->id){
+        //BAGIAN CREATE DATA LINK
+        $short->full_url = $data['fullURL'];
+        $short->slug = $slug;
+        $short->short_url  = "https://${domainName}/s/${slug}";
+        $short->save();
+        if ($short->id) {
             return response()->json([
                 'success'  => 'Berhasil Mempersingkat URL',
                 'url' => "https://${domainName}/s/${slug}"
             ], 200);
-         }
-         else {
+        } else {
             return response()->json([
                 'error'  => 'Gagal Dalam Mempersingkat URL'
             ], 400);
-         }
+        }
     }
 
-    function getURL($slug){
+    function getURL($slug)
+    {
         $data = Shortened_url::where('slug', $slug)->first();
         // dd($data->full_url);
         return \Redirect::to($data->full_url);
-
     }
 }

@@ -20,14 +20,14 @@
 
 <body>
     <div class="App">
-        <div class="section section-1" style="background-image: url('images/background.jpg');
+        {{-- <div class="section section-1" style="background-image: url('images/background.jpg');
                 background-size: cover;
               background-position: center center;
-              background-attachment: fixed;" `>
+              background-attachment: fixed;"> --}}
             <div class="section-1-bg" style="background:linear-gradient( to right,rgb(6, 34, 62),rgba(5, 32, 68, 1));">
                 @yield('content')
             </div>
-        </div>
+        {{-- </div> --}}
     </div>
 </body>
 @include('components.user.components.spinner')

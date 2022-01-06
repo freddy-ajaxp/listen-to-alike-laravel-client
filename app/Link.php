@@ -22,5 +22,8 @@ class Link extends Model
     {
         return $this->hasMany(Link_platform::class, 'id_link');
     }
-
+    public function visits()
+    {
+        return $this->belongsTo(Visit::class, 'link_id');
+    }
 }

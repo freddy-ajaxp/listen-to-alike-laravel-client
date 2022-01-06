@@ -23,7 +23,6 @@ use Illuminate\Support\Facades\View;
 
 Route::group(['middleware' => 'revalidate'], function()
 {
-     
     Route::get('/login', function () {
         return view('components/user/view/login');
     })->name('view.login')->middleware('sessionvalidator');
@@ -96,9 +95,7 @@ Route::post('table/dummy', 'TableController@dummy')->name('table.dummy');
 Route::post('table/deleteLinkById', 'ListPlatformController@deleteLinkById')->name('table.delete-link');
 Route::post('table/custom', 'TableController@patchCustomLink')->name('table.custom-link');
 
-
-//ADMIN
-
+/* START ADMIN */
 Route::get('/admin/userList', function () {
     $data['main'] = 'links';
     return view('components/admin/view/users')->with('components', $data);
@@ -169,7 +166,7 @@ Route::get('admin/editText', 'AdminController@editText');
 Route::post('admin/resetPassword', 'AdminController@resetPassword')->name('admin.reset-pwd');
 Route::post('admin/setPrivilege', 'AdminController@setPrivilege');
 
-
+/* END ADMIN */
 
 
 Route::get('dummy', 'ListPlatformController@dummy');
